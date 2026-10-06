@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_06",
+  "course": "CG3207",
+  "title": "Two values leave a `jalr`",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_06_jalr_datapath.png",
+  "source_reference": "Week 4/Chapter 3B RISC-V Microarchitecture.pdf, p.23. Keep the PC target choices and the PC+4-to-register writeback path; crop the slide's bottom note.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "For jalr x1, 8(x2), if PC is 0x40 and x2 contains 0x100, what becomes the next PC and what goes into x1? Could you trace each route?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "The target uses x2, but x1 receives PC+4. Which two mux choices make those different answers possible?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "If x2 changes to 0x200, which output changes? Would the value written into x1 change too?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "What if the offset were 9 instead of 8? Is 0x109 the actual next PC under RISC-V, and is the low-bit rule drawn explicitly here?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "If this were jal x1, 8 instead, which value would be the target base, and would the link value still be PC+4?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

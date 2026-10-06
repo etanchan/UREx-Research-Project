@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_17",
+  "course": "CG2271",
+  "title": "Where are UART bits sampled?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "The idle-high line falls to the start-bit low level, signaling a possible frame. The receiver checks near the middle of that start-bit interval to confirm it before scheduling data samples.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "Transitions are where line voltage and timing uncertainty are greatest. Sampling near each bit's center gives margin against edges and small clock mismatch.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "The start bit is a framing interval, not data bit 0. Counting it as payload would misalign every later payload sample and reconstruct the wrong bit sequence/byte.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "Parity is optional and depends on the agreed UART framing configuration; transmitter and receiver must agree whether it exists, as well as data bits and stop bits.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "A faster receiver uses shorter local bit periods, so its successive sample points drift earlier relative to the transmitter's bit centers; enough drift can sample an edge or neighboring bit and cause data/framing errors.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}

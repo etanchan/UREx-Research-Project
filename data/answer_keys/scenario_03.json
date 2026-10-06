@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_03",
+  "course": "CG3207",
+  "title": "Where does the immediate go in `addi`?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "InstrImm denotes bits taken from the instruction; Extend interprets them according to ImmSrc and produces 32-bit ExtImm=5. The ALU B mux selects that immediate, RD1 supplies x5=7, and the ALU/writeback route produces x5=12.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "ALUControl chooses the ALU operation, here addition; ALUSrcB chooses RD2 versus ExtImm as the second operand, here ExtImm when the signal is 1. It is a control signal, not a storage register.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "ExtImm is also wired to the PC-relative target adder for instructions such as branches and jal. For ordinary addi, the PC selection stays on PC+4; its immediate goes through the ALU B mux, not into the chosen next-PC path.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "add x5,x5,x6 selects RD2 (x6) with ALUSrcB=0; addi selects ExtImm with ALUSrcB=1. Both select the ALU result for register writeback and assert RegWrite; x6's value was not specified, so an exact sum for add cannot be given.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "The RD2-to-WriteData wire is available to sw, but addi has MemWrite=0, so data memory is not changed. addi selects the ALU result, not data-memory ReadData, for writeback.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}

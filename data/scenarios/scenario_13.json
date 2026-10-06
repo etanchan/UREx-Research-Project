@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_13",
+  "course": "CG2271",
+  "title": "Which physical frame contains the page?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg2271_13_logical_address_translation.png",
+  "source_reference": "Week 10/CG227Lect8.pptx, slide 7, “Logical Address Translation”. Keep page table 2,7,1,5 and frames; remove the printed formula. Give page/frame size = 256 bytes. For turn 4, a clean second image with page 2's entry changed to 4 is preferable to a text-only edit.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "If the CPU asks for logical page 2, offset 10, where does that land in the physical memory pictured?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "I got 2x256+10. Which number in the diagram should replace that first 2, and why?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "If I choose offset 200 on the same logical page, does the physical frame change, or just the place within it?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "Now the page-2 entry is changed from frame 1 to frame 4. Which part of the physical address changes, and what does it become for offset 10?",
+      "revised_image_path": "data/images/cg2271_13_logical_address_translation_revised.png",
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "If the entry were marked not present instead, could we still take the same arrow straight to a frame?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

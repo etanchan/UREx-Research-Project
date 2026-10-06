@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "urex-benchmark"
+version = "0.1.0"
+description = "UREx Engineering Diagrams: Multi-turn VLM Benchmark for Engineering Education"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "UREx Research Team" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.scripts]
+urex-validate = "urex_benchmark.validator:main"
+urex-run = "urex_benchmark.runner:main"
+urex-score-template = "urex_benchmark.scoring.template:main"
+urex-score-summary = "urex_benchmark.scoring.summary:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

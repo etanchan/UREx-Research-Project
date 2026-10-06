@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_11",
+  "course": "CG3207",
+  "title": "Why do two memory blocks fight for one line?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "In a 128-line direct-mapped cache, line is block number modulo 128: 129 mod 128 = 1. Block 129 has only line 1 as its slot.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "They cannot coexist in this one-way line: block 1 also maps to line 1. The tag distinguishes the different memory blocks that share index 1; with 4096 memory blocks, the block address has 12 bits, split into 5 tag bits and 7 index bits.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "Starting empty, each of the four accesses misses: load 1, replace with 129, replace with 1, replace with 129. Each replaces the line-1 contents, assuming no other cache mechanism or interference changes the trace.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "Changing the word within block 129 changes only its 4-bit word offset among 16 words. Its memory-block ID, line index 1 and tag remain the same.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "With 256 lines, block 1 maps to line 1 and 129 to line 129, so they do not collide. The index widens from 7 to 8 bits and the 12-bit block tag narrows from 5 to 4 bits, keeping the 16-word offset at 4 bits.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}

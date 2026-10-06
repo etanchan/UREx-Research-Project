@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_18",
+  "course": "CS2113",
+  "title": "What does an architecture arrow actually assert?",
+  "status": "ready",
+  "initial_image_path": "data/images/cs2113_18_architecture_diagram.png",
+  "source_reference": "TP/docs/diagrams/architecture-diagrams/ArchitectureDiagram.png. Keep its legend. For a visual change in turn 4, create an edited second diagram with a direct UI->File arrow.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "The arrow from Logic to Storage goes one way. According to this legend, what relationship does that claim?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "Does it mean every command must call Storage, or only that Logic can depend on it? What can we safely infer from this drawing?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "Storage also has a dashed arrow toward File. Does the legend say that line is a different kind of relationship?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "If I draw a new direct arrow from UI to File, what claim have I added that the original picture does not make?",
+      "revised_image_path": "data/images/cs2113_18_architecture_diagram_revised.png",
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "Could this architecture diagram tell me the exact order of calls for an add command, or would a sequence diagram answer that better?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

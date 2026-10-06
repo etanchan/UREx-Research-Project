@@ -1,0 +1,6 @@
+12345,Goggles,54321,RETAIL
+---INVENTORY---
+ID_0001,adam,0,0,1.3
+ID_0003,ada,3,0,3.0
+ID_0002,bob,2,0,2.1
+ID_0004,edward,987687,12312,1.0

@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_16",
+  "course": "CG2271",
+  "title": "Which crossings change the PWM output?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "For the top high-true trace (ELS=0b10), it clears to low at the CnV match while the counter counts up and sets back to high at the down-count match. Match the two transitions to the rising and falling slopes.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "They share the same up/down counter period and CnV crossings. The low-true (0b01) trace performs opposite set/clear actions and is complementary in the depicted steady pattern, not a new timer frequency.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "Moving CnV upward delays its up-count crossing and advances its down-count crossing. The low interval between those crossings shrinks, so the top high-true output is high for more of each unchanged period.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "Moving CnV toward the bottom makes the up-count match earlier and the down-count match later, widening the low interval and shortening the high-true pulse. The complementary low-true high interval widens.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "No exact percentage is warranted from a schematic without numeric compare value and counter limit/period. With those settings and the defined edge behaviour one can calculate duty cycle; the drawn proportions are illustrative.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}

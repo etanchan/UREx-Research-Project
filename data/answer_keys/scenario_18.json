@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_18",
+  "course": "CS2113",
+  "title": "What does an architecture arrow actually assert?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "The legend calls the solid Logic->Storage arrow an association: Logic has a directed relationship with Storage. The arrow direction identifies the drawn dependence/connection, not a specific call instance.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "It does not prove every command calls Storage. It shows the architectural relationship is allowed/present; individual command behaviour requires a runtime trace or code.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "Yes. The dashed Storage->File arrow is a *transient dependency* according to this drawing's legend, unlike the solid association. The dash does not mean 'unimportant'.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "A direct UI->File arrow would assert a new direct UI-to-File relationship, bypassing the absence of such an edge in the original. It would not, by itself, prove every UI action accesses a file.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "No exact order of method calls follows from this static component view. The add sequence diagram can show the ordered message exchange for that use case.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}

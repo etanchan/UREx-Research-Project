@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_12",
+  "course": "CG3207",
+  "title": "What does two-way placement change?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "128 mod 64=0, so block 128 maps to set 0 and may occupy either of its two ways; it is not free to go to an arbitrary set.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "Yes. Block 64 also maps to set 0, but with just that one way occupied, block 128 can fill the other way without eviction.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "There are 64 sets, so set selection needs log2 64=6 bits. The earlier 128 direct-mapped lines needed 7 index bits; the extra physical choice here is a way within the selected set, not another set bit.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "0, 64 and 128 all map to set 0, which holds only two blocks, so one must be absent or evicted when the third is installed. The exact victim is unknown without current contents and a replacement policy.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "Blocks 1 and 129 both map to set 1 but can coexist in its two ways. With only those two alternating and no interfering access, the first two accesses miss and subsequent ones hit, assuming the cache starts empty.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}

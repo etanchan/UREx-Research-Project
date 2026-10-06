@@ -1,0 +1,355 @@
+{
+  "render_scale": 3,
+  "images": [
+    {
+      "image": "data/images/cg2271_13_logical_address_translation.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG2271/Week 10/CG227Lect8.pptx",
+          "sha256": "885b30c03544c8efc3cb9d9181105ecc2fbe60d533926afea4c971a15c9e47b0"
+        },
+        {
+          "path": "data/image_sources/cg2271_13_source_slide.pdf",
+          "sha256": "6ceededc371d8877c2ca35dae0132e8706c446ba41f75eb4c6c55a1c56712d60"
+        }
+      ],
+      "source_location": "slide 7",
+      "preparation": "Original logical memory, page table and physical frames; address formula removed; 256-byte size added.",
+      "width": 2031,
+      "height": 1464,
+      "sha256": "0297e25e41b6fa2da9b70d63dc5c78bebb5b74f368cf063fd268fee6ddf3b3c9"
+    },
+    {
+      "image": "data/images/cg2271_13_logical_address_translation_revised.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG2271/Week 10/CG227Lect8.pptx",
+          "sha256": "885b30c03544c8efc3cb9d9181105ecc2fbe60d533926afea4c971a15c9e47b0"
+        },
+        {
+          "path": "data/image_sources/cg2271_13_source_slide.pdf",
+          "sha256": "6ceededc371d8877c2ca35dae0132e8706c446ba41f75eb4c6c55a1c56712d60"
+        }
+      ],
+      "source_location": "slide 7; turn 4",
+      "preparation": "Original logical memory, page table and physical frames; address formula removed; 256-byte size added. Page 2 maps to frame 4; physical-memory placement updated consistently.",
+      "width": 2031,
+      "height": 1464,
+      "sha256": "b13cec36a498c03bd99255df1fb08b8df4e1cc0a09b06c008acd99908d9fd95b"
+    },
+    {
+      "image": "data/images/cg2271_14_round_robin_timeline.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG2271/Week 4/CG2271Lect3.pdf",
+          "sha256": "c899e54503b74c843e40309b6822ed1012dd73a8c346107cb1d11a2937ce331b"
+        }
+      ],
+      "source_location": "page 21",
+      "preparation": "Original execution blocks, order and durations retained. No arrival times or queue history added.",
+      "width": 2037,
+      "height": 753,
+      "sha256": "9bc495532ae9afd3c2b32e5c4de0ef6716201fa57e0060ce0f400b3ee0dd69c3"
+    },
+    {
+      "image": "data/images/cg2271_15_semaphore_visualization.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG2271/Week 7/CG2271Lect6.pptx",
+          "sha256": "522d1daa709eb5aa2b7109b1b0985e3fc93af2ba4392b8140dd1e0ab4232d055"
+        },
+        {
+          "path": "data/image_sources/cg2271_15_source_slide.pdf",
+          "sha256": "63453f962192fb5fd4a8bf68055f9b12d222af5b5587048e5812e0e27c310677"
+        }
+      ],
+      "source_location": "slide 19",
+      "preparation": "Original four state panels, arrows and event captions retained; surrounding explanatory bullets removed.",
+      "width": 1989,
+      "height": 618,
+      "sha256": "53ac447144af0f4d099ba61a5e23c3d863bfcb9d46aee944e5a78a4abc3b5bd9"
+    },
+    {
+      "image": "data/images/cg2271_16_choosing_pwm_polarity.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG2271/Week 7/LL-5 PWM Programming.pptx",
+          "sha256": "60b0689cfa562c742156d650b71ffeae31d27ed9ee00f8b92e8391d7bf159149"
+        }
+      ],
+      "source_location": "slide 18, embedded diagram",
+      "preparation": "Original embedded counter/waveform diagram extracted; ELS labels retained; teaching prose removed; CnV label supplied explicitly.",
+      "width": 2340,
+      "height": 1425,
+      "sha256": "9f7c273f3e23023f9838b30e94704be819179b1b26b26b76198196380251a2c0"
+    },
+    {
+      "image": "data/images/cg2271_17_uart_receiver_basics.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG2271/Week 11/LL-8 UART Programming.pptx",
+          "sha256": "48e5eebaa89bab521f7a622b86715d5ef50182df348ec7c358d7397dedb2be0d"
+        },
+        {
+          "path": "data/image_sources/cg2271_17_uart_receiver_basics.svg",
+          "sha256": "c748c5d80b5c23e215cd3884159fb89b1bf54df8fdf8f0644fb2cc761774eb90"
+        }
+      ],
+      "source_location": "slides 4-5",
+      "preparation": "Legible vector redraw of one illustrative UART frame with bit labels and center sample points; optional parity identified; no decoded byte or teaching prose.",
+      "width": 3120,
+      "height": 990,
+      "sha256": "0f5cbc724156a1307f48759ed6de7423a22ab929ac8f9fae4bdd4fa48617c776"
+    },
+    {
+      "image": "data/images/cg3207_01_adder_symbols.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 6/Chapter 4 Arithmetic for Computers.pdf",
+          "sha256": "387acf966df192cedb43c041e40f0ed23e22375fceb842993ca2da0b49747acc"
+        }
+      ],
+      "source_location": "page 3",
+      "preparation": "Faithful diagram crop; slide heading and teaching prose excluded.",
+      "width": 1086,
+      "height": 486,
+      "sha256": "9771d870a675da78148117d0ace727fa691e739fbcad3c78954f39b172a7cf98"
+    },
+    {
+      "image": "data/images/cg3207_01_ripple_chain_unanswered.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 6/Chapter 4 Arithmetic for Computers.pdf",
+          "sha256": "387acf966df192cedb43c041e40f0ed23e22375fceb842993ca2da0b49747acc"
+        },
+        {
+          "path": "data/image_sources/cg3207_01_ripple_chain_unanswered.svg",
+          "sha256": "7e0dc8672b9913dc31fc69bfae51979a4eddeddcd20c903564b023451f6fc399"
+        }
+      ],
+      "source_location": "page 3; turn-4 extension",
+      "preparation": "Unanswered two-column diagram: block types and carry connection left unspecified.",
+      "width": 2400,
+      "height": 1020,
+      "sha256": "48b59748ca714c25170d79a80af1b0da2d87e8601784822b4e491f79a6790148"
+    },
+    {
+      "image": "data/images/cg3207_02_alu_control_circuit.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 6/Chapter 4 Arithmetic for Computers.pdf",
+          "sha256": "387acf966df192cedb43c041e40f0ed23e22375fceb842993ca2da0b49747acc"
+        }
+      ],
+      "source_location": "page 10",
+      "preparation": "Original ALU and control table retained; explanatory paragraph removed.",
+      "width": 2061,
+      "height": 1218,
+      "sha256": "55077ba817fde76ddd2862eb1ad0b0fd6192aabfd8fda19414e505958c0874e1"
+    },
+    {
+      "image": "data/images/cg3207_03_single_cycle_addi.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 4/Chapter 3B RISC-V Microarchitecture.pdf",
+          "sha256": "c207719154ddef26f32a490ba9fc2b2fcb7cfd89c46eab085ad30349a58b1677"
+        }
+      ],
+      "source_location": "page 17",
+      "preparation": "Faithful diagram crop; slide heading and teaching prose excluded.",
+      "width": 1977,
+      "height": 1197,
+      "sha256": "ecba25153b417db331e4a9b5eb2d6e12856e3c08edca1832676ddb9380ff57de"
+    },
+    {
+      "image": "data/images/cg3207_04_processor_a_vs_b.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 4/Chapter 3B RISC-V Microarchitecture.pdf",
+          "sha256": "c207719154ddef26f32a490ba9fc2b2fcb7cfd89c46eab085ad30349a58b1677"
+        }
+      ],
+      "source_location": "pages 17 and 23",
+      "preparation": "Full-width vertical A/B comparison; original control widths and ports retained; no instruction capability answers.",
+      "width": 2040,
+      "height": 2562,
+      "sha256": "8c29232af51d3fc10bc6d1ab7bb105d044a5acbad21690c199380d37b163cd91"
+    },
+    {
+      "image": "data/images/cg3207_05_beq_trace.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 4/Chapter 3B RISC-V Microarchitecture.pdf",
+          "sha256": "c207719154ddef26f32a490ba9fc2b2fcb7cfd89c46eab085ad30349a58b1677"
+        },
+        {
+          "path": "data/image_sources/cg3207_05_beq_trace.svg",
+          "sha256": "7697b995dc85a1aecd29dffae6cb96c2a7527141f4dda6736d9b73828d5cf178"
+        }
+      ],
+      "source_location": "page 15",
+      "preparation": "Neutral vector redraw of branch comparison and both next-PC routes; no selected path or computed result; decoded byte-offset assumption explicit.",
+      "width": 3000,
+      "height": 2040,
+      "sha256": "1ef094c449663b33e0ca899fc95731f2dc6432707afd2842d32fead2d87c1f40"
+    },
+    {
+      "image": "data/images/cg3207_06_jalr_datapath.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 4/Chapter 3B RISC-V Microarchitecture.pdf",
+          "sha256": "c207719154ddef26f32a490ba9fc2b2fcb7cfd89c46eab085ad30349a58b1677"
+        }
+      ],
+      "source_location": "page 23",
+      "preparation": "Faithful diagram crop; slide heading and teaching prose excluded.",
+      "width": 1977,
+      "height": 1170,
+      "sha256": "fea02c31653240618e6b71bcd4c42a8877aaf873bac825dd9f04fb1211462830"
+    },
+    {
+      "image": "data/images/cg3207_07_pipelined_registers.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 8/Chapter 5 The Processor (Pipelined  RV).pdf",
+          "sha256": "5d59bb33a8849ccff4b6f4ad5d8880a748379602ded33671e0bd753453b3d326"
+        }
+      ],
+      "source_location": "page 11",
+      "preparation": "Faithful diagram crop; slide heading and teaching prose excluded.",
+      "width": 2214,
+      "height": 1278,
+      "sha256": "e78565fdbf4f6f29a3d6088c498d1561952459c66d6dd0a84a7b926bfba188d9"
+    },
+    {
+      "image": "data/images/cg3207_08_data_forwarding_circuitry.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 8/Chapter 5 The Processor (Pipelined  RV).pdf",
+          "sha256": "5d59bb33a8849ccff4b6f4ad5d8880a748379602ded33671e0bd753453b3d326"
+        }
+      ],
+      "source_location": "page 24",
+      "preparation": "Faithful diagram crop; slide heading and teaching prose excluded.",
+      "width": 2214,
+      "height": 1479,
+      "sha256": "4649662982f26b38b5117116a4365a7252e28f4ed20cb908b6cbac1dc8508638"
+    },
+    {
+      "image": "data/images/cg3207_09_load_use_hazard_timeline.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 8/Chapter 5 The Processor (Pipelined  RV).pdf",
+          "sha256": "5d59bb33a8849ccff4b6f4ad5d8880a748379602ded33671e0bd753453b3d326"
+        }
+      ],
+      "source_location": "page 28",
+      "preparation": "Original timeline retained; blue answer arrows, stall shading/label and flush callout removed. Instruction and stage labels retained.",
+      "width": 2082,
+      "height": 711,
+      "sha256": "4016bcf4ec955eb40119666323e7453857b473880ebf17764adafe0d8d1f8b3f"
+    },
+    {
+      "image": "data/images/cg3207_10_control_hazards_flushing.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 8/Chapter 5 The Processor (Pipelined  RV).pdf",
+          "sha256": "5d59bb33a8849ccff4b6f4ad5d8880a748379602ded33671e0bd753453b3d326"
+        }
+      ],
+      "source_location": "page 33",
+      "preparation": "Original timeline retained; blue answer arrows, stall shading/label and flush callout removed. Instruction and stage labels retained.",
+      "width": 2064,
+      "height": 846,
+      "sha256": "8af588ddf875af2cab4f21659ef15eb78030390c16dd00554352774fd6ab01cb"
+    },
+    {
+      "image": "data/images/cg3207_11_direct_mapping_cache.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 11/Chapter 7 Memory System Principles.pdf",
+          "sha256": "790364dc4103d4a29f632a122ffd2ba5a97905e02ffa642a7dbdd8fca1692007"
+        }
+      ],
+      "source_location": "page 13",
+      "preparation": "Cropped original cache/memory structure; worked mapping prose, solved bit counts and color-coded mapping answers removed; scenario parameters added.",
+      "width": 2040,
+      "height": 1140,
+      "sha256": "5f76780e3df7912906f4af831aa75bb22d2c38c5e3b498768d2853ca2e0ad81d"
+    },
+    {
+      "image": "data/images/cg3207_12_set_associative_mapping.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CG3207/Week 11/Chapter 7 Memory System Principles.pdf",
+          "sha256": "790364dc4103d4a29f632a122ffd2ba5a97905e02ffa642a7dbdd8fca1692007"
+        }
+      ],
+      "source_location": "page 19",
+      "preparation": "Cropped original cache/memory structure; worked mapping prose, solved bit counts and color-coded mapping answers removed; scenario parameters added.",
+      "width": 2040,
+      "height": 1140,
+      "sha256": "0a6d50a8e23cacce1017909df18873ff6eac4d3cb915ddce8301b6082ecf14e5"
+    },
+    {
+      "image": "data/images/cs2113_18_architecture_diagram.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CS2113/TP/docs/diagrams/architecture-diagrams/ArchitectureDiagram.png",
+          "sha256": "6e34b02023e6dadf9c4d4c52ee0343c304380b8f29705f8b889df8856c99432f"
+        }
+      ],
+      "source_location": "original PNG",
+      "preparation": "Byte-for-byte copy of source diagram; all labels, arrows, legend and activation bars retained.",
+      "width": 491,
+      "height": 469,
+      "sha256": "6e34b02023e6dadf9c4d4c52ee0343c304380b8f29705f8b889df8856c99432f"
+    },
+    {
+      "image": "data/images/cs2113_18_architecture_diagram_revised.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CS2113/TP/docs/diagrams/architecture-diagrams/ArchitectureDiagram.png",
+          "sha256": "6e34b02023e6dadf9c4d4c52ee0343c304380b8f29705f8b889df8856c99432f"
+        },
+        {
+          "path": "data/image_sources/cs2113_18_architecture_diagram_revised.svg",
+          "sha256": "0cbbeb122ca68150fd8fcdceddec3a89245df4024843c5495759090c213d0e76"
+        }
+      ],
+      "source_location": "turn-4 variant",
+      "preparation": "Original diagram embedded unchanged; one solid UI-to-File association added as an editable vector overlay.",
+      "width": 491,
+      "height": 469,
+      "sha256": "04728c34afa8f8cc9b2ce4f2a49310d80b862116722e77a3b4ba729b71ada484"
+    },
+    {
+      "image": "data/images/cs2113_19_add_sequence_diagram.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CS2113/TP/docs/diagrams/sequence-diagrams/add-sequence.png",
+          "sha256": "1788fe531021edecd4edca00150e8f6aefbea82a93d4ebdd097007e657bc840d"
+        }
+      ],
+      "source_location": "original PNG",
+      "preparation": "Byte-for-byte copy of source diagram; all labels, arrows, legend and activation bars retained.",
+      "width": 997,
+      "height": 445,
+      "sha256": "1788fe531021edecd4edca00150e8f6aefbea82a93d4ebdd097007e657bc840d"
+    },
+    {
+      "image": "data/images/cs2113_20_storage_class_diagram.png",
+      "sources": [
+        {
+          "path": "referenceFiles/CS2113/TP/docs/diagrams/class-diagrams/StorageClassDiagram.png",
+          "sha256": "1b7e766019d8af5b994e14acce25459620b9d0eb49bbd1f0a6e18567bab0a5d9"
+        }
+      ],
+      "source_location": "original PNG",
+      "preparation": "Byte-for-byte copy of source diagram; all labels, arrows, legend and activation bars retained.",
+      "width": 602,
+      "height": 378,
+      "sha256": "1b7e766019d8af5b994e14acce25459620b9d0eb49bbd1f0a6e18567bab0a5d9"
+    }
+  ]
+}

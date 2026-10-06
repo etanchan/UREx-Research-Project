@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_04",
+  "course": "CG3207",
+  "title": "Can these two processors run the same instructions?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_04_processor_a_vs_b.png",
+  "source_reference": "Week 4/Chapter 3B RISC-V Microarchitecture.pdf, p.17 (earlier processor with control), and p.23 (expanded processor with link and jalr). Crop the slide headings and bottom note, retain all mux inputs, control widths, PC adder, register writeback, and memory ports. Re-render each at sufficient size; a crowded side-by-side thumbnail is inadequate. Supply an instruction list on the question page, not an answer table.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "Can both A and B run addi x5, x6, 5? What in each picture tells you?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "What about lw x5, 8(x6)? Both have data memory, but which value goes to its address input and which value eventually gets written into x5?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "What about lui x5, 0x12345? Can both do that too, or is something missing from one of them?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "I can see a PC-plus-offset route in A. Does that mean A can do jal x1, 12 completely, including saving the return address? Compare it with jal x0, 12 and point to the path B adds.",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "Now try jalr x1, 8(x2). Which diagram can make the next PC depend on x2 and save PC+4 into x1? Trace both outputs, and tell me what is missing in A.",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

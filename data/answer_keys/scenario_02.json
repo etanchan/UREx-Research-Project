@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_02",
+  "course": "CG3207",
+  "title": "Why does one ALU control bit go to two places?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "Yes. [3:0] names bits 3, 2, 1 and 0, a four-bit signal. The table shows four *used codes* out of 16 possible four-bit patterns; four operations do not imply that this circuit has only two control wires.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "Bit 0 is the rightmost bit. The pictured ALUControl0 line fans out to the B-versus-inverted-B choice before the adder and to the adder carry-in; the full control also selects the output-mux entry.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "For SUB (0001), bit 0 selects ~B and supplies carry-in 1, implementing two's-complement subtraction A+(~B)+1. ADD (0000) selects B and carry-in 0.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "7-3=4, so SUB selects the adder's sum 4 at the output mux. Inverting B but adding 0 instead of 1 yields 7-3-1=3 in the fixed-width arithmetic, an off-by-one result.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "A *redesigned* four-operation interface could encode the choices in two bits, with new decoding to drive the complement, carry-in and output mux. Merely shortening the control word on this drawing would break the listed codes and bit-0 wiring.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Optional image-preparation tools; not benchmark runtime dependencies.
+pymupdf==1.28.2
+python-pptx==1.0.2
+resvg-py==0.5.0

@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_07",
+  "course": "CG3207",
+  "title": "Which values do pipeline registers hold?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_07_pipelined_registers.png",
+  "source_reference": "Week 8/Chapter 5 The Processor (Pipelined RV).pdf, p.11. Keep readable stage boundaries, register banks, instruction and data routes.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "I can see four narrow rectangles between the main parts of this processor. What do those rectangles do?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "Okay, for add x5, x1, x2, what would the rectangle just after the register file need to hold so the instruction can carry on?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "For lw, is the ALU's address already the value that Writeback needs? Follow where the loaded data actually appears.",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "If I remove the register between Execute and Memory, which work is now combined into one stage, and what happens to the clean clock boundary?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "So does the first lw necessarily finish in fewer cycles after pipelining, or is the benefit that different instructions can occupy different stages together?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

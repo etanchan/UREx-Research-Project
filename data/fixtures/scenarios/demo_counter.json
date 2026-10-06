@@ -1,0 +1,54 @@
+{
+  "scenario_id": "demo_counter",
+  "course": "TEST_DEMO",
+  "title": "Synthetic 2-Bit Synchronous Counter Trace (DEMO FIXTURE ONLY)",
+  "status": "ready",
+  "initial_image_path": "data/fixtures/images/demo_diagram_turn1.png",
+  "source_reference": "Synthetic demonstration fixture - strictly for automated test validation",
+  "notes": "Clearly labeled test fixture; not a genuine engineering benchmark scenario.",
+  "metadata": {
+    "is_synthetic_fixture": true
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "What are the states that this 2-bit counter transitions through on each clock edge?",
+      "revised_image_path": null,
+      "metadata": {
+        "focus": "state_enumeration"
+      }
+    },
+    {
+      "turn_id": 2,
+      "student_message": "If Q1=0 and Q0=1, what is the next state (Q1*, Q0*)?",
+      "revised_image_path": null,
+      "metadata": {
+        "focus": "single_step_transition"
+      }
+    },
+    {
+      "turn_id": 3,
+      "student_message": "Does the counter increment or decrement in this initial schematic?",
+      "revised_image_path": null,
+      "metadata": {
+        "focus": "direction_property"
+      }
+    },
+    {
+      "turn_id": 4,
+      "student_message": "Now look at the revised schematic where an inverter was added before D1. How does the count sequence change?",
+      "revised_image_path": "data/fixtures/images/demo_diagram_turn4.png",
+      "metadata": {
+        "focus": "circuit_modification_and_revised_image"
+      }
+    },
+    {
+      "turn_id": 5,
+      "student_message": "Is state 11 still reachable in the revised counter from reset state 00?",
+      "revised_image_path": null,
+      "metadata": {
+        "focus": "reachability_analysis"
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+../drivers/fsl_clock.c:74:17:CLOCK_GetLircClkFreq	0	static
+../drivers/fsl_clock.c:117:10:CLOCK_GetOsc0ErClkFreq	0	static
+../drivers/fsl_clock.c:140:10:CLOCK_GetEr32kClkFreq	8	static
+../drivers/fsl_clock.c:270:6:CLOCK_SetSimConfig	0	static
+../drivers/fsl_clock.c:284:6:CLOCK_EnableUsbfs0Clock	12	static
+../drivers/fsl_clock.c:319:10:CLOCK_GetInternalRefClkFreq	16	static
+../drivers/fsl_clock.c:335:10:CLOCK_GetPeriphClkFreq	0	static
+../drivers/fsl_clock.c:360:10:CLOCK_GetOutClkFreq	8	static
+../drivers/fsl_clock.c:194:10:CLOCK_GetBusClkFreq	16	static
+../drivers/fsl_clock.c:179:10:CLOCK_GetFlashClkFreq	8	static
+../drivers/fsl_clock.c:209:10:CLOCK_GetCoreSysClkFreq	8	static
+../drivers/fsl_clock.c:169:10:CLOCK_GetPlatClkFreq	8	static
+../drivers/fsl_clock.c:224:10:CLOCK_GetFreq	16	static
+../drivers/fsl_clock.c:392:16:CLOCK_GetMode	0	static
+../drivers/fsl_clock.c:431:10:CLOCK_SetMcgliteConfig	16	static
+../drivers/fsl_clock.c:480:6:CLOCK_InitOsc0	12	static
+../drivers/fsl_clock.c:503:6:CLOCK_DeinitOsc0	0	static

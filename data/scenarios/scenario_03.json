@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_03",
+  "course": "CG3207",
+  "title": "Where does the immediate go in `addi`?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_03_single_cycle_addi.png",
+  "source_reference": "Week 4/Chapter 3B RISC-V Microarchitecture.pdf, p.17. Keep InstrImm, Extend, ExtImm, both ALU inputs, ALUSrcB, WriteData, and the result mux. Remove the control table from p.18.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "For addi x5, x5, 5, if x5 starts at 7, what is the difference between InstrImm and ExtImm, and where does the 5 go after Extend?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "Does ALUControl choose the two ALU inputs? I called ALUSrcB a control register in my notes; is that the right term for the line going to the mux?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "I thought ExtImm was for instructions like addi. Why does it also connect to the adder near the PC? Does addi use that route?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "Now change it to add x5, x5, x6. Which ALU input path switches, and what has to be selected for writeback in each case?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "RD2 also runs toward WriteData at data memory. For this addi, does that mean it stores anything there, or is that wire just available for a different instruction?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

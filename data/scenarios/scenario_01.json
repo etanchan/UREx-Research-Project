@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_01",
+  "course": "CG3207",
+  "title": "What do the two adder outputs mean?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_01_adder_symbols.png",
+  "source_reference": "Week 6/Chapter 4 Arithmetic for Computers.pdf, p.3. Isolate the two adder symbols; remove the displayed equations and completed truth tables. For the fourth turn, a small *unanswered* two-bit ripple-chain drawing would make the connection visible.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "What do A, B, Cin, S and Cout represent on these two symbols? I'm trying to understand what each one actually does.",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "For A = 1 and B = 1, I expected S to be 2. Where does that 2 go in the outputs?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "If Cin is also 1 on the full adder, which outputs change? Could the half adder handle that same input?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "If I had to add two two-bit numbers, would the carry from the first column go into the next half adder, or would that next column need a full adder? Why?",
+      "revised_image_path": "data/images/cg3207_01_ripple_chain_unanswered.png",
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "I think the half-adder carry is A OR B, but for the full adder I wrote Cout = AB + ACin + BCin. Could you check those against input cases and show the resulting truth-table rows?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

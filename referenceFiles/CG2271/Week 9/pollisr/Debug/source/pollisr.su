@@ -1,0 +1,12 @@
+C:\Users\famil\OneDrive\Documents\School\Sem 5\CG2271\Week 9\pollisr\CMSIS/core_cm0plus.h:757:22:__NVIC_EnableIRQ	16	static
+C:\Users\famil\OneDrive\Documents\School\Sem 5\CG2271\Week 9\pollisr\CMSIS/core_cm0plus.h:795:22:__NVIC_DisableIRQ	16	static
+C:\Users\famil\OneDrive\Documents\School\Sem 5\CG2271\Week 9\pollisr\CMSIS/core_cm0plus.h:848:22:__NVIC_ClearPendingIRQ	16	static
+C:\Users\famil\OneDrive\Documents\School\Sem 5\CG2271\Week 9\pollisr\CMSIS/core_cm0plus.h:866:22:__NVIC_SetPriority	24	static
+../source/pollisr.c:39:6:initLEDs	8	static
+../source/pollisr.c:54:6:offLED	16	static
+../source/pollisr.c:70:6:toggleLED	16	static
+../source/pollisr.c:88:6:initIRQ	8	static
+../source/pollisr.c:121:6:PORTA_IRQHandler	16	static
+../source/pollisr.c:138:13:helloTask	16	static
+../source/pollisr.c:145:13:blinkLEDTask	16	static
+../source/pollisr.c:153:5:main	16	static

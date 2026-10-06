@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="680" viewBox="0 0 1000 680">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10" fill="#222" /></marker></defs>
+<rect width="1000" height="680" fill="white" />
+<g stroke="#222" fill="none" stroke-width="2">
+<rect x="70" y="110" width="90" height="80" /><rect x="360" y="65" width="100" height="65" /><rect x="360" y="215" width="100" height="65" />
+<path d="M735 85L790 110V265L735 290Z" />
+<rect x="735" y="355" width="170" height="90" /><rect x="170" y="425" width="200" height="170" />
+<path d="M535 445L640 477V543L535 575V529L553 510L535 491Z" />
+<path d="M160 150H240V95H360 " marker-end="url(#arrow)" /><path d="M240 150V245H360 " marker-end="url(#arrow)" /><path d="M305 42V115H360 " marker-end="url(#arrow)" /><path d="M180 330H310V265H360 " marker-end="url(#arrow)" /><path d="M460 95H650V135H735 " marker-end="url(#arrow)" /><path d="M460 245H735" marker-end="url(#arrow)" /><path d="M790 185H957V23H30V150H70" marker-end="url(#arrow)" />
+<path d="M370 475H535 " marker-end="url(#arrow)" /><path d="M370 550H492V552H535 " marker-end="url(#arrow)" /><path d="M640 482H688V400H735 " marker-end="url(#arrow)" /><path d="M760 355V280" marker-end="url(#arrow)" /><path d="M825 315V355 " marker-end="url(#arrow)" /><path d="M125 382H272V425 " marker-end="url(#arrow)" /><path d="M90 565H170" marker-end="url(#arrow)" /><path d="M640 530H672V610H400" marker-end="url(#arrow)" />
+<circle cx="240" cy="150" r="3" fill="#222" />
+</g>
+<g font-family="Helvetica,Arial,sans-serif" fill="#171717" font-size="18">
+<text x="98" y="155" font-size="23">PC</text><text x="179" y="138">PC</text><text x="300" y="36">4</text>
+<text x="390" y="107" font-size="27">+</text><text x="390" y="257" font-size="27">+</text>
+<text x="484" y="81">PCPlus4</text><text x="478" y="230">PCTarget</text><text x="92" y="336">ExtImm</text><text x="735" y="130" dx="9">0</text><text x="744" y="257">1</text>
+<text x="838" y="173">PC_IN</text><text x="679" y="329">PCSrc</text>
+<text x="769" y="391">PC Logic</text><text x="753" y="424" font-size="15">branch control</text><text x="837" y="328" font-size="15">opcode / funct3</text>
+<text x="217" y="505">Register</text><text x="240" y="531">File</text><text x="305" y="467">RD1</text><text x="305" y="546">RD2</text><text x="251" y="447" font-size="15">WE</text>
+<text x="48" y="367">RegWrite</text><text x="40" y="537" font-size="14">Result</text><text x="179" y="573" font-size="15">WD</text>
+<text x="568" y="517">ALU</text><text x="658" y="473">eq</text><text x="449" y="630" font-size="16">ALUResult (writeback route)</text>
+<text x="30" y="663" font-size="16">ExtImm is already decoded to a byte offset.</text>
+</g></svg>

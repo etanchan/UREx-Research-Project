@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_15",
+  "course": "CG2271",
+  "title": "Where does the second waiter go?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "After P1's wait(S) consumes the single available permit, P1 proceeds and S has no free permit (0 in the pictured convention). The visual doesn't show a separate owner field; 'P1 holds it' describes the effect of successful acquisition.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "P2 cannot acquire when the permit is unavailable; the picture places P2 in the waiting-process list and labels it suspended. In this blocking example it does not repeatedly occupy the CPU to poll S.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "P3's signal(S) wakes or enables P2 to proceed; it does not mean P2 has already run its critical section, much less completed it. The slide does not explain why P3 is the process signaling.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "P2 remains suspended in the waiting list without a signal or another defined way to make a permit available. The diagram cannot show P2's later progress from the given events.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "With initial count 2, P1's wait would leave one permit, so P2's subsequent wait could proceed instead of joining the waiting list. Two concurrent entrants would not enforce a one-at-a-time critical section.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_05",
+  "course": "CG3207",
+  "title": "Trace both outcomes of `beq`",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_05_beq_trace.png",
+  "source_reference": "Week 4/Chapter 3B RISC-V Microarchitecture.pdf, p.15. Redraw the comparator/ALU flag, PC-plus-4 route, PC-plus-branch-offset route, and PC selection without highlighted answer paths. State that the branch immediate has already been decoded to a byte offset.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "For beq x1, x2, 12, where do the values from x1 and x2 enter the comparison, and what output tells the PC logic whether they match?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "Say the PC is 0x100 and the values match. Which input of the PC mux is selected, and what is the next PC?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "Keep the same PC and offset but make x2 different from x1. Which path is selected now, and what is the next PC?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "Does the ALU have to literally subtract to test equality here, or can we tell only that its equality flag is used? How would we avoid reading more into the drawing than it shows?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "After either outcome, does the ALU result or the branch offset get written to a register? Which control path settles that?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

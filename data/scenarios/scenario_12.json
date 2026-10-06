@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_12",
+  "course": "CG3207",
+  "title": "What does two-way placement change?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_12_set_associative_mapping.png",
+  "source_reference": "Week 11/Chapter 7 Memory System Principles.pdf, p.19. Remove worked mapping text. State 128 cache blocks arranged in 64 two-way sets; 16 words per block; 4096 memory blocks.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "Where can block 128 go here? Show the set number and the two physical slots available inside that set.",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "If block 64 is already in one way of that set, could block 128 occupy the other without evicting it?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "Why does the set field now need six bits instead of the seven line bits in the direct-mapped cache?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "Now request block 0 as well. Can 0, 64 and 128 all remain there? If not, can this drawing alone tell us the exact victim?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "Compare the 1,129,1,129 access pattern from the previous diagram. Does this two-way organisation still force them to evict one another?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

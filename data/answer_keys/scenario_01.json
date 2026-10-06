@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_01",
+  "course": "CG3207",
+  "title": "What do the two adder outputs mean?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "A and B are the one-bit operands. S is the sum bit and Cout is the carry into the next column. The full adder also has Cin, an incoming carry; the half adder does not.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "1+1=2, or binary 10: the low bit appears as S=0, and the high bit appears as Cout=1. A one-bit S port cannot hold the number 2 by itself.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "With A=B=Cin=1, the total is binary 11, so S=1 and Cout=1. The half adder cannot accept a separate Cin; it only represents the Cin=0 case for the same A and B.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "For two bits with no external carry, the least-significant column can use a half adder. Its carry must enter the next column, which needs a full adder to combine its A, B and Cin inputs.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "The half-adder carry is A AND B, not OR: A=1, B=0 disproves OR. The proposed full-adder carry AB+ACin+BCin is correct; S=A XOR B XOR Cin. In A,B,Cin -> S,Cout order the full-adder rows are 000->00, 001->10, 010->10, 011->01, 100->10, 101->01, 110->01, 111->11; the half-adder A,B -> S,Cout rows are 00->00, 01->10, 10->10, 11->01.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_02",
+  "course": "CG3207",
+  "title": "Why does one ALU control bit go to two places?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_02_alu_control_circuit.png",
+  "source_reference": "Week 6/Chapter 4 Arithmetic for Computers.pdf, p.10. Keep the ALU circuit and control table; crop the paragraph explaining the first mux. Make ALUControl[3:0], the bit-0 fan-out, the four-way output mux, and the Cout port readable.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "I see four operation codes in the table, but ALUControl[3:0] looks like four bits. Am I counting the bits correctly?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "Which end is bit 0 here, and where does that bit go in the drawing?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "That little block before the adder seems to choose B or inverted B. Why does the same bit also feed the carry-in of the adder?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "If A = 7 and B = 3, follow the subtraction code through both of those bit-0 connections. What result should reach the output mux, and what would go wrong if we inverted B but left carry-in at 0?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "Since the table shows only four operations, could the whole control be two bits instead? Or would that require changing the wiring and the codes drawn here?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

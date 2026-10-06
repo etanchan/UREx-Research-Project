@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_08",
+  "course": "CG3207",
+  "title": "Where does a forwarded value enter?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_08_data_forwarding_circuitry.png",
+  "source_reference": "Week 8/Chapter 5 The Processor (Pipelined RV).pdf, p.24. Keep the M and W bypass lines, ALU input muxes, hazard logic, and stage labels.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "If sub x8, x7, x3 comes right after add x7, x1, x2, won't sub read the old x7? How does this picture deal with that?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "Which ALU input mux needs to change for that sub, and why doesn't the whole instruction have to start over?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "Suppose two older instructions both write x7. If their results are present in M and W, which version should the consumer use? What in the forwarding controls makes that priority possible?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "Replace the producer with lw x7, 0(x1). Is the value at the M-stage ALU output now the loaded word or just its address?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "Can the very next dependent instruction always run without a bubble in that load case? Use the positions of data memory and the ALU input to explain.",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

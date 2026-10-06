@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_09",
+  "course": "CG3207",
+  "title": "Where does the load-use bubble go?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_09_load_use_hazard_timeline.png",
+  "source_reference": "Week 8/Chapter 5 The Processor (Pipelined RV).pdf, p.28. Use the lower pipeline timeline, hiding the blue answer annotations but keeping instruction/stage names.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "Why can't the and just continue right after the lw in this timeline? They seem to be using different parts of the processor.",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "Could we forward the value at the load's ALU output like we did for an ordinary add, or what does that ALU output represent here?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "What is held back, and where is the empty slot inserted in the lower timeline? Does the load itself stop?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "There is also or t2, s6, s7 later. Does its dependence on s7 force *another* bubble, or can the spacing in this actual timeline already solve it?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "If the and did not use s7 at all, which part of this depicted stall would no longer be needed?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

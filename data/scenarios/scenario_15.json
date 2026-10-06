@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_15",
+  "course": "CG2271",
+  "title": "Where does the second waiter go?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg2271_15_semaphore_visualization.png",
+  "source_reference": "Week 7/CG2271Lect6.pptx, slide 19, “Semaphore: Visualization”. Keep S, P1, P2, and sequence arrows; crop surrounding explanation.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "S starts at 1. Follow P1's wait(S) in the picture: who holds the permit after that point?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "When P2 then reaches wait(S), where does it wait, and does this drawing imply it keeps running on the CPU while waiting?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "In the last panel P3 calls signal(S). Does that mean P2 has completed its critical section already, or only that it may resume?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "Suppose nobody signals after P2 is suspended. Where does the depicted sequence get stuck?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "If S had started at 2, which part of this two-process sequence would change, and would it still enforce one-at-a-time entry?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

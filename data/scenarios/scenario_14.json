@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_14",
+  "course": "CG2271",
+  "title": "What can we infer from this round-robin timeline?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg2271_14_round_robin_timeline.png",
+  "source_reference": "Week 4/CG2271Lect3.pptx, slide 21, “Round Robin: Illustration”. Preserve execution blocks and durations. Do not supply arrival times the source lacks.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "A appears in two consecutive 2-TU slots. Does the picture tell us why B and C did not run between them?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "One possible explanation is that B and C were not ready yet. Can we establish that from this timeline, or is it just a possible ready-queue history?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "A's final slot is only 1 TU. How could that happen with a 2-TU quantum?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "If B had already been waiting before A's second slot, would the shown order still look like ordinary round robin? What assumption would we need to check?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "What extra labels or another diagram would let us reconstruct the queue and waiting times exactly?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

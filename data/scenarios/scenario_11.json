@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_11",
+  "course": "CG3207",
+  "title": "Why do two memory blocks fight for one line?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_11_direct_mapping_cache.png",
+  "source_reference": "Week 11/Chapter 7 Memory System Principles.pdf, p.13. Remove worked mappings. State 4096 memory blocks, 128 direct-mapped cache lines, 16 words per block.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "If I request memory block 129, where could it be placed in this cache?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "If block 1 is already there, can blocks 1 and 129 stay in cache at the same time? Which address bits would distinguish them?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "Now access blocks 1, 129, 1, 129. What happens at that line each time, assuming the cache starts empty?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "Would choosing a different word *within* block 129 send it to another line, or only change the word offset?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "If this cache had twice as many lines but the same block size, would 1 and 129 still collide? Which field changes width?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

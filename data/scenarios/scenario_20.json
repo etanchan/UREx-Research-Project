@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_20",
+  "course": "CS2113",
+  "title": "What can this class diagram prove?",
+  "status": "ready",
+  "initial_image_path": "data/images/cs2113_20_storage_class_diagram.png",
+  "source_reference": "TP/docs/diagrams/class-diagrams/StorageClassDiagram.png. Retain arrowheads, interface marker, dependencies, labels, and Model box.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "What is the hollow triangle between StorageManager and Storage telling me?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "If another part of the app is written against the Storage interface, which details of StorageManager could it avoid depending on?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "The arrow labelled <<hashes>> points at HashUtil. Does that show a dependency or ownership? What about the arrows toward Model?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "If I added a new class implementing Storage, where would its realization arrow point? Would that alone require changing the existing HashUtil dependency?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "Can this picture establish whether hashing happens before serialization during a save, or is that order outside what a class diagram shows?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

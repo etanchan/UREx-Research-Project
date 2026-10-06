@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_16",
+  "course": "CG2271",
+  "title": "Which crossings change the PWM output?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg2271_16_choosing_pwm_polarity.png",
+  "source_reference": "Week 7/LL-5 PWM Programming.pptx, slide 18. Keep counter triangle, CnV crossing points, both output waveforms, and ELS labels. Crop answer prose.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "In the top blue output trace, what makes the pin go low and then high again? I'm trying to match it to the triangle above.",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "Do the high-true and low-true outputs have different counter periods in this drawing, or do they mostly invert one another?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "If CnV moves toward the top of the triangle but the period stays fixed, how do the two crossing times move and what happens to high-true duty cycle?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "What if CnV is near the bottom instead? Use the two sloped counter segments to check the direction of the change.",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "Can we calculate an exact percentage of high time from this slide, or do we need numerical CnV and period values?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

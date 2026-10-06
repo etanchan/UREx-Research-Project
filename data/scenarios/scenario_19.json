@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_19",
+  "course": "CS2113",
+  "title": "Who actually adds the application?",
+  "status": "ready",
+  "initial_image_path": "data/images/cs2113_19_add_sequence_diagram.png",
+  "source_reference": "TP/docs/diagrams/sequence-diagrams/add-sequence.png. Preserve names, message arrows, creation arrows, returns, and activation bars at readable scale.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "When LogJob issues execute(...), who receives it, and which object starts interpreting the command?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "An AddCommandParser and an AddCommand appear partway down. Which arrows create them, and which object creates which?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "Follow the actual call that adds an application. Is it made by the parser, the command, or the UI?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "Trace the path back from that call to printMessage(addSuccess). Does the UI update the Model, or just display the returned result?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "If ApplicationManager.add(...) were removed from the sequence, would the other arrows alone show that an application was saved? Why?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

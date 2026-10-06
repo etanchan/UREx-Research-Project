@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="340" viewBox="0 0 800 340">
+<rect width="800" height="340" fill="white"/>
+<g font-family="Helvetica,Arial,sans-serif" fill="#171717" text-anchor="middle">
+<text x="400" y="30" font-size="20">Two-bit addition · no external carry</text>
+<text x="240" y="72" font-size="17">Column 1 (most significant)</text><text x="590" y="72" font-size="17">Column 0 (least significant)</text>
+<g fill="none" stroke="#171717" stroke-width="2">
+<rect x="160" y="135" width="160" height="95"/><rect x="510" y="135" width="160" height="95"/>
+<path d="M195 102V135 M285 102V135 M545 102V135 M635 102V135 M240 230V275 M590 230V275 M160 182H105 M510 182H467 M365 182H320"/>
+<path d="M365 182H467" stroke-dasharray="5 5"/>
+</g>
+<g font-size="18"><text x="195" y="96">A1</text><text x="285" y="96">B1</text><text x="545" y="96">A0</text><text x="635" y="96">B0</text>
+<text x="240" y="190" font-size="30">?</text><text x="590" y="190" font-size="30">?</text>
+<text x="240" y="298">S1</text><text x="590" y="298">S0</text><text x="105" y="169">C1</text><text x="484" y="167">C0</text><text x="345" y="167">?</text></g>
+<text x="414" y="214" font-size="14">carry connection?</text>
+<text x="400" y="328" font-size="15">Choose the block types and complete the carry connection.</text>
+</g></svg>

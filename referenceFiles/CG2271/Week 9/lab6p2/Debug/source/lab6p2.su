@@ -1,0 +1,8 @@
+../source/lab6p2.c:34:6:initLEDs	8	static
+../source/lab6p2.c:52:6:toggleLED	16	static
+../source/lab6p2.c:68:6:offLED	16	static
+../source/lab6p2.c:86:13:hello_task	16	static
+../source/lab6p2.c:100:13:blinkRedTask	16	static
+../source/lab6p2.c:106:13:blinkGreenTask	16	static
+../source/lab6p2.c:113:13:blinkBlueTask	16	static
+../source/lab6p2.c:121:5:main	16	static

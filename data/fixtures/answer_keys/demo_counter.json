@@ -1,0 +1,66 @@
+{
+  "scenario_id": "demo_counter",
+  "course": "TEST_DEMO",
+  "title": "Synthetic 2-Bit Synchronous Counter Trace (DEMO FIXTURE ONLY)",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "The counter cycles through states 00 -> 01 -> 10 -> 11 -> 00 in ascending binary order.",
+      "key_points": [
+        "Identifies 4 states",
+        "Sequence is 00, 01, 10, 11",
+        "Wraps around to 00"
+      ],
+      "common_misconceptions": [
+        "Confusing Q1 (MSB) and Q0 (LSB)",
+        "Omitting state 00 or 11"
+      ]
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "From state 01, the next state is 10 (binary 2).",
+      "key_points": [
+        "Q1* becomes 1",
+        "Q0* becomes 0",
+        "Overall state is 10"
+      ],
+      "common_misconceptions": [
+        "Assuming both flip-flops toggle at different times"
+      ]
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "The initial circuit increments the binary count by 1 modulo 4 on each active clock edge.",
+      "key_points": [
+        "Increments/up-counter",
+        "Modulo 4 operation"
+      ],
+      "common_misconceptions": [
+        "Calling it a down-counter"
+      ]
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "Inverting the D1 input inverts the next-state MSB equation, altering the sequence from 00 -> 01 -> 10 -> 11 into 00 -> 11 -> 01 -> 10 (or non-consecutive permutation).",
+      "key_points": [
+        "Recognizes that D1 inversion alters transition logic",
+        "Traces each state under new next-state logic",
+        "Notes that count sequence is no longer standard binary up"
+      ],
+      "common_misconceptions": [
+        "Assuming the inverter has no effect on synchronous clocking"
+      ]
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "Yes, tracing from 00 under the modified logic visits 11 on the immediate next clock cycle.",
+      "key_points": [
+        "Directly answers reachability question (Yes)",
+        "Shows transition 00 -> 11"
+      ],
+      "common_misconceptions": [
+        "Claiming 11 is unreachable because it was the last state previously"
+      ]
+    }
+  ]
+}

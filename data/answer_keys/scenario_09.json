@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_09",
+  "course": "CG3207",
+  "title": "Where does the load-use bubble go?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "and wants s7 at its Execute ALU input in the cycle immediately following the load's Execute stage. The load only obtains the word at the end of its Memory stage, too late for that same-cycle input without the depicted stall.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "The load ALU computes address s5+40; it is not the memory word stored at that address. An ALU-result bypass would forward the address, unlike an add producer whose ALU output is already the answer.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "The dependent and is held in Decode (and the front of the pipeline is held), while a bubble enters Execute. The older load continues through Memory and Writeback; the phrase 'stall the load until AND finishes' reverses the roles.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "No automatic second bubble follows merely because or also uses s7. In the lower timeline its later Execute position allows the loaded value to be available, with forwarding or register writeback as depicted; judge the actual slots rather than the register name alone.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "Without an s7 dependence, and could advance into Execute on the next cycle; the specific load-use hold and bubble would be unnecessary. Other hazards, if present, would be separate questions.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}

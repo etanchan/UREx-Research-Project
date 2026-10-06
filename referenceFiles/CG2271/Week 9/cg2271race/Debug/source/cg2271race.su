@@ -1,0 +1,3 @@
+../source/cg2271race.c:37:13:addOneTask	24	static
+../source/cg2271race.c:48:13:printTask	16	static
+../source/cg2271race.c:57:5:main	32	static

@@ -1,0 +1,44 @@
+{
+  "scenario_id": "scenario_10",
+  "course": "CG3207",
+  "title": "Which instructions get flushed?",
+  "status": "ready",
+  "initial_image_path": "data/images/cg3207_10_control_hazards_flushing.png",
+  "source_reference": "Week 8/Chapter 5 The Processor (Pipelined RV).pdf, p.33. Retain the timeline and branch-resolution stage; remove the “Flush these instructions” text and answer arrow.",
+  "notes": "Source-based images prepared and visually checked. See data/image_sources/manifest.json for provenance and data/image_sources/review.html for full-resolution review.",
+  "metadata": {
+    "image_manifest": "data/image_sources/manifest.json"
+  },
+  "turns": [
+    {
+      "turn_id": 1,
+      "student_message": "At the moment this beq is resolved as taken, which younger instructions are already in the pipeline? Point them out on the timeline.",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 2,
+      "student_message": "They have been fetched, so what would go wrong if we let them reach Writeback before changing the PC?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 3,
+      "student_message": "Does the flush remove beq itself, the two younger instructions, or everything that was fetched earlier?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 4,
+      "student_message": "If the same comparison comes out not taken, which of those instruction slots remain valid in this scheme?",
+      "revised_image_path": null,
+      "metadata": {}
+    },
+    {
+      "turn_id": 5,
+      "student_message": "In the load-use timeline we inserted a bubble. What changes in this branch timeline instead, and why?",
+      "revised_image_path": null,
+      "metadata": {}
+    }
+  ]
+}

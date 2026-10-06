@@ -1,0 +1,37 @@
+{
+  "scenario_id": "scenario_13",
+  "course": "CG2271",
+  "title": "Which physical frame contains the page?",
+  "turns": [
+    {
+      "turn_id": 1,
+      "expected_answer": "Use logical page 2 to index the table; its entry is physical frame 1. At 256 bytes per frame, physical address is 1x256+10=266.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 2,
+      "expected_answer": "The first number is the *frame* number from page 2's table entry, namely 1; the logical page number 2 chooses the entry but is not itself the physical frame.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 3,
+      "expected_answer": "Frame 1 remains selected. Offset 200 selects another byte within that frame, at 1x256+200=456.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 4,
+      "expected_answer": "Changing the entry to frame 4 changes only the frame-number part; offset 10 stays 10. The new physical address is 4x256+10=1034 if the modified page is present.",
+      "key_points": [],
+      "common_misconceptions": []
+    },
+    {
+      "turn_id": 5,
+      "expected_answer": "No. A not-present entry provides no current resident frame to combine with the offset; address translation triggers handling such as a page fault before an access can use a physical frame.",
+      "key_points": [],
+      "common_misconceptions": []
+    }
+  ]
+}
