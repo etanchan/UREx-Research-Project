@@ -55,6 +55,7 @@ class GeminiProvider(BaseProvider):
         self.temperature = float(settings.get("temperature", 0.2))
         self.max_tokens = int(settings.get("max_tokens", 2048))
         self.timeout = float(settings.get("timeout", 120.0))
+        self.thinking_level = settings.get("thinking_level")
         self.system_prompt = settings.get("system_prompt")
         self.active_conversations: Dict[str, Dict[str, Any]] = {}
 
@@ -121,12 +122,18 @@ class GeminiProvider(BaseProvider):
 
         endpoint = f"{self.API_BASE}/models/{model_name}:generateContent?key={self.api_key}"
 
+        gen_config: Dict[str, Any] = {
+            "temperature": self.temperature,
+            "maxOutputTokens": self.max_tokens,
+        }
+        if self.thinking_level:
+            gen_config["thinkingConfig"] = {
+                "thinkingLevel": self.thinking_level
+            }
+
         payload: Dict[str, Any] = {
             "contents": contents,
-            "generationConfig": {
-                "temperature": self.temperature,
-                "maxOutputTokens": self.max_tokens,
-            },
+            "generationConfig": gen_config,
         }
 
         if self.system_prompt:
@@ -167,6 +174,7 @@ class GeminiProvider(BaseProvider):
                     "prompt_tokens": usage.get("promptTokenCount", 0),
                     "completion_tokens": usage.get("candidatesTokenCount", 0),
                     "total_tokens": usage.get("totalTokenCount", 0),
+                    "thinking_tokens": usage.get("thoughtsTokenCount", 0),
                 }
 
                 if conversation_id in self.active_conversations:

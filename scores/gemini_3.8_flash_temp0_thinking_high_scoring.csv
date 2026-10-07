@@ -1,0 +1,2234 @@
+model_id,scenario_id,turn_id,student_message,attached_image_path,model_response,expected_answer_reference,technical_correctness,diagram_grounding,misconception_handling,relevance,appropriate_uncertainty,evaluator_notes
+gemini-3.8-flash,scenario_01,1,"What do A, B, Cin, S and Cout represent on these two symbols? I'm trying to understand what each one actually does.",data/images/cg3207_01_adder_symbols.png,"These symbols represent fundamental digital circuits used to perform binary addition (adding 0s and 1s). 
+
+Think of them just like standard grade-school addition where you add numbers column by column and ""carry over"" to the next column when a number gets too large.
+
+---
+
+### What each label stands for and does:
+
+#### **Inputs (Data going into the adder)**
+* **$\mathbf{A}$ and $\mathbf{B}$ (Data Inputs):**
+  * **What they are:** The two single binary digits (bits: either `0` or `1`) that you want to add together.
+  * **Where they are:** Found on both the Half Adder and the Full Adder.
+
+* **$\mathbf{C_{in}}$ (Carry In):**
+  * **What it is:** An incoming ""carry"" bit from a previous addition.
+  * **What it does:** If a previous column of addition resulted in an overflow (a carry), that extra `1` gets fed into the next column through $\mathbf{C_{in}}$. 
+  * **Where it is:** Only present on the **Full Adder**.
+
+---
+
+#### **Outputs (Results coming out of the adder)**
+* **$\mathbf{S}$ (Sum):**
+  * **What it is:** The primary result of the addition for this current bit position (the digit you write down at the bottom of the column).
+  * **What it does:** 
+    * If the result is an odd number ($1$ or $3$), $\mathbf{S = 1}$.
+    * If the result is an even number ($0$ or $2$), $\mathbf{S = 0}$.
+
+* **$\mathbf{C_{out}}$ (Carry Out):**
+  * **What it is:** The ""carry"" generated to be passed to the next higher-order bit.
+  * **What it does:** 
+    * In binary, $1 + 1 = 10_2$ (which equals $2$ in decimal). A single bit cannot hold the value $2$, so it writes down a $0$ for the Sum ($\mathbf{S = 0}$) and produces an overflow of $1$ for the Carry Out ($\mathbf{C_{out} = 1}$).
+
+---
+
+### The Difference: Why is one ""Half"" and the other ""Full""?
+
+| Feature | **Half Adder** | **Full Adder** |
+| :--- | :--- | :--- |
+| **Number of Inputs** | 2 ($A, B$) | 3 ($A, B, C_{in}$) |
+| **Can accept a previous carry?** | **No** | **Yes** |
+| **Where it is used** | Only for the very first column (the least significant bit / rightmost bit), where no carry could possibly exist yet. | For every subsequent column (middle and left bits) in multi-bit addition (e.g., 8-bit, 16-bit, 32-bit CPU adders). |
+
+---
+
+### Quick Examples to See Them in Action
+
+#### 1. Half Adder Examples ($A + B$):
+* $0 + 0 \rightarrow \mathbf{S = 0}, \mathbf{C_{out} = 0}$ (Total = 0)
+* $1 + 0 \rightarrow \mathbf{S = 1}, \mathbf{C_{out} = 0}$ (Total = 1)
+* $1 + 1 \rightarrow \mathbf{S = 0}, \mathbf{C_{out} = 1}$ (Total = $2$, written as binary $10_2$)
+
+#### 2. Full Adder Examples ($A + B + C_{in}$):
+* $1 + 0 + \text{carry } 0 \rightarrow \mathbf{S = 1}, \mathbf{C_{out} = 0}$ (Total = 1)
+* $1 + 1 + \text{carry } 0 \rightarrow \mathbf{S = 0}, \mathbf{C_{out} = 1}$ (Total = 2)
+* $1 + 1 + \text{carry } 1 \rightarrow \mathbf{S = 1}, \mathbf{C_{out} = 1}$ (Total = $3$, written as binary $11_2$)","A and B are the one-bit operands. S is the sum bit and Cout is the carry into the next column. The full adder also has Cin, an incoming carry; the half adder does not.",,,,,,
+gemini-3.8-flash,scenario_01,2,"For A = 1 and B = 1, I expected S to be 2. Where does that 2 go in the outputs?",,"The number **2** doesn't disappear—it is represented by **both outputs together!**
+
+Here is why: these circuits work in **binary (base 2)**, not decimal (base 10). 
+
+In binary:
+* A single wire/pin can only ever be **`0`** or **`1`**.
+* The digit **""2"" physically does not exist** as a single symbol in binary, just like the digit ""10"" does not exist as a single symbol in our normal decimal system.
+
+---
+
+### How ""2"" is represented
+
+In binary, the number 2 is written as **`10`**.
+
+Just like standard math has place values (Hundreds, Tens, Ones), binary has place values based on powers of 2:
+* **The ""Twos"" column ($2^1$)** $\rightarrow$ This is **$C_{out}$**
+* **The ""Ones"" column ($2^0$)** $\rightarrow$ This is **$S$**
+
+When you put the two output pins side-by-side, they form a **2-bit number**:
+
+$$\mathbf{[C_{out}][S]}$$
+
+When $A = 1$ and $B = 1$:
+* $C_{out} = \mathbf{1}$ (worth $1 \times 2 = 2$)
+* $S = \mathbf{0}$ (worth $0 \times 1 = 0$)
+
+Together, the outputs read **`1 0`**, which in binary means:
+$$(1 \times 2) + (0 \times 1) = \mathbf{2}$$
+
+---
+
+### A helpful comparison with standard math
+
+Think of how you add in standard decimal math (base 10) when adding $5 + 5$:
+
+```text
+    1  <-- Carry
+    5
++   5
+-----
+    0  <-- Sum (result in current column)
+```
+You don't write ""10"" in a single column. You write **`0`** at the bottom (Sum) and carry the **`1`** into the ""Tens"" column (Carry). 
+
+The adder does the exact same thing:
+* Because binary can only count up to `1`, the moment you hit $1 + 1 = 2$, it ""overflows.""
+* It writes **$0$** to the Sum ($S$).
+* It pushes the **$1$** to the next column via Carry Out ($C_{out}$).","1+1=2, or binary 10: the low bit appears as S=0, and the high bit appears as Cout=1. A one-bit S port cannot hold the number 2 by itself.",,,,,,
+gemini-3.8-flash,scenario_01,3,"If Cin is also 1 on the full adder, which outputs change? Could the half adder handle that same input?",,"### 1. If $C_{in}$ is also 1 on the Full Adder:
+
+Now you are adding three ones together: 
+$$A + B + C_{in} = 1 + 1 + 1 = \mathbf{3}$$
+
+Just like before, the circuit outputs a 2-bit binary number $[C_{out}][S]$:
+* In binary, the decimal number **3** is written as **`1 1`** ($1 \times 2 + 1 \times 1$).
+
+So the outputs become:
+* **$C_{out} = 1$** (worth 2)
+* **$S = 1$** (worth 1)
+
+#### Which output actually changed?
+Compared to when $C_{in}$ was 0 ($C_{out} = 1, S = 0$):
+* $C_{out}$ **stays the same** (it was already `1`, and is still `1`).
+* **$S$ changes from `0` to `1`**.
+
+---
+
+### 2. Could the Half Adder handle that same input?
+
+**No, absolutely not.** 
+
+Here is why:
+* **Physically missing a pin:** A Half Adder only has **two input wires** ($A$ and $B$). There is literally no third wire to plug $C_{in}$ into.
+* **Maximum capacity:** Because a Half Adder only accepts two inputs, the absolute maximum it can ever add is $1 + 1 = 2$. It has no way of reaching a total of 3.
+
+This is the exact reason it is called a **""Half""** Adder:
+> It only does *half* the job of addition. It can **generate** a carry ($C_{out}$), but it cannot **receive** one from a previous column ($C_{in}$).
+
+*(Fun fact: If you take **two Half Adders** and wire them together with an OR gate, you get a single Full Adder!)*","With A=B=Cin=1, the total is binary 11, so S=1 and Cout=1. The half adder cannot accept a separate Cin; it only represents the Cin=0 case for the same A and B.",,,,,,
+gemini-3.8-flash,scenario_01,4,"If I had to add two two-bit numbers, would the carry from the first column go into the next half adder, or would that next column need a full adder? Why?",data/images/cg3207_01_ripple_chain_unanswered.png,"The next column (Column 1) **must be a Full Adder**. 
+
+Here is why, along with how the diagram connects:
+
+---
+
+### Why Column 1 needs a Full Adder
+
+Look at how many numbers Column 1 actually has to add together:
+1. Bit **$A_1$**
+2. Bit **$B_1$**
+3. The **carry ($C_0$)** coming over from Column 0
+
+That is a total of **three inputs**. 
+
+As we saw earlier, a **Half Adder can only accept two inputs**—it physically lacks an input pin for a carry from another column. Therefore, Column 1 *must* be a **Full Adder** so it has a $C_{in}$ pin to receive that carry.
+
+---
+
+### Completing the Diagram
+
+| Column | Block Type | Role |
+| :--- | :--- | :--- |
+| **Column 0** (right)<br>*(Least Significant)* | **Half Adder** | Adds just the two rightmost bits: $A_0 + B_0$.<br>*(No carry exists before this column, so 2 inputs are enough.)* |
+| **Column 1** (left)<br>*(Most Significant)* | **Full Adder** | Adds $A_1 + B_1 + \text{Carry In}$. |
+
+#### The Carry Connection:
+* The wire labeled **$C_0$** is the **Carry Out** of Column 0.
+* You connect that dotted line directly to the **`?` pin on Column 1**, which acts as its **Carry In ($C_{in}$)**.
+
+---
+
+### A Concrete Example
+
+Imagine you want to calculate **$3 + 1 = 4$** in 2-bit binary:
+* Number $A = 3 \rightarrow \mathbf{1 1_2}$ ($A_1 = 1, A_0 = 1$)
+* Number $B = 1 \rightarrow \mathbf{0 1_2}$ ($B_1 = 0, B_0 = 1$)
+
+1. **Column 0 (Half Adder):**
+   * Adds $A_0 (1) + B_0 (1) = 2$ (binary `10`).
+   * Output: **$S_0 = 0$**, Carry Out **$C_0 = 1$**.
+
+2. **Column 1 (Full Adder):**
+   * Now it must add **three things**: $A_1 (1) + B_1 (0) + C_0 (1) = 2$ (binary `10`).
+   * Output: **$S_1 = 0$**, final Carry Out **$C_1 = 1$**.
+
+Reading the final bits from left to right: $[C_1][S_1][S_0] = \mathbf{100_2}$, which is decimal **4**! Without a Full Adder in Column 1, that $C_0 = 1$ would have had nowhere to go.","For two bits with no external carry, the least-significant column can use a half adder. Its carry must enter the next column, which needs a full adder to combine its A, B and Cin inputs.",,,,,,
+gemini-3.8-flash,scenario_01,5,"I think the half-adder carry is A OR B, but for the full adder I wrote Cout = AB + ACin + BCin. Could you check those against input cases and show the resulting truth-table rows?",,"You got **one right and one wrong**—let’s look at both!
+
+---
+
+### 1. Half Adder Carry: **It should be `A AND B`, not `A OR B`**
+
+A carry only occurs when the sum overflows the single bit—that is, when the total equals **2**. 
+* With only two inputs ($A$ and $B$), the only way to reach 2 is if **both** inputs are `1`. 
+* Therefore, the carry is **$C_{out} = A \cdot B$** (an **AND** gate).
+
+If you used **OR** ($A + B$), you would produce a carry whenever *either* bit was `1`, which would give the wrong math:
+
+#### Half Adder Truth Table:
+| $A$ | $B$ | Math ($A+B$) | Sum ($S$) | **Correct $C_{out}$**<br>$(A \cdot B)$ | **Your $C_{out}$**<br>$(A + B)$ | Result if using OR |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 0 | 0 | 0 | 0 | **0** | 0 | $[0][0] = 0$ (Correct) |
+| **0** | **1** | **1** | **1** | **0** | **1 (Wrong!)** | **$[1][1] = 3$ (Incorrect!)** |
+| **1** | **0** | **1** | **1** | **0** | **1 (Wrong!)** | **$[1][1] = 3$ (Incorrect!)** |
+| 1 | 1 | 2 | 0 | **1** | 1 | $[1][0] = 2$ (Correct) |
+
+> **Notice:** If you used OR, adding $1 + 0$ would output $S = 1$ and $C_{out} = 1$, which represents the binary number `11` (decimal **3**)!
+
+---
+
+### 2. Full Adder Carry: **Your equation is 100% correct!**
+
+$$C_{out} = AB + AC_{in} + BC_{in}$$
+
+In a Full Adder, you have three inputs, and you generate a carry whenever the sum is **2 or 3**. That means a carry is produced whenever **any two (or all three)** inputs are `1`. This is known as a **majority function**, which is exactly what your formula represents:
+* $AB$: Both $A$ and $B$ are 1
+* $AC_{in}$: Both $A$ and $C_{in}$ are 1
+* $BC_{in}$: Both $B$ and $C_{in}$ are 1
+
+#### Full Adder Truth Table:
+| $A$ | $B$ | $C_{in}$ | Decimal Sum | $AB$ | $AC_{in}$ | $BC_{in}$ | **Your $C_{out}$**<br>($AB + AC_{in} + BC_{in}$) | Expected Carry |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 0 |
+| 0 | 0 | 1 | 1 | 0 | 0 | 0 | **0** | 0 |
+| 0 | 1 | 0 | 1 | 0 | 0 | 0 | **0** | 0 |
+| **0** | **1** | **1** | **2** | 0 | 0 | 1 | **1** | **1** |
+| 1 | 0 | 0 | 1 | 0 | 0 | 0 | **0** | 0 |
+| **1** | **0** | **1** | **2** | 0 | 1 | 0 | **1** | **1** |
+| **1** | **1** | **0** | **2** | 1 | 0 | 0 | **1** | **1** |
+| **1** | **1** | **1** | **3** | 1 | 1 | 1 | **1** | **1** |
+
+Every single row matches the expected carry!
+
+---
+
+### Summary Rule of Thumb
+* A carry means: **""Is the sum $\ge 2$?""**
+  * With 2 inputs (Half Adder): Need **both** $\rightarrow A \cdot B$
+  * With 3 inputs (Full Adder): Need **any pair** $\rightarrow AB + AC_{in} + BC_{in}$","The half-adder carry is A AND B, not OR: A=1, B=0 disproves OR. The proposed full-adder carry AB+ACin+BCin is correct; S=A XOR B XOR Cin. In A,B,Cin -> S,Cout order the full-adder rows are 000->00, 001->10, 010->10, 011->01, 100->10, 101->01, 110->01, 111->11; the half-adder A,B -> S,Cout rows are 00->00, 01->10, 10->10, 11->01.",,,,,,
+gemini-3.8-flash,scenario_02,1,"I see four operation codes in the table, but ALUControl[3:0] looks like four bits. Am I counting the bits correctly?",data/images/cg3207_02_alu_control_circuit.png,"**Yes, you are counting the bits correctly!** 
+
+Here is why, along with an explanation of why there are only 4 operations listed for a 4-bit signal:
+
+---
+
+### 1. Verification of the Bit Count
+* **Notation:** The subscript notation **$[3:0]$** refers to bit 3, bit 2, bit 1, and bit","Yes. [3:0] names bits 3, 2, 1 and 0, a four-bit signal. The table shows four *used codes* out of 16 possible four-bit patterns; four operations do not imply that this circuit has only two control wires.",,,,,,
+gemini-3.8-flash,scenario_02,2,"Which end is bit 0 here, and where does that bit go in the drawing?",,"### 1. Which end is Bit 0?
+
+In standard digital logic notation:
+* **Bit 0 is the far-right bit** (the Least Significant Bit, or LSB).
+* **Bit 3 is the far-left bit** (the Most Significant Bit, or MSB).
+
+$$\begin{matrix}
+\text{Bit position:} & \mathbf{3} & \mathbf{2} & \mathbf{1} & \mathbf{0} \\
+\hline
+\text{ADD:} & 0 & 0 & 0 & \mathbf{0} \\
+\text{SUB:} & 0 & 0 & 0 & \mathbf{1} \\
+\text{AND:} & 1 & 1 & 1 & \mathbf{0} \\
+\text{OR:}  & 1 & 1 & 0 & \mathbf{0} \\
+\end{matrix}$$
+
+Notice that the codes for **ADD** (`0000`) and **SUB** (`0001`) are completely identical *except* for that rightmost bit (**Bit 0**).
+
+---
+
+### 2. Where does Bit 0 go in the drawing?
+
+In the schematic, look at the **blue wire on the right labeled $\text{ALUControl}_0$** (the subscript $0$ means it is carrying only Bit 0). 
+
+It splits and goes to **two specific places**:
+
+1. **The select line of the small 2:1 multiplexer** (just above the adder):
+   * When Bit 0 is **`0`** (ADD): The mux selects input `0`, passing **$B$** straight through.
+   * When Bit 0 is **`1`** (SUB): The mux selects input `1`, passing **$\overline{B}$** (the inverted version of $B$ from the NOT gate).
+
+2. **The Carry-in ($C_{\text{in}}$) of the Adder** (the right side of the trapezoid with the `+` sign):
+   * When Bit 0 is **`0`** (ADD): A carry-in of **$0$** is added $\rightarrow A + B + 0$.
+   * When Bit 0 is **`1`** (SUB): A carry-in of **$+1$** is added $\rightarrow A + \overline{B} + 1$.
+
+*(Together, inverting $B$ and adding $1$ creates the two's complement of $B$, turning an addition operation into subtraction: $A - B$.)*",Bit 0 is the rightmost bit. The pictured ALUControl0 line fans out to the B-versus-inverted-B choice before the adder and to the adder carry-in; the full control also selects the output-mux entry.,,,,,,
+gemini-3.8-flash,scenario_02,3,That little block before the adder seems to choose B or inverted B. Why does the same bit also feed the carry-in of the adder?,,"This is a classic and elegant trick in digital design used to perform **two's complement subtraction** using an adder circuit!
+
+Here is how the math and the hardware connect:
+
+---
+
+### The Math: Two's Complement Negation
+Computers represent negative numbers using **two's complement**. To make a number negative (to get $-B$ from $B$), you:
+1. Invert all the bits ($\overline{B}$).
+2. Add $1$.
+
+$$\mathbf{-B = \overline{B} + 1}$$
+
+Because subtraction is simply adding a negative number:
+$$A - B = A + (-B)$$
+$$A - B = \mathbf{A + \overline{B} + 1}$$
+
+---
+
+### The Hardware: Reusing the Same Bit
+
+Notice the two pieces needed to turn $+B$ into $-B$: **inverting the bits** and **adding $1$**. 
+
+By tying $\text{ALUControl}_0$ to both the multiplexer and the carry-in ($C_{\text{in}}$), the circuit handles both steps simultaneously:
+
+| $\text{ALUControl}_0$ | Multiplexer Output | Adder $C_{\text{in}}$ | What the Adder Calculates | Result |
+| :---: | :---: | :---: | :---: | :---: |
+| **`0`** (ADD) | Passes $B$ | $+0$ | $A + B + 0$ | $\mathbf{A + B}$ |
+| **`1`** (SUB) | Passes $\overline{B}$ | $+1$ | $A + \overline{B} + 1$ | $\mathbf{A - B}$ |
+
+### Why do it this way?
+This avoids needing to design and build an entirely separate ""subtractor"" circuit. By adding just one inverter, one small multiplexer, and routing that single bit to $C_{\text{in}}$, **an adder can do both addition and subtraction.**","For SUB (0001), bit 0 selects ~B and supplies carry-in 1, implementing two's-complement subtraction A+(~B)+1. ADD (0000) selects B and carry-in 0.",,,,,,
+gemini-3.8-flash,scenario_02,4,"If A = 7 and B = 3, follow the subtraction code through both of those bit-0 connections. What result should reach the output mux, and what would go wrong if we inverted B but left carry-in at 0?",,"To see this clearly, let’s represent $A$ and $B$ as 4-bit binary numbers ($N=4$):
+* **$A = 7 = 0111_2$**
+* **$B = 3 = 0011_2$**
+
+For subtraction (**SUB**), the control code is `0001`, which means **$\text{ALUControl}_0 = 1$**.
+
+---
+
+### 1. Tracing the Two Bit-0 Paths
+
+#### Path A: The small 2:1 Multiplexer
+* $\text{ALUControl}_0 = 1$ tells this multiplexer to select input **`1`**.
+* Input `1` is connected to the inverter, so it receives $\overline{B}$ (the bitwise inversion of $B$):
+  $$\overline{B} = \overline{0011_2} = 1100_2$$
+* The value **$1100_2$** is fed into the right side of the adder.
+
+#### Path B: Carry-in ($C_{\text{in}}$) of the Adder
+* $\text{ALUControl}_0 = 1$ goes directly into the adder's carry-in pin:
+  $$C_{\text{in}} = 1$$
+
+---
+
+### 2. What Result Reaches the Output?
+
+The adder adds the left input ($A$), the right input ($\overline{B}$), and the carry-in ($C_{\text{in}}$):
+
+$$\begin{array}{r@{\quad}l}
+  & 0111_2 & (A = 7) \\
++ & 1100_2 & (\overline{B}) \\
++ & 0001_2 & (C_{\text{in}} = 1) \\
+\hline
+  & \mathbf{0100_2} & (\text{with a carry-out of } 1)
+\end{array}$$
+
+* In 4 bits, **$0100_2 = 4$**.
+* The adder's **Sum** line ($4$) is wired to the bottom multiplexer's `0001` port.
+* Since the code is `0001`, the output multiplexer selects that port and passes **$4$** to the final **Result** ($7 - 3 = 4$).
+
+---
+
+### 3. What Goes Wrong if $C_{\text{in}}$ is Left at 0?
+
+If you invert the bits of $B$ but **do not** add $1$, you are only using the **one's complement** of $B$. 
+
+Mathematically, bitwise inversion produces:
+$$\overline{B} = -B - 1$$
+
+If $C_{\text{in}} = 0$, the","7-3=4, so SUB selects the adder's sum 4 at the output mux. Inverting B but adding 0 instead of 1 yields 7-3-1=3 in the fixed-width arithmetic, an off-by-one result.",,,,,,
+gemini-3.8-flash,scenario_02,5,"Since the table shows only four operations, could the whole control be two bits instead? Or would that require changing the wiring and the codes drawn here?",,"**Yes, absolutely.** Since there are only 4 operations, you only need **2 bits** mathematically ($2^2 = 4$). 
+
+However, switching to 2 bits **would require changing both the codes and the wiring**. 
+
+Here is what would have to change, and why it was designed with 4 bits in the first place:
+
+---
+
+### 1. What Would Have to Change?
+
+#### A. The Control Codes
+You would replace the 4-bit codes with 2-bit codes. For example:
+* **ADD:** `00`
+* **SUB:** `01`
+* **OR:** `10`
+* **AND:** `11`
+
+#### B. The Output Multiplexer
+* **Current design:** The bottom multiplexer takes a **4-bit** bus (`/4`) as its select line, matching specific 4-bit patterns (`0000`, `000","A *redesigned* four-operation interface could encode the choices in two bits, with new decoding to drive the complement, carry-in and output mux. Merely shortening the control word on this drawing would break the listed codes and bit-0 wiring.",,,,,,
+gemini-3.8-flash,scenario_03,1,"For addi x5, x5, 5, if x5 starts at 7, what is the difference between InstrImm and ExtImm, and where does the 5 go after Extend?",data/images/cg3207_03_single_cycle_addi.png,"]` is `Instr[31:7]`).
+        *   `ExtImm`: 32 bits (sign-extended full word).
+    *   **Content / Representation:**
+        *   `InstrImm`: Contains the raw bits `Instr[31:7]` directly from the instruction word. In RISC-V, immediate bits are scrambled or located in different bit","InstrImm denotes bits taken from the instruction; Extend interprets them according to ImmSrc and produces 32-bit ExtImm=5. The ALU B mux selects that immediate, RD1 supplies x5=7, and the ALU/writeback route produces x5=12.",,,,,,
+gemini-3.8-flash,scenario_03,2,Does ALUControl choose the two ALU inputs? I called ALUSrcB a control register in my notes; is that the right term for the line going to the mux?,,"### 1. Does `ALUControl` choose the two ALU inputs?
+
+**No.** 
+
+* **What `ALUControl` actually does:** It is a 4-bit signal that tells the ALU **which operation to perform** (e.g., `ADD`, `SUB`, `AND`, `OR`, `SLT`).
+* **How the inputs are actually chosen:**
+  * **Input A (`SrcA`):** There is no choice here; it is hardwired directly from **`RD1`** (the first read port of the Register File).
+  * **Input B (`SrcB`):** This input is chosen by the **multiplexer (MUX)** right in front of the ALU, which is controlled by **`ALUSrcB`**:
+    * If `ALUSrcB = 0`: selects **`RD2`** (a register value).
+    * If `ALUSrcB = 1`: selects **`ExtImm`** (the sign-extended immediate value).
+
+---
+
+### 2. Is `ALUSrcB` a ""control register""?
+
+**No, that is not the right term.** 
+
+* The correct term is a **control signal** (or **control line** / **multiplexer select signal**).
+* **Why it is not a register:**
+  * A **register** is a sequential hardware storage element (made of flip-flops, driven by a clock) that *stores* data across clock cycles (like the **PC** or the **Register File**).
+  * `ALUSrcB` is simply a **1-bit wire** carrying a combinational logic level (`0` or `1`) directly from the **Decoder** to the MUX select input. It does not store anything.","ALUControl chooses the ALU operation, here addition; ALUSrcB chooses RD2 versus ExtImm as the second operand, here ExtImm when the signal is 1. It is a control signal, not a storage register.",,,,,,
+gemini-3.8-flash,scenario_03,3,I thought ExtImm was for instructions like addi. Why does it also connect to the adder near the PC? Does addi use that route?,,"### 1. Why does `ExtImm` connect to the adder near the PC?
+
+It connects there for **Branch** (like `beq`, `bne`) and **Jump** (like `jal`) instructions.
+
+In RISC-V, branches and jumps use **PC-relative addressing**. This means the target address where the program should jump is calculated as:
+$$\text{Target Address} = \text{PC} + \text{Immediate Offset}$$
+
+* Just like `addi` has an immediate value, branch and jump instructions also encode an immediate offset inside the instruction.
+* The **Extend** unit decodes and sign-extends this offset into `ExtImm`.
+* By routing `ExtImm` to that adder, the processor can compute $\text{PC} + \text{ExtImm}$ to jump to a new part of your code.
+
+*(Notice how this datapath saves hardware: instead of using two separate adders—one for $\text{PC} + 4$ and one for $\text{PC} + \text{Offset}$—it uses a single adder with a MUX in front of it that chooses whether to add `4` or `ExtImm` to the PC.)*
+
+---
+
+### 2. Does `addi` use that route?
+
+**No, it does not.**
+
+Here is what happens during an `addi` instruction:
+
+1. **The next instruction should just be sequential:** Since `addi` is not a jump or branch, the CPU simply needs to fetch the next instruction at $\text{PC} + 4$.
+2. **The MUX ignores `ExtImm`:** 
+   * The control unit sets **`PCSrc = 0`**.
+   * The MUX chooses **input `0`** (the constant **`4`**), and the adder calculates $\text{PC} + 4$.
+3. **The physical wire vs. the logical route:**
+   * In physical hardware, the electrical voltage of `ExtImm` *does* travel along that wire all the way to input `1` of the PC MUX. 
+   * However, because `PCSrc = 0`, that input is blocked/ignored by the multiplexer and discarded.
+
+For `addi`, `ExtImm` is only used at the **ALU** via the `SrcB` MUX (where `ALUSrcB = 1`).","ExtImm is also wired to the PC-relative target adder for instructions such as branches and jal. For ordinary addi, the PC selection stays on PC+4; its immediate goes through the ALU B mux, not into the chosen next-PC path.",,,,,,
+gemini-3.8-flash,scenario_03,4,"Now change it to add x5, x5, x6. Which ALU input path switches, and what has to be selected for writeback in each case?",,"### 1. Which ALU input path switches?
+
+The path for **`SrcB` (the bottom ALU input)** switches. 
+
+* **`SrcA` does NOT change:** 
+  * In both instructions, `rs1 = x5`. 
+  * `SrcA` stays connected to **`RD1`** (reading the contents of register `x5`).
+
+* **`SrcB` switches:**
+  * For **`addi`**: The control signal **`ALUSrcB = 1`**, so the MUX selects input **`1`** (**`ExtImm`**, the sign-extended immediate value `5`).
+  * For **`add`**: The control signal **`ALUSrcB = 0`**, so the MUX switches to input **`0`** (**`RD2`**, which reads register `x6` via `rs2 = Instr[24:20]`).
+
+---
+
+### 2. What has to be selected for writeback in each case?
+
+**The selection is identical for both instructions:**
+
+At the far-right multiplexer before data routes back to **`WD`** (Write Data) of the Register File:
+
+* **What is selected:** **`ALUResult` (Input `0`)**
+* **The control signal:** **`MemtoReg = 0`**
+* **Write enable:** **`RegWrite = 1`** (to enable writing into destination register `rd = x5`)
+
+#### Why are they the same?
+Neither `addi` nor `add` interacts with **Data Memory**. In both cases, the value you want to save into register `x5` is computed directly by the ALU. Therefore:
+* **`addi`:** writes `ALUResult` ($x5 + 5$) back to register `x5`.
+* **`add`:** writes `ALUResult` ($x5 + x6$) back to register `x5`.
+
+*(Input `1` on that MUX, which comes from **`ReadData`** out of Data Memory, is only selected during load instructions like `lw` where `MemtoReg = 1`.)*","add x5,x5,x6 selects RD2 (x6) with ALUSrcB=0; addi selects ExtImm with ALUSrcB=1. Both select the ALU result for register writeback and assert RegWrite; x6's value was not specified, so an exact sum for add cannot be given.",,,,,,
+gemini-3.8-flash,scenario_03,5,"RD2 also runs toward WriteData at data memory. For this addi, does that mean it stores anything there, or is that wire just available for a different instruction?",,"**No, it stores nothing in Data Memory.** That wire is just physically there and waiting for a different instruction to use it.
+
+Here is why:
+
+### 1. Why nothing is stored during `addi`
+* Data Memory has a write control port labeled **`WE` (Write Enable)**.
+* For an `addi` instruction, the Decoder sets the control signal **`MemWrite = 0`**.
+* Because `WE = 0`, the memory unit is ""locked."" Even though the voltage/data from `RD2` is physically sitting at the `WD` (Write Data) input pins, **the memory completely ignores it and overwrites nothing.**
+
+---
+
+### 2. Which instruction actually uses that wire?
+That wire is specifically designed for **Store instructions** (such as `sw` — Store Word).
+
+For example, in:
+```assembly
+sw x6, 8(x5)   # Store the contents of register x6 into memory
+```
+* `rs2` is `x6`.
+* The Register File reads `x6` onto line **`RD2`**.
+* `RD2` carries that value straight along the **`WriteData`** line to the memory's `WD` input.
+* For `sw`, the Decoder sets **`MemWrite = 1`**, telling the Data Memory: *""On the next clock tick, write the value on `WD` into the address specified by the ALU!""*
+
+---
+
+### Key Takeaway for Hardware Datapaths
+In hardware, **all wires are permanently connected**, so signals travel everywhere simultaneously. What prevents unintended side effects are the **write-enable signals** (`RegWrite`, `MemWrite`) and **multiplexers**. If an enable signal is `0`, the data arriving on the wire is completely ignored.","The RD2-to-WriteData wire is available to sw, but addi has MemWrite=0, so data memory is not changed. addi selects the ALU result, not data-memory ReadData, for writeback.",,,,,,
+gemini-3.8-flash,scenario_04,1,"Can both A and B run addi x5, x6, 5? What in each picture tells you?",data/images/cg3207_04_processor_a_vs_b.png,"**Yes, both Datapath A and Datapath B can execute the instruction `addi x5, x6, 5`.**
+
+The instruction `addi x5, x6, 5` requires:
+1. Reading register `rs1` (`x6`) and passing its value to ALU input `SrcA`.
+2. Extracting and sign-extending the","Yes. In A and B, RD1 reads x6, Extend supplies 5, ALUSrcB selects the immediate and the ALU adds them. The writeback selection chooses ALUResult and RegWrite writes x5; B's extra input muxes can select the same ordinary path.",,,,,,
+gemini-3.8-flash,scenario_04,2,"What about lw x5, 8(x6)? Both have data memory, but which value goes to its address input and which value eventually gets written into x5?",,"**Yes, both Datapath A and Datapath B can execute `lw x5, 8(x6)`.** 
+
+Here is the breakdown of the specific values you asked about:
+
+---
+
+### 1. Which value goes to the Data Memory address input (`A`)?
+* **The value:** The **effective memory address**, which is **$\text{Register}(x6) + 8$** (labeled as **`ALUResult`**).
+* **How it gets there:**
+  * **Base Address:** The register file reads `x6` via `rs1` (bits `19:15`) and outputs its value onto **`RD1`**, which goes to the ALU’s **`SrcA`** input (in B, through the `ALUSrcA = 0` multiplexer).
+  * **Offset:** The `Extend` unit sign-extends the immediate value **`8`** from the instruction to 32 bits (`ExtImm`). The multiplexer before the ALU selects `ExtImm` (via `ALUSrcB = 1` in A, or `ALUSrcB` selecting input 1 in B) into **`SrcB`**.
+  * **Addition:** The ALU performs addition (`ALUControl = ADD`), producing $\text{ALUResult} = R[x6] + 8$.
+  * This output **`ALUResult`** is connected directly to the address input **`A`** of the **Data Memory**.
+
+---
+
+### 2. Which value eventually gets written into `x5`?
+* **The value:** **`ReadData`** (the 32-bit data word retrieved from memory at that address).
+* **How it gets there:**
+  ","Yes. RD1 gives x6's base value, the extended 8 is added by the ALU, and ALUResult addresses data memory. The memory's ReadData, not the address or the literal 8, is selected for writeback to x5 in both; no memory contents were specified, so no numeric x5 result is known.",,,,,,
+gemini-3.8-flash,scenario_04,3,"What about lui x5, 0x12345? Can both do that too, or is something missing from one of them?",,"In Datapath A and Datapath B, there are critical differences in how the ALU inputs are designed:
+
+### Can Datapath B execute `lui x5, 0x12345`?
+**Yes.** Datapath B is fully equipped to execute `lui`.
+
+* **The mechanism:** In RISC-V, `lui` loads a 20","Only B supports the pictured lui route: its ALUSrcA can choose zero, its B input can take the extended U-immediate, and addition passes 0x12345000 to x5. A's ALU A is fixed to RD1 and has no zero choice; merely changing the decoder cannot create that data path.",,,,,,
+gemini-3.8-flash,scenario_04,4,"I can see a PC-plus-offset route in A. Does that mean A can do jal x1, 12 completely, including saving the return address? Compare it with jal x0, 12 and point to the path B adds.",,"Wait, let's look at the PC update in B:
+                *   At the left of Datapath B:
+                    *   Adder at PC:
+                        *   One input is `PC`.
+                        *   The other input comes from a mux:
+                            *   Wait, there are TWO muxes before the adder, or a 4-to-1 mux","A has PC+offset selection, so jal x0,12 can perform the jump without needing to retain a link. It cannot implement jal x1,12 fully because PC+4 cannot be selected into register writeback; B adds that link path. The next PC also requires the decoded J offset, as assumed in these figures.",,,,,,
+gemini-3.8-flash,scenario_04,5,"Now try jalr x1, 8(x2). Which diagram can make the next PC depend on x2 and save PC+4 into x1? Trace both outputs, and tell me what is missing in A.",,"`PC Logic` (which outputs a 2-bit signal labeled `2`).
+                                                - At the top left, the wire splits into two 1-bit lines: bit 0 and bit 1!
+                                                - Bit 0 controls the top MUX (or the bottom MUX?).
+                                                  - The top MUX has select bit `0","B selects RD1 from x2 as the target-adder base, adds the extended 8, selects the result for the next PC, and separately writes PC+4 into x1. A's target adder starts at PC, not RD1, and A has no PC+4 register-writeback choice. No numeric next PC or link is possible without x2 and current PC values.",,,,,,
+gemini-3.8-flash,scenario_05,1,"For beq x1, x2, 12, where do the values from x1 and x2 enter the comparison, and what output tells the PC logic whether they match?",data/images/cg3207_05_beq_trace.png,"Based on the provided datapath diagram:
+
+1. **Where the values enter the comparison:**
+   * The values of registers `x1` and `x2` are read from the **Register File** via outputs **RD1** and **RD2**, and they enter the two inputs of the **ALU** to be compared.
+
+2. **What output tells the PC logic whether they match:**
+   * The **`eq`** (equality) output signal from the **ALU** goes directly into the **PC Logic** (branch control) block to indicate whether the two values match.","The register file presents x1 on RD1 and x2 on RD2 to the ALU. Its eq flag goes to PC Logic, which controls the next-PC selection for beq.",,,,,,
+gemini-3.8-flash,scenario_05,2,"Say the PC is 0x100 and the values match. Which input of the PC mux is selected, and what is the next PC?",,"Based on the diagram and scenario:
+
+1. **Which input of the PC mux is selected:**
+   * **Input 1** (`PCTarget`) is selected. 
+   * *Reason:* Since the values match (`eq = 1`) for a `beq` instruction, the branch is taken, causing the **PC Logic** to assert **`PCSrc = 1`**.
+
+2. **What the next PC is:**
+   * The next PC is **`0x10C`** (or 268 in decimal).
+   * *Calculation:* 
+     $$\text{Next PC} = \text{PCTarget} = \text{PC} + \text{ExtImm} = \text{0x100} + 12\ (\text{which is } \text{0xC}) = \mathbf{\text{0x10C}}$$","Equality makes the taken target win. With a *decoded 12-byte offset*, PC+12 is 0x10C (hex 0x100+0xC), selected instead of PC+4.",,,,,,
+gemini-3.8-flash,scenario_05,3,"Keep the same PC and offset but make x2 different from x1. Which path is selected now, and what is the next PC?",,"Based on the scenario where $x1 \neq x2$:
+
+1. **Which path/input is selected:**
+   * **Input 0** (`PCPlus4`) of the PC mux is selected.
+   * *Reason:* Since the values do not match (`eq = 0`), the `beq` condition is false, meaning the branch is **not taken**. The **PC Logic** outputs **`PCSrc = 0`**.
+
+2. **What the next PC is:**
+   * The next PC is **`0x104`**.
+   * *Calculation:* 
+     $$\text{Next PC} = \text{PCPlus4} = \text{PC} + 4 = \text{0x100} + 4 = \mathbf{\text{0x104}}$$","If values differ, eq=0; the PC mux keeps the sequential PC+4 path. From 0x100, the next PC is 0x104.",,,,,,
+gemini-3.8-flash,scenario_05,4,"Does the ALU have to literally subtract to test equality here, or can we tell only that its equality flag is used? How would we avoid reading more into the drawing than it shows?",,"### 1. Does the ALU have to literally subtract?
+
+**No, the diagram does not indicate that it has to subtract; we can tell only that it provides an equality flag (`eq`).**
+
+* **Implementation vs. Interface:** In hardware, testing $A == B$ does not require a full subtraction (which involves carry-propagation and is slower/more power-hungry). It can be done simply with bitwise XNOR gates feeding into an AND gate ($\overline{A \oplus B}$). 
+* While some classic textbook datapaths (like Patterson & Hennessy) reuse the ALU's subtractor and check a `Zero` flag ($A - B = 0$), this drawing explicitly labels the signal **`eq`**, not `Zero`. 
+* Therefore, functionally, all the diagram commits to is that the ALU compares the two inputs and outputs whether they are equal. The internal mechanism (subtraction vs. dedicated comparator) is left abstract.
+
+---
+
+### 2. How to avoid reading more into the drawing than it shows
+
+To avoid ""over-reading"" schematic and datapath diagrams, follow these principles:
+
+1. **Treat blocks as ""black boxes"" defined strictly by their ports:**
+   * Look only at the inputs, outputs, and labels on the boundary of each component. The ALU takes two data inputs and provides `eq` and `ALUResult`. Anything happening *inside* the trapezoid is unspecified unless an internal breakdown or standard table is provided.
+
+2. **Notice what control signals are *missing*:**
+   * The drawing shows no `ALUControl` or operation-select lines entering the ALU. Because there is no visible signal commanding the ALU to ""perform a SUB,"" assuming it executes a subtraction relies on outside assumptions rather than the diagram itself.
+
+3. **Distinguish between *functional requirements* and *implementation choices*:**
+   * **Requirement:** The hardware must know if $x1 == x2$.
+   * **Implementation:** Could be subtraction, bitwise comparison, or an auxiliary comparator. Unless the diagram specifies the implementation, assume only the requirement.
+
+4. **Watch the naming conventions:**
+   * Labels are chosen intentionally:
+     * A line labeled **`Zero`** strongly suggests the result of an arithmetic operation was checked for zero ($A - B = 0$).
+     * A line labeled **`eq`** strictly denotes an equivalence check ($A == B$).
+
+5. **Beware of ""textbook bias"":**
+   * Students often project specific implementations from standard textbooks (such as Patterson & Hennessy or Harris & Harris) onto generic diagrams. Always ground your analysis in the specific wires, labels, and blocks actually drawn on the page.","This visible datapath guarantees the equality flag is used, but does not expose the ALU's internal equality implementation. The accompanying control table on p.18 specifies SUB for the branch, so subtraction is warranted only when that control is part of the evidence.",,,,,,
+gemini-3.8-flash,scenario_05,5,"After either outcome, does the ALU result or the branch offset get written to a register? Which control path settles that?",,"**No, neither the ALU result nor the branch offset is written to a register.**
+
+---
+
+### Which control path settles that?
+
+This is settled entirely by the **`RegWrite`** signal feeding into the **`WE` (Write Enable)** port of the **Register File**:
+
+* **Why nothing is written:** 
+  Branch instructions (`beq`) only alter the flow of control (updating the `PC`); they do not modify any architectural registers. 
+* **How the hardware enforces it:** 
+  The main control unit sets **`RegWrite = 0`** (deasserts it) for branch instructions. Because `WE = 0`, the register file ignores whatever data is arriving at its **`WD`** (Write Data) port via `Result`. No register is updated, regardless of whether the branch was taken or not taken.",Neither result is written to a general register for beq: RegWrite=0. The offset helps form the target PC; the comparison flag controls selection. MemWrite=0 also prevents a memory store.,,,,,,
+gemini-3.8-flash,scenario_06,1,"For jalr x1, 8(x2), if PC is 0x40 and x2 contains 0x100, what becomes the next PC and what goes into x1? Could you trace each route?",data/images/cg3207_06_jalr_datapath.png,"Lower Mux Output)`.
+  - What are the normal cases for PC update?
+    1. PC + 4 (sequential execution):
+       - Upper mux chooses `4`.
+       - Lower mux chooses `PC`.
+       - Then `PC_IN = PC + 4`.
+       - This happens when `PCSrc = 00` (","The target base comes from RD1=x2=0x100; adding 8 yields next PC 0x108. Separately PC+4=0x44 is selected for register writeback into x1. The target is even, so the ISA's bit-zero clearing does not alter it.",,,,,,
+gemini-3.8-flash,scenario_06,2,"The target uses x2, but x1 receives PC+4. Which two mux choices make those different answers possible?",,"PC + 4`!
+                                                                            *   Wait! Let's verify this!
+                                                                                *   Can the ALU compute `PC + 4`?
+                                                                                    *   If `ALUSrcA` selects `PC`, `SrcA = PC`.
+                                                                                    *   If `ALUSrcB` selects `4`,","The target-base choice selects RD1 rather than PC for the PC adder, while the register-result choice selects PC+4 rather than ALU/memory data. These are distinct routes to PC_IN and the register file's WD.",,,,,,
+gemini-3.8-flash,scenario_06,3,"If x2 changes to 0x200, which output changes? Would the value written into x1 change too?",,"### 1. Which output changes?
+**Only the Next PC (`PC_IN`) changes.**
+
+* **Previous Next PC:** $0x100 + 8 = \mathbf{0x108}$
+* **New Next PC:** $0x200 + 8 = \mathbf{0x208}$
+
+---
+
+### 2. Would the value written into $x1$ change too?
+**No, it does not change.** 
+
+The value written to $x1$ remains **`0x44`** ($PC + 4$).
+
+---
+
+### Why? (Datapath Isolation)
+The two values are calculated along completely independent paths:
+
+1. **Target Address (`PC_IN = 0x208`):**
+   * Uses **$x2$** via the `RD1` line routed to the PC Adder's lower multiplexer, adding it to the immediate offset (`8`) from `ExtImm`. Since $x2$ changed from `0x100` to `0x200`, this sum changes.
+
+2. **Return Address to $x1$ (`Result = 0x44`):**
+   * Uses the **ALU**, which takes **$PC$** (`0x40`) through `SrcA` and the constant **$4$** through `SrcB`. 
+   * Because it does not read $x2$ (`RD1`) for this calculation, modifying $x2$ has **zero effect** on the value saved into $x1$.","The target becomes 0x208 when x2=0x200. The link remains 0x44, because current PC is still 0x40 and its PC+4 route does not use x2.",,,,,,
+gemini-3.8-flash,scenario_06,4,"What if the offset were 9 instead of 8? Is 0x109 the actual next PC under RISC-V, and is the low-bit rule drawn explicitly here?",,"### 1. Is `0x109` the actual next PC under RISC-V?
+
+**No, the actual next PC is `0x108`.**
+
+According to the official RISC-V Unprivileged ISA specification for `jalr`:
+> *""The target address is obtained by adding the 12-bit signed I-immediate to the register `rs1`, then **setting the least-significant bit of the result to zero**.""*
+
+Mathematically:
+$$\text{Target} = (\text{rs1} + \text{imm}) \ \& \ \sim 1$$
+
+* $\text{Sum} = 0x100 + 9 = 0x109 = 0001\_0000\_1001_2$
+* Clearing the least-significant bit (bit 0): $0001\_0000\_1000_2 = \mathbf{0x108}$
+
+*(This rule guarantees that instruction fetches always remain halfword/word-aligned, even if an odd offset or base address is supplied).*
+
+---
+
+### 2. Is the low-bit rule drawn explicitly here?
+
+**No, it is not drawn explicitly.**
+
+* **What the diagram shows:** 
+  The 32-bit output of the PC adder (`+`) connects directly via a plain 32-bit bus (`PC_IN`) straight into the `PC` register. 
+* **What is missing:** 
+  There is no bit-slicing notation (such as `{AdderOut[31:1], 1'b0}`), no AND gate with a mask, and no ground connection to bit 0.
+
+This is a common pedagogical simplification in introductory datapath schematics: subtle hardware details like the `jalr` LSB-clearing rule are often omitted from the drawing to keep the diagram readable.","Under the RISC-V ISA, jalr clears bit 0 of (rs1+imm), so 0x109 becomes 0x108. The teaching datapath does not clearly draw the bit-clearing logic, so a good explanation separates ISA behaviour from the schematic's simplified path.",,,,,,
+gemini-3.8-flash,scenario_06,5,"If this were jal x1, 8 instead, which value would be the target base, and would the link value still be PC+4?",,"### 1. Which value would be the target base?
+
+The target base would be the **current `PC`** (rather than a register value).
+
+* **For `jalr`:** The jump is register-indirect $\rightarrow$ Base is **`rs1` ($x2$)**, computing $\text{Target} = x2 + \text{imm}$.
+* **For `jal`:** The jump is PC-relative $\rightarrow$ Base is **`PC`**, computing $\text{Target} = \text{PC} + \text{imm}$ (here, $0x40 + 8 = \mathbf{0x48}$).
+
+#### On the Datapath:
+* **`jalr`** set the lower PC multiplexer to **`1`** to pass `RD1` ($x2$).
+* **`jal`** sets the lower PC multiplexer to **`0`** to pass the current **`PC`** directly into the adder, while the upper multiplexer selects **`1`** (`ExtImm`) to add the offset of `8`.
+
+---
+
+### 2. Would the link value still be $PC + 4$?
+
+**Yes, absolutely.**
+
+For both `jal` and `jalr`, the RISC-V specification dictates that the return address saved in the destination register $rd$ ($x1$) is always **$PC + 4$** (here, $0x40 + 4 = \mathbf{0x44}$).
+
+#### On the Datapath:
+The return-address path does not change at all between `jal` and `jalr`:
+* `SrcA` is set to **`PC`**
+* `SrcB` is set to constant **`4`**
+* The **ALU** calculates $PC + 4$, which flows through `ALUResult` $\rightarrow$ `Result` $\rightarrow$ `WD` (Write Data) into $x1$.","jal uses current PC, not x2/RD1, as target base; with the stated offset the target would be 0x48. It still writes PC+4=0x44 to x1 in B.",,,,,,
+gemini-3.8-flash,scenario_07,1,I can see four narrow rectangles between the main parts of this processor. What do those rectangles do?,data/images/cg3207_07_pipelined_registers.png,"Those four tall, narrow rectangles are **pipeline registers** (often called **pipeline stage registers** or **latches**). 
+
+They are the key components that enable **pipelining**, dividing the processor into the five distinct stages shown at the top: **Fetch (F)**, **Decode (D)**, **Execute (E)**, **Memory (M)**, and **Writeback (W)**.
+
+From left to right, they are:
+1. **F/D Register** (between Fetch and Decode)
+2. **D/E Register** (between Decode and Execute)
+3. **E/M Register** (between Execute and Memory)
+4. **M/W Register** (between Memory and Writeback)
+
+---
+
+### What They Do:
+
+1. **Store Data and Control Signals Temporarily:**
+   * At each clock edge (`CLK`), these registers capture and save all the intermediate results, instruction bits, and control signals produced by the previous stage (e.g., ALU results, register data, memory read data).
+
+2. **Isolate the Stages:**
+   * They act like physical barriers between stages so that signals from one stage do not bleed into or corrupt the next stage mid-cycle.
+
+3. **Enable Parallel Processing (Pipelining):**
+   * By holding the state between stages, they allow the processor to work on **up to five different instructions simultaneously** (one in each stage at any given clock cycle), much like an assembly line in a factory.
+
+4. **Synchronize Timing:**
+   * They ensure that data only moves forward to the next stage synchronously on each clock tick, allowing the processor to run at a much higher clock frequency than an unpipelined (single-cycle) design.","They are pipeline registers (the D, E, M and W boundaries). At clock edges they hold the data and control signals an instruction needs in the next stage, so several instructions can occupy different stages without their values being mixed up.",,,,,,
+gemini-3.8-flash,scenario_07,2,"Okay, for add x5, x1, x2, what would the rectangle just after the register file need to hold so the instruction can carry on?",,"The rectangle just after the Register File is the **Decode/Execute (D/E) pipeline register**. 
+
+For the instruction `add x5, x1, x2`, this register needs to store two main categories of information: **Data values** and **Control signals**.
+
+---
+
+### 1. Data Values (Operands & Destination)
+* **`RD1E` (Read Data 1):** The actual 32-bit value stored inside register **`x1`** (the first operand).
+* **`RD2E` (Read Data 2):** The actual 32-bit value stored inside register **`x2`** (the second operand).
+* **`rdE` (Destination Register Address):** The number **`5`** (binary `00101`). This must travel down the pipeline so the processor remembers to write the final result into register **`x5`** two cycles later.
+* **`PCE`:** The Program Counter value of this instruction (carried forward through the pipeline).
+
+---
+
+### 2. Control Signals for the Execute (E) Stage
+* **`ALUControlE`:** Set to **ADD**. This tells the ALU to add the two inputs together.
+* **`ALUSrcBE`:** Set to **`0`**. This tells the multiplexer right before the ALU to select `RD2E` (the value of `x2`) rather than an immediate value (`ExtImmE`).
+
+---
+
+### 3. Control Signals to Pass Forward to Later Stages (Memory & Writeback)
+Because this instruction doesn't write to the register file until the 5th stage, the control instructions must ride along with the data:
+
+* **`RegWriteE` = `1` (True):** Signals that this instruction *will* write its result back to a register in the Writeback stage.
+* **`MemWriteE` = `0` (False):** Ensures we do **not** accidentally overwrite data memory during the Memory stage.
+* **`MemtoRegE` = `0`:** Tells the final multiplexer in the Writeback stage to choose the **ALU result** rather than memory data.
+* **`PCSE` = `0`:** Ensures this instruction does not trigger a branch/jump.
+
+---
+
+### Summary
+In short, it holds **the value of `x1`**, **the value of `x2`**, the destination tag **`x5`**, and the command saying: *""Add these two inputs together, don't touch memory, and write the answer into register x5.""*","The rectangle after Decode must retain the values read from x1 and x2 (RD1 and RD2), destination ID x5, and the controls needed later, including ALU operation and register write. The RD1E, RD2E, rdE and E-suffixed control labels show these values on the Execute side.",,,,,,
+gemini-3.8-flash,scenario_07,3,"For lw, is the ALU's address already the value that Writeback needs? Follow where the loaded data actually appears.",,"**No**, the ALU's result is **not** the value that Writeback needs. 
+
+For an `lw` (load word) instruction, the ALU only computes the **memory address** (base register + offset). The actual value that needs to be written into the destination register is the **data stored at that address in Data Memory**.
+
+Here is the step-by-step path showing where the loaded data actually appears:
+
+---
+
+### Step-by-Step Path of the Loaded Data:
+
+1. **Execute (E) Stage — Computing the Address:**
+   * The ALU adds the base register (`RD1E`) and the immediate offset (`ExtImmE`).
+   * The output, **`ALUResultE`**, is the *memory address*, not the data.
+
+2. **Memory (M) Stage — Fetching the Actual Data:**
+   * `ALUResultE` passes into the **E/M register** and comes out as **`ALUResultM`**.
+   * It enters the address port **`A`** of the **Data Memory**.
+   * The Data Memory reads the word at that address, and the actual loaded data appears at output **`RD`** as **`ReadDataM`**.
+
+3. **Memory/Writeback (M/W) Register — Latching the Data:**
+   * **`ReadDataM`** is captured by the final tall rectangle (the **M/W register**) on the next clock tick and emerges as **`ReadDataW`**.
+
+4. **Writeback (W) Stage — Selecting the Data:**
+   * **`ReadDataW`** arrives at input **`1`** of the final multiplexer on the far right.
+   * Because this is a load instruction, the control signal **`MemtoRegW`** is set to **`1`** (selecting memory data instead of the ALU result at input `0`).
+   * The output of this multiplexer is **`ResultW`** (which now contains your loaded data).
+
+5. **Looping Back to the Register File:**
+   * **`ResultW`** flows all the way along the bottom wire back to the Decode stage, entering the **`WD` (Write Data)** port of the **Register File** to be saved in the destination register.","No. The lw ALU computes an address in Execute; data memory returns ReadDataM in Memory. That value crosses into W and the result mux selects memory data for register writeback, not the ALU address.",,,,,,
+gemini-3.8-flash,scenario_07,4,"If I remove the register between Execute and Memory, which work is now combined into one stage, and what happens to the clean clock boundary?",,"If you remove the **E/M pipeline register** (the third tall rectangle), here is what happens:
+
+---
+
+### 1. Which Work is Now Combined?
+The **Execute (E)** and **Memory (M)** stages merge into a single, combined **Execute/Memory (EX/MEM) stage**, turning your 5-stage pipeline into a **4-stage pipeline** (Fetch, Decode, Exec/Mem, Writeback).
+
+Specifically, the following operations must now occur sequentially **within a single clock cycle**:
+* **ALU calculation + Memory access:** 
+  * For a load (`lw`) or store (`sw`), the ALU must first calculate the memory address (`Base + Offset`).
+  * Immediately and without waiting for a clock tick, that output enters the Data Memory's address port (`A`), and the Data Memory must complete reading or writing the data.
+* **Branch decision + PC update:** The ALU flags and PC Logic resolve, and the branch address is computed and fed back, all in that same elongated step.
+
+---
+
+### 2. What Happens to the ""Clean Clock Boundary""?
+
+Removing that register destroys the timing isolation between the execution units and memory, causing three major effects:
+
+#### A. The Clock Period Must Stretch (Frequency Drops Significantly)
+In a standard pipeline, the clock cycle time ($T_{\text{clk}}$) is set by the single slowest individual stage:
+$$\text{Clock Cycle Time} \ge \max(T_{\text{Fetch}}, T_{\text{Decode}}, T_{\text{Execute}}, T_{\text{Mem}}, T_{\text{WB}})$$
+
+ALU operations and Data Memory accesses are typically the **two slowest operations** in the entire processor. If you remove the boundary between them, the new combined stage's delay is roughly:
+$$T_{\text{combined}} \approx T_{\text{ALU}} + T_{\text{Data Memory}}$$
+Because every stage must run at the same clock speed, **the entire processor's clock must slow down** to accommodate this combined delay. Even simple instructions (like `add`, which doesn't use memory) will be forced to wait through this much longer clock cycle.
+
+#### B. Signals Ripple Continuously (No Intermediate Latch)
+* **Previously:** The ALU had a full clock cycle to finish its math; the result settled cleanly at the inputs of the E/M register, and memory access only began on the next clock tick.
+* **Now:** Signals ripple directly through the ALU logic and into the Data Memory in real time. 
+
+#### C. Risk of Spurious Memory Writes (Glitches)
+While the ALU's logic gates are settling, its output bits flip back and forth temporarily (glitches). Because there is no register holding the address stable, the Data Memory’s address port (`A`) will see unstable, garbage addresses for part of the cycle. If `MemWrite` is asserted too early, the processor could accidentally corrupt data at an incorrect memory location before the correct address stabilizes.",Removing the E/M register eliminates that clock boundary: ALU execution and data-memory work would be in one longer combinational stage (and their controls/data must still be carried coherently). The drawing alone supplies no exact new clock period.,,,,,,
+gemini-3.8-flash,scenario_07,5,"So does the first lw necessarily finish in fewer cycles after pipelining, or is the benefit that different instructions can occupy different stages together?",,"The second part of your statement hits the nail on the head: **pipelining does not make an individual instruction finish in fewer cycles—in fact, it takes *more* cycles!** 
+
+The entire benefit of pipelining comes from **throughput** (different instructions occupying different stages together at the same time), not from reducing the time it takes for a single instruction to complete.
+
+Here is the breakdown of why:
+
+---
+
+### 1. Cycle Count: Pipelining Actually *Increases* Latency
+* **In a single-cycle processor:** An `lw` instruction takes **1 single (very long) clock cycle** to finish from start to end.
+* **In a 5-stage pipelined processor:** That exact same `lw` instruction takes **5 clock cycles** to traverse Fetch $\rightarrow$ Decode $\rightarrow$ Execute $\rightarrow$ Memory $\rightarrow$ Writeback.
+
+Even in terms of real time (nanoseconds), a single `lw` usually takes slightly *longer* to finish in a pipeline because of the extra delays added by the pipeline registers (setup and hold times).
+
+---
+
+### 2. The Real Benefit: Throughput & Clock Speed
+The win comes from two factors when running a whole program:
+
+1. **Overlap (Instruction-Level Parallelism):**
+   * While that first `lw` is in the Memory stage, the next instruction is in Execute, the one after that is in Decode, and a fourth is being Fetched.
+   * Once the pipeline fills up (after cycle 5), **one instruction completes every single clock cycle**, just like in a single-cycle processor.
+
+2. **Much Higher Clock Frequency:**
+   * Because each cycle only has to do $\frac{1}{5}\text{th}$ of the total work, the clock can tick **much faster** (e.g., 1 GHz instead of 200 MHz).
+   * Finishing 1 instruction per cycle at **1 GHz** gets a program done nearly 5 times faster than finishing 1 instruction per cycle at **200 MHz**.
+
+---
+
+### The Classic Analogy: Doing Laundry
+Think of the 5 stages as **Washing, Drying, Folding, and Putting Away**:
+* Doing a single load doesn't get faster: it still takes 4 separate steps to finish that one load.
+* But while Load 1 is in the dryer, you put Load 2 in the washer. 
+* You aren't speeding up how long **one load** takes (latency); you are drastically speeding up how long it takes to do **10 loads** (throughput).","The first load does not necessarily finish in fewer cycles; in this five-stage picture it passes through multiple stages. The potential gain is throughput from overlapping instructions, subject to stalls and clock timing.",,,,,,
+gemini-3.8-flash,scenario_08,1,"If sub x8, x7, x3 comes right after add x7, x1, x2, won't sub read the old x7? How does this picture deal with that?",data/images/cg3207_08_data_forwarding_circuitry.png,"**Yes, during the Decode (D) stage, `sub` actually *does* read the old (stale) value of `x7` from the Register File.** 
+
+This happens because `add` has not reached the Writeback (W) stage yet, so the Register File has not been updated. 
+
+However, the hardware prevents this from causing an error through **Data Forwarding (Bypassing)** managed by the **Hazard Unit**. Here is exactly how this diagram deals with it:
+
+---
+
+### 1. The Timeline of the Instructions
+* **Clock Cycle $N$:**
+  * `add x7, x1, x2` is in the **Execute (E)** stage (its result is being computed by the ALU).
+  * `sub x8, x7, x3` is in the **Decode (D)** stage reading `rs1 = x7` from the Register File. As you noted, it reads the *old* value of `x7`.
+* **Clock Cycle $N+1$:**
+  * `add` moves to the **Memory (M)** stage. Its newly calculated result is now sitting on the pipeline wire labeled **`ALUResultM`**.
+  * `sub` moves to the **Execute (E)** stage. It needs the updated `x7` at **`SrcA`** of the ALU right now to compute `sub`.
+
+---
+
+### 2. How the Diagram Resolves It (Follow the Wires)
+
+1. **Hazard Detection (Bottom of the diagram):**
+   * The **Hazard Unit** monitors the registers:
+     * `rs1E` (which is `x7`, the source register needed by `sub` in the Execute stage).
+     * `rdM` (which is `x7`, the destination register of `add` in the Memory stage).
+     * `RegWriteM` (which is `1`, meaning `add` intends to write to a register).
+   * It detects a conflict: `rs1E == rdM` and `RegWriteM == 1`.
+
+2. **Selecting the Forwarded Value:**
+   * To override the stale value, the Hazard Unit asserts the control line **`ForwardAE = 10`** (shown in blue at the bottom).
+
+3. **Multiplexer Bypass (Just before the ALU):**
+   * Look at the 3-to-1 multiplexer directly in front of **`SrcA`** (top input of the ALU):
+     * Input **`00`**: The stale value from the register file (`RD1E`).
+     * Input **`01`**: A forwarded result from the Writeback stage (`ResultW`).
+     * Input **`10`**: Connected via the bold black line directly from **`ALUResultM`**.
+   * Because `ForwardAE` selects **`10`**, the fresh result of",The producer's ALU result can bypass the register file from a later pipeline stage to the consumer's Execute ALU input. sub uses the forwarded x7 in place of the stale RD1 value read in Decode.,,,,,,
+gemini-3.8-flash,scenario_08,2,"Which ALU input mux needs to change for that sub, and why doesn't the whole instruction have to start over?",,"### 1. Which ALU input mux needs to change?
+
+The **top 3-to-1 multiplexer** (feeding **`SrcA`**) is the one that needs to change.
+
+Here is why:
+* In RISC-V, the format is `sub rd, rs1, rs2` ($\text{rd} = \text{rs1} - \text{rs2}$).
+* For `sub x8, x7, x3`:
+  * **`rs1` is `x7`** (the dependent register).
+  * **`rs2` is `x3`** (independent register).
+* In the diagram:
+  * `rs1` flows through the top path: `rs1D` $\rightarrow$ `RD1D` $\rightarrow$ `RD1E` $\rightarrow$ into the **top multiplexer** controlled by **`ForwardAE`**.
+  * `rs2` flows through the bottom path controlled by `ForwardBE`.
+* Therefore, the Hazard Unit changes **`ForwardAE` from `00` to `10`**, swapping out the stale `RD1E` input for the freshly computed **`ALUResultM`** at the top ALU input (`SrcA`).
+
+---
+
+### 2. Why doesn't the whole instruction have to start over?
+
+The instruction doesn't need to stall or start over because of a concept called **""Just-in-Time"" forwarding**:
+
+1. **The stale value hasn't done any damage yet:** 
+   Reading the register file in the Decode (D) stage is purely passive. No registers were overwritten, memory wasn't touched, and no math was done yet. The old value was simply sitting quietly in the `RD1E` pipeline register.
+
+2. **The value is needed only when execution begins:**
+   `sub` doesn't actually need the numerical value of `x7` until it enters the **Execute (E)** stage to perform the subtraction. 
+
+3. **The new value is ready at the exact same moment:**
+   In the exact clock cycle that `sub` enters the **Execute** stage, the previous `add` instruction enters the **Memory** stage. Its result is sitting right there on the wire labeled `ALUResultM`.
+
+Because the multiplexer sits right at the physical entrance of the ALU, the hardware can discard the stale `RD1E` value and steer the fresh `ALUResultM` value into the ALU in the very same clock cycle. 
+
+Since the ALU receives the correct input before the clock edge finishes the calculation, **the pipeline never loses a step, never corrupts any data, and never needs to re-fetch the instruction.**","Because x7 is sub's first source, the SrcA/forward-A mux at Execute selects the bypassed value. Decode's old read is overridden before the dependent ALU operation; the instruction has not already executed and need not restart.",,,,,,
+gemini-3.8-flash,scenario_08,3,"Suppose two older instructions both write x7. If their results are present in M and W, which version should the consumer use? What in the forwarding controls makes that priority possible?",,"### 1. Which version should the consumer use?
+
+The consumer must use the **version from the Memory (M) stage**. 
+
+In standard sequential execution, instructions execute in program order. Since the instruction in the **M** stage came *after* the instruction in the **W** stage, it represents the most recent update to `x7`. Taking the value from W would mean using an outdated (overwritten) value.
+
+---
+
+### 2. What in the forwarding controls makes that priority possible?
+
+The priority is built directly into the **conditional logic inside the Hazard Unit** (shown at the bottom of the diagram). 
+
+Even though both instructions match the destination register (`rdM == rs1E` **and** `rdW == rs1E`), the Hazard Unit uses a **priority-based `if-else` structure** (or priority encoder):
+
+#### The Priority Logic Equations:
+1. **First Priority (Memory Stage Hazard):**
+   ```text
+   if (RegWriteM and (rdM != 0) and (rdM == rs1E))
+       ForwardAE = 10;   // Forward ALUResultM (Most recent value)
+   ```
+
+2. **Second Priority (Writeback Stage Hazard):**
+   ```text
+   else if (RegWriteW and (rdW != 0) and (rdW == rs1E))
+       ForwardAE = 01;   // Forward ResultW (Older value, only if M is NOT writing to rs1)
+   ```
+
+3. **Default (No Hazard):**
+   ```text
+   else
+       ForwardAE = 00;   // Use register file output (RD1E)
+   ```
+
+### Why this works:
+In boolean hardware terms, the condition to forward from the Writeback stage (`ForwardAE = 01`) explicitly checks that the Memory stage **is not** writing to the same register:
+
+$$\text{Forward from W} = (\text{W-hazard condition}) \;\mathbf{AND\; NOT}\; (\text{M-hazard condition})$$
+
+Because the Memory stage check takes precedence, the Hazard Unit asserts **`10`** (selecting the bold line from `ALUResultM`) instead of **`01`**, guaranteeing that the newer value always overrides the older one.","Choose the younger matching producer in M over an older one in W, provided the M value is a valid result for forwarding. The hazard/forwarding comparisons and mux controls must prioritize that match; otherwise W would feed stale x7.",,,,,,
+gemini-3.8-flash,scenario_08,4,"Replace the producer with lw x7, 0(x1). Is the value at the M-stage ALU output now the loaded word or just its address?",,"It is **just its address**. 
+
+Here is why, following the path in the diagram:
+
+1. **What the ALU computes for `lw`:**
+   * In the Execute (E) stage, the ALU adds the base register and the offset: $\text{Address} = \text{x1} + 0$.
+   * That calculation is what gets latched into the pipeline register as **`ALUResultM`**.
+
+2. **Where the loaded word actually comes from:**
+   * In the Memory (M) stage, `ALUResultM` is fed into input **`A`** (Address) of the **Data Memory** block.
+   * The actual data stored at that address only appears at the output labeled **`RD`** (**`ReadDataM`**) at the end of the Memory stage.
+
+### Why this is a critical distinction (The ""Load-Use"" Hazard):
+Because `ALUResultM` is only the address, the wire forwarding from `ALUResultM` (input `10` of the mux) **cannot** supply the value of `x7`. 
+
+The actual data isn't ready in time for an instruction executing in the very next cycle. This is why a `lw` followed immediately by a dependent instruction cannot be solved by forwarding alone—the Hazard Unit must introduce a **1-cycle stall (bubble)** so the loaded data can reach the Writeback stage (`ResultW`) before being forwarded.","For lw, the ALU output in M is the effective *address* x1+0. The loaded word emerges from data memory later, so forwarding that ALU output as x7 would substitute an address for the data.",,,,,,
+gemini-3.8-flash,scenario_08,5,Can the very next dependent instruction always run without a bubble in that load case? Use the positions of data memory and the ALU input to explain.,,"**No, it cannot run without a bubble.** A load instruction followed immediately by a dependent instruction is a fundamental hardware conflict known as a **load-use hazard**, and it *must* stall for at least one clock cycle.
+
+Looking at the physical positions of the **Data Memory** and the **ALU inputs** in the diagram shows exactly why this is physically impossible to do in real time:
+
+---
+
+### 1. Spatial Mismatch (The Necessary Wire Doesn't Exist)
+Look closely at the inputs to the ALU multiplexers in the **Execute (E)** stage:
+* Input `00`: From Register File (`RD1E`)
+* Input `10`: From **`ALUResultM`** (the address, not the data)
+* Input `01`: From **`ResultW`** (from the Writeback stage)
+
+Notice that the loaded data leaves Data Memory on the wire labeled **`ReadDataM`**. **There is no wire connecting `ReadDataM` directly back to the ALU multiplexers in stage E.** 
+The data must first pass through the **M/W pipeline register** and the Writeback multiplexer to become **`ResultW`** before it can ever be forwarded.
+
+---
+
+### 2. Temporal Mismatch (The Timing Conflict)
+Even if an engineer drew a wire directly from `ReadDataM` back to the ALU multiplexer, it still wouldn't work within a single clock cycle:
+
+* **When the ALU needs the data:** 
+  In the cycle where the dependent instruction is in the **Execute (E)** stage, its ALU needs stable inputs at **`SrcA`** and **`SrcB`** right at the beginning of the cycle so the ALU has enough time to perform arithmetic/logic before the next clock tick.
+* **When Data Memory produces the data:**
+  In that exact same clock cycle, `lw` is in the **Memory (M)** stage. Reading from SRAM/Data Memory is slow; the data only becomes valid at **`RD` (`ReadDataM`)** near the *end* of the clock cycle.
+
+To compute the dependent instruction without a bubble, the hardware would have to:
+1. Wait for Data Memory to finish reading in stage M (late in the cycle).
+2. Propagate that data across the chip back to stage E.
+3. Run the full ALU operation in stage E.
+
+Doing both a **full Memory Read** AND a **full ALU operation** in series during a single clock cycle would violate the clock timing constraints and break the pipeline frequency.
+
+---
+
+### Conclusion
+Because the data isn't physically available until the end of the Memory stage, the Hazard Unit **must stall the dependent instruction for 1 cycle (insert a bubble)**. 
+
+This delays the consumer until the next cycle, allowing the loaded data to advance into the **Writeback (W)** stage (`ResultW`), where it can finally be forwarded safely into the ALU using mux input **`01`**.","No. In this five-stage timing, an immediately following consumer wants its operand in Execute before the load's memory read has made the word available. Hold the consumer for a cycle, insert a bubble, then forward the loaded result when available.",,,,,,
+gemini-3.8-flash,scenario_09,1,Why can't the and just continue right after the lw in this timeline? They seem to be using different parts of the processor.,data/images/cg3207_09_load_use_hazard_timeline.png,"Even though the two instructions use different physical hardware components at the same time (no *structural hazard*), the issue here is a **Load-Use Data Hazard** (a data dependency). 
+
+The `and` instruction cannot continue without waiting because **the data it needs does not exist yet**.
+
+Here is what is happening step-by-step:
+
+---
+
+### 1. Where and when is the data produced?
+* **`lw s7, 40(s5)`** reads a value from memory and writes it to **`s7`**.
+* In **Cycle 3**, the `lw` instruction is in the ALU stage (`+`), calculating the memory address ($40 + \text{s5}$). It has **not** read from memory yet.
+* In **Cycle 4**, `lw` accesses the **Data Memory (DM)** stage. The actual value of `s7` is only retrieved from memory at the **end of Cycle 4**.
+
+---
+
+### 2. When does `and` need that data?
+* **`and s8, s7, t3`** needs the value of **`s7`** to perform its bitwise AND operation (`&`) in the **ALU stage**.
+* If `and` did not stall, its ALU stage would have to run in **Cycle 4**.
+* But at the start of Cycle 4, **the data from memory has not arrived yet** (it is currently being read during Cycle 4). It is impossible to send data backward in time.
+
+---
+
+### 3. Why there is a 1-cycle stall (even with Forwarding)
+The diagram is already showing an optimized pipeline with **forwarding** (bypassing):
+
+* **At the end of Cycle 4 / start of Cycle 5:** The value of `s7` finally comes out of Data Memory (`DM`).
+* **In Cycle 5:** That value can be forwarded directly to the ALU (`&`) stage of the `and` instruction.
+
+Because the data is only ready at the end of Cycle 4, the `and` instruction has no choice but to **stall (freeze) for 1 cycle** in the Decode/Register Fetch (`RF`) stage during Cycle 4. 
+
+---
+
+### Summary
+While the hardware (ALU, DM, RF) is physically free to be used, **you cannot compute an operation until its inputs are ready**. A load instruction followed immediately by an instruction that uses that loaded register always requires at least a **1-cycle stall** in a standard 5-stage pipeline.","and wants s7 at its Execute ALU input in the cycle immediately following the load's Execute stage. The load only obtains the word at the end of its Memory stage, too late for that same-cycle input without the depicted stall.",,,,,,
+gemini-3.8-flash,scenario_09,2,"Could we forward the value at the load's ALU output like we did for an ordinary add, or what does that ALU output represent here?",,"**No, we cannot forward the ALU output for a load instruction.** 
+
+If we did, the program would compute the wrong result because **that ALU output is the memory address, not the data.**
+
+---
+
+### What does the ALU output represent for `lw`?
+
+For the instruction `lw s7, 40(s5)`:
+
+1. **In the ALU stage (Cycle 3):** 
+   * The ALU computes: **$\text{Address} = \text{Contents of s5} + 40$**
+   * The output of the ALU is just a **memory address** (a pointer to a location in memory).
+
+2. **In the Memory stage (Cycle 4):**
+   * That address is sent to Data Memory (`DM`).
+   * The memory looks up what is stored inside that address and spits out the **actual data**.
+   * **This data** is what belongs in register **`s7`**.
+
+---
+
+### Why this differs from an `add` instruction
+
+| Instruction | What the ALU computes | Is this the final value for the destination register? | Can we forward from the ALU? |
+| :--- | :--- | :--- | :--- |
+| **`add s7, t1, t2`** | `t1 + t2` (Arithmetic sum) | **Yes!** This sum is the exact value intended for `s7`. | **Yes.** Ready at the end of Cycle 3. |
+| **`lw s7, 40(s5)`** | `s5 + 40` (Memory Address) | **No.** This is just *where* the data lives, not the data itself. | **No.** Forwarding this would give the `and` instruction an address, not the data. |
+
+---
+
+### A Concrete Example
+
+Imagine:
+* Register `s5` holds the address `1000`.
+* In memory at address `1040`, the value stored is **`99`**.
+* We want `s7` to receive **`99`**.
+
+1. **Cycle 3 (ALU):** The ALU calculates $1000 + 40 = \mathbf{1040}$.
+   * If you forwarded this value to the `and` instruction, the `and` instruction would calculate using the number **`1040`** (which is wrong!).
+2. **Cycle 4 (DM):** Memory reads address `1040` and retrieves the real value: **$\mathbf{99}$**.
+   * Only now is the true value of `s7` available to be forwarded.","The load ALU computes address s5+40; it is not the memory word stored at that address. An ALU-result bypass would forward the address, unlike an add producer whose ALU output is already the answer.",,,,,,
+gemini-3.8-flash,scenario_09,3,"What is held back, and where is the empty slot inserted in the lower timeline? Does the load itself stop?",,"Here are the direct answers to your three questions:
+
+---
+
+### 1. Does the load itself stop?
+**No, the load does not stop at all.** 
+
+Instructions that are *ahead* in the pipeline must keep moving forward. In fact, the load **must** continue running so it can actually finish reading the memory and deliver the data. 
+
+In the diagram, you can see `lw` moving forward smoothly without delay:
+* Cycle 3: ALU (`+`)
+* Cycle 4: Data Memory (`DM`)
+* Cycle 5: Register Write-back (`RF`)
+
+---
+
+### 2. What is held back?
+Everything **behind** (younger than) the load is frozen for 1 cycle:
+
+1. **`and` is held in the Decode / Register Fetch (`RF`) stage:**
+   * Notice in the diagram that `and` has **two `RF` boxes in a row** (one in Cycle 3, and one in Cycle 4). It is forced to wait there.
+2. **`or` is held in the Instruction Fetch (`IM`) stage:**
+   * Similarly, `or` has **two `IM` boxes in a row** (Cycle 3 and Cycle 4). 
+3. **`sub` is delayed from being fetched:**
+   * The Program Counter (PC) is frozen, so `sub` cannot enter the pipeline until Cycle 5 instead of Cycle 4.
+
+---
+
+### 3. Where is the empty slot inserted?
+The empty slot—called a **bubble** or **pipeline stall (NOP)**—is inserted into the **Execution (EX / ALU) stage during Cycle 4**.
+
+Here is how to spot it in the diagram during **Cycle 4**:
+* **Memory (`DM`)** is busy with `lw`.
+* **ALU (the trapezoid shape)** is **completely empty!** Nobody is using it in Cycle 4. 
+* The `and` instruction doesn't enter the ALU stage until **Cycle 5**.
+
+#### How the hardware physically does this:
+At Cycle 4, the processor's hazard unit zeros out all the control lines (turning `and`'s forward-moving command into a harmless `NOP` / do-nothing instruction) and sends that zeroed-out command into the ALU. At the same time, it freezes the pipeline registers for `and` and `or`, making them repeat their stages.","The dependent and is held in Decode (and the front of the pipeline is held), while a bubble enters Execute. The older load continues through Memory and Writeback; the phrase 'stall the load until AND finishes' reverses the roles.",,,,,,
+gemini-3.8-flash,scenario_09,4,"There is also or t2, s6, s7 later. Does its dependence on s7 force *another* bubble, or can the spacing in this actual timeline already solve it?",,"**No, it does not force another bubble.** The spacing in this timeline is already enough to completely solve it.
+
+Here is why:
+
+---
+
+### 1. The ""Free Spacing"" from the First Stall
+When the `and` instruction was stalled by 1 cycle, **everything behind it was delayed by 1 cycle too**. 
+
+Because `or` was held in the instruction fetch stage during Cycle 4, it didn't enter the Register Fetch (`RF`) stage until **Cycle 5**, and doesn't need the value in the ALU until **Cycle 6**.
+
+---
+
+### 2. Timeline Breakdown for `s7` and `or`
+
+Let's look at what `lw` and `or` are doing in Cycles 5 and 6:
+
+* **Cycle 5:** 
+  * **`lw`** is in its final stage: **Write-Back (WB / `RF`)**. It is writing the loaded data into the register file.
+  * **`or`** is in the **Decode / Register Fetch (`RF`)** stage. 
+  *(In standard MIPS/RISC design, the register file writes in the first half of the clock cycle and reads in the second half, so `or` can often read the updated value in the very same cycle).*
+* **Cycle 6:**
+  * **`lw`** is completely done and has left the pipeline.
+  * **`or`** enters the **ALU (`|`)** stage. 
+  * The value of `s7` is completely available (it's either already stored safely in the register file or forwarded from the WB stage at the boundary of Cycle 5/6).
+
+---
+
+### 3. Visual Proof in the Diagram
+Notice in the timeline for `or`:
+* **Cycle 4:** It has a duplicate `IM` box (it was delayed because of the `and` stall).
+* **Cycle 5:** It moves smoothly into `RF`.
+* **Cycle 6:** It moves immediately into the ALU (`|`) stage without any repeated boxes or stalls.
+
+Because `or` is spaced **two instructions after the load** (thanks to the 1-cycle bubble), forwarding / register-file sharing completely handles the dependency without needing any extra pause.","No automatic second bubble follows merely because or also uses s7. In the lower timeline its later Execute position allows the loaded value to be available, with forwarding or register writeback as depicted; judge the actual slots rather than the register name alone.",,,,,,
+gemini-3.8-flash,scenario_09,5,"If the and did not use s7 at all, which part of this depicted stall would no longer be needed?",,"If the `and` instruction did not use `s7`, **the entire stall would disappear completely.** No bubbles or duplicated stages would be needed at all.
+
+Here is why:
+
+---
+
+### 1. What would visually change in the diagram?
+
+* **For `and`:** The duplicate `RF` box in Cycle 4 disappears. It would go straight from `RF` (Cycle 3) to `ALU` (Cycle 4).
+* **For `or`:** The duplicate `IM` box in Cycle 4 disappears. It would go to `RF` in Cycle 4 and `ALU` in Cycle 5.
+* **For `sub`:** It wouldn't have to wait until Cycle 5 to be fetched; it would enter the pipeline in Cycle 4.
+* **For the hardware:** The empty bubble in the ALU during Cycle 4 is eliminated. Every stage is now busy every single cycle.
+
+---
+
+### 2. Doesn't `or` still need `s7`? Wouldn't the stall just move down?
+
+**No, because `or` is already far enough away!**
+
+In a standard 5-stage pipeline with forwarding, a load only requires a stall if the dependent instruction is **immediately next to it** (distance = 1). If there is even one independent instruction between them (distance = 2), forwarding handles it completely:
+
+* **Cycle 4:** `lw` is in the Data Memory (`DM`) stage. By the end of Cycle 4, the data is fetched and stored in the pipeline register.
+* **Cycle 5:** `or` enters the ALU stage. At this exact moment, the data from `lw` can be **forwarded directly** from the pipeline register into the ALU input of `or`.
+
+### Summary: The ""Compiler's Trick""
+Because an independent instruction naturally absorbs the 1-cycle memory delay, compilers often deliberately rearrange code to place an unrelated instruction right after a `lw`. 
+
+If `and` didn't depend on `s7`, it would perfectly act as this ""filler,"" and the pipeline would run at 100% throughput with **zero stalls**.","Without an s7 dependence, and could advance into Execute on the next cycle; the specific load-use hold and bubble would be unnecessary. Other hazards, if present, would be separate questions.",,,,,,
+gemini-3.8-flash,scenario_10,1,"At the moment this beq is resolved as taken, which younger instructions are already in the pipeline? Point them out on the timeline.",data/images/cg3207_10_control_hazards_flushing.png,"Based on the diagram and the note that **""Branch outcome is determined in Execute""**:
+
+---
+
+### 1. When is the branch resolved?
+* The `beq` instruction reaches its **Execute (EX)** stage during **Cycle 3** (represented by the ALU block labeled with `−`).
+* Therefore, the branch outcome is determined in **Cycle 3**.
+
+---
+
+### 2. Which younger instructions are in the pipeline at that moment (Cycle 3)?
+
+Looking at the column for **Cycle 3**:
+
+1. **`sub s8, t1, s3` (Address `24`)**:
+   * **Timeline position:** It was fetched in Cycle 2 and is currently in the **RF (Decode / Register Fetch)** stage during **Cycle 3**.
+2. **`or s9, t6, s5` (Address `28`)**:
+   * **Timeline position:** It is currently in the **IM (Instruction Fetch)** stage during **Cycle 3**.
+
+---
+
+### Summary
+At the end of **Cycle 3**, both the **`sub`** and **`or`** instructions are in the pipeline. Because the branch is taken, these two instructions will be flushed/discarded, and the correct target instruction (`L1: add s7, s3, s4` at PC `58`) is fetched starting in **Cycle 4**.","The two sequential, younger instructions following beq occupy the stages behind it when its outcome is known in Execute; identify those specific instruction rows/slots in the shown timeline, rather than older rows ahead of the branch.",,,,,,
+gemini-3.8-flash,scenario_10,2,"They have been fetched, so what would go wrong if we let them reach Writeback before changing the PC?",,"If you let those instructions (`sub` and `or`) continue all the way to the **Writeback (WB)** stage, the processor would violate the correctness of the program. 
+
+Here is specifically what would go wrong:
+
+---
+
+### 1. Architectural Register Corruption
+* **The fundamental rule of a taken branch:** The code following the branch (the fall-through path) should **never** have been executed.
+* If they reach Writeback:
+  * The `sub` instruction will overwrite register **`s8`** with `t1 - s3`.
+  * The `or` instruction will overwrite register **`s9`** with `t6 | s5`.
+* If the code at or after `L1` (or anywhere later in the program) relies on the previous values stored in `s8` or `s9`, the program will now produce **wrong results or crash**.
+
+---
+
+### 2. Spurious Exceptions and Irreversible Side Effects
+While `sub` and `or` only write to registers, in general programs, instructions fetched on a mispredicted branch could include:
+* **Memory Stores (`sw`):** Writing erroneous data into RAM (in the Memory stage) is difficult or impossible to undo.
+* **Fault-causing instructions:** An instruction could cause an illegal operation (e.g., divide-by-zero, a null-pointer dereference, or a segmentation fault). The CPU would wrongly trigger an operating system exception for an instruction that logically never should have run.
+
+---
+
+### 3. Severe Performance Penalty
+* If you waited until Writeback to update the PC:
+  * The `sub` instruction reaches Writeback in **Cycle 6**.
+  * The `or` instruction reaches Writeback in **Cycle 7**.
+* Waiting until Cycle 6 or 7 to fetch from `L1` would introduce a **4- to 5-cycle branch penalty**, rather than the **2-cycle penalty** shown in the diagram.
+
+---
+
+### How the Hardware Fixes This
+As soon as the branch evaluates as taken at the end of **Cycle 3**, the hardware:
+1. **Flushes** the instructions currently in the pipeline (`sub` and `or`) by turning their control signals into zeroes (converting them into **NOPs** or ""bubbles"").
+2. Immediately redirects the **PC to `L1` (address `58`)**, so the correct target instruction is fetched in **Cycle 4**.",A taken branch changes the required instruction address. Those younger sequential instructions came from the wrong path; allowing either to change a register or memory would commit work the program did not choose.,,,,,,
+gemini-3.8-flash,scenario_10,3,"Does the flush remove beq itself, the two younger instructions, or everything that was fetched earlier?",,"The flush removes **only the two younger instructions (`sub` and `or`)**. 
+
+Here is why for each category:
+
+---
+
+### 1. The two younger instructions (`sub` and `or`): **FLUSHED**
+* **Why:** These were fetched assuming the program would continue sequentially ($PC + 4$). Because the branch is taken, these instructions logically should **never execute**. 
+* **Action:** The hardware clears their control signals (converts them into **NOPs** or ""bubbles"") in the pipeline registers so they do no harm.
+
+---
+
+### 2. The `beq` instruction itself: **KEPT (NOT flushed)**
+* **Why:** `beq` is a valid, correct instruction. It needs to complete its journey through the pipeline.
+* **Action:** In **Cycle 4**, `beq` advances to the **DM (Memory)** stage, and in **Cycle 5** to the **RF (Writeback)** stage. Even though a branch doesn't write to a register or memory, it still finishes normally.
+
+---
+
+### 3. Instructions fetched earlier (older instructions): **KEPT (NOT flushed)**
+* **Why:** Any instruction fetched *before* `beq` logically belongs to the program execution that happened *prior* to the branch. 
+* **Action:** If there were instructions ahead of `beq` (already in the Memory or Writeback stages), they are completely valid and must be allowed to commit their results.
+
+---
+
+### Summary Rule of Thumb
+A branch flush **only discards instructions that are younger than the branch** (instructions that entered the pipeline after the branch). Everything at or older than the branch continues normally.",Squash the two younger wrong-path instructions (invalidate their pipeline entries). The resolving beq and older instructions remain valid and continue; a flush is not a reset of the whole pipeline.,,,,,,
+gemini-3.8-flash,scenario_10,4,"If the same comparison comes out not taken, which of those instruction slots remain valid in this scheme?",,"If the branch is **not taken**, **all of those instruction slots remain valid**. No instructions are flushed.
+
+Here is why:
+
+### 1. The Pipeline ""Predicts Not Taken"" by Default
+Notice that in Cycles 2 and 3, the processor automatically fetched the next sequential instructions:
+* **Cycle 2:** Fetched `sub` (PC `24` = PC + 4)
+* **Cycle 3:** Fetched `or` (PC `28` = PC + 8)
+
+This hardware design uses a simple **predict-not-taken** strategy: it assumes the branch will fall through until proven otherwise.
+
+---
+
+### 2. Status of the Instructions in Cycle 4:
+Since the branch condition evaluated to false (not taken), the prediction was **correct**:
+
+* **`beq` (PC `20`)**: Remains valid and moves to **DM (Memory)** in Cycle 4.
+* **`sub` (PC `24`)**: Remains valid and moves to **Execute (EX)** in Cycle 4.
+* **`or` (PC `28`)**: Remains valid and moves to **Decode/Register Fetch (RF)** in Cycle 4.
+* **Next Instruction (PC `2C`)**: The hardware fetches the next sequential instruction (`2C`) into **Instruction Fetch (IM)** in Cycle 4.
+
+---
+
+### Key Takeaway
+When the branch is **not taken**, the branch penalty is **0 cycles**. The pipeline runs at full throughput without inserting any bubbles (NOPs).","If not taken, the already fetched sequential instructions are on the correct path and normally remain valid in this pictured scheme. There is no taken-branch flush for them.",,,,,,
+gemini-3.8-flash,scenario_10,5,"In the load-use timeline we inserted a bubble. What changes in this branch timeline instead, and why?",,"The fundamental difference comes down to **stalling (delaying)** versus **flushing (discarding)**:
+
+---
+
+### 1. What happens: Stall vs. Flush
+
+* **In a Load-Use Hazard (Stall):**
+  * **Action:** You insert a bubble to **pause / delay** the dependent instruction.
+  * **PC and Pipeline Registers:** The PC and the IF/ID registers are **frozen** (held constant for one cycle).
+  * **Fate of the instruction:** The dependent instruction *waits* in the Decode/RF stage and runs one cycle later. It **eventually executes**.
+
+* **In this Branch Hazard (Flush):**
+  * **Action:** You don’t just delay instructions—you **cancel / discard** them completely.
+  * **PC and Pipeline Registers:** The PC is **not frozen**; it is forcefully updated to the target address (`58`). The pipeline registers holding `sub` and `or` (`ID/EX` and `IF/ID`) are cleared to zeros (converted into NOPs).
+  * **Fate of the instructions:** The `sub` and `or` instructions are **killed**. They never complete their execution, and their slots in Cycles 4–7 become empty bubbles that produce no results.
+
+---
+
+### 2. Why this difference exists
+
+| Hazard Type | Reason for Action | Why not the other? |
+| :--- | :--- | :--- |
+| **Load-Use Data Hazard** | The instruction is **correct and necessary**, but its data simply isn't ready yet. | You *cannot* flush it, because the program needs its result. You must pause and wait. |
+| **Branch Control Hazard** | The instructions fetched (`sub` and `or`) belong to the **wrong execution path**. | You *cannot* stall and let them run later, because they should logically **never execute at all**. They must be erased. |
+
+---
+
+### Summary of Timeline Effects
+* In a **load-use stall**, the timeline *stretches*: the dependent instruction spends an extra cycle in Decode, shifting all future instructions back by 1 cycle.
+* In a **taken branch flush**, the timeline *aborts work*: the two already-fetched slots (`sub` and `or`) are converted into useless bubbles, and instruction fetch restarts immediately at the new address (`58: add`) in Cycle 4, resulting in a **2-cycle penalty**.","The load-use stall holds a valid dependent instruction until its data can arrive; the taken-branch flush discards younger instructions whose PC path is wrong. Both may create empty slots, but their cause and the affected instructions differ.",,,,,,
+gemini-3.8-flash,scenario_11,1,"If I request memory block 129, where could it be placed in this cache?",data/images/cg3207_11_direct_mapping_cache.png,"In a **direct-mapped cache**, each memory block maps to exactly one specific cache line. 
+
+The formula to find the cache line is:
+$$\text{Cache Line} = (\text{Memory Block Number}) \pmod{\text{Total Number of Cache Lines}}$$
+
+Given:
+* **Memory Block Number:** $129$
+* **Total Cache Lines:** $128$
+
+$$\text{Cache Line} = 129 \pmod{128} = 1$$
+
+Therefore, memory block 129 can only be placed in **Cache Line 1** (the slot currently labeled **B1** in the diagram, replacing whatever is currently stored there).","In a 128-line direct-mapped cache, line is block number modulo 128: 129 mod 128 = 1. Block 129 has only line 1 as its slot.",,,,,,
+gemini-3.8-flash,scenario_11,2,"If block 1 is already there, can blocks 1 and 129 stay in cache at the same time? Which address bits would distinguish them?",,"### 1. Can blocks 1 and 129 stay in the cache at the same time?
+
+**No.** 
+
+Because this is a **direct-mapped cache**, each cache line can hold only **one** memory block at a time. Since both Block 1 and Block 129 map to the exact same cache line (Line 1):
+
+$$\text{Line} = 1 \pmod{128} = 1$$
+$$\text{Line} = 129 \pmod{128} = 1$$
+
+Loading Block 129 will **evict (overwrite)** Block 1. If a program alternates between needing Block 1 and Block 129, they will continually kick each other out (known as **cache thrashing** or conflict misses).
+
+---
+
+### 2. Which address bits distinguish them?
+
+They are distinguished by the **Tag bits** (specifically, the **5 most significant bits** of the block address).
+
+Here is how the address is broken down:
+
+#### Address Field Breakdown:
+1. **Block Offset:**  
+   * $16 \text{ words/block} = 2^4 \implies \mathbf{4\text{ bits}}$ (to select the word inside the block)
+2. **Cache Index:**  
+   * $128 \text{ cache lines} = 2^7 \implies \mathbf{7\text{ bits}}$ (to select the line in the cache)
+3. **Tag:**  
+   * Total memory blocks $= 4096 = 2^{12}$
+   * Block address bits $= 12$ bits
+   * $\text{Tag bits} = 12 - 7 = \mathbf{5\text{ bits}}$
+
+*(Total address size = $5 \text{ (Tag)} + 7 \text{ (Index)} + 4 \text{ (Offset)} = 16 \text{ bits}$)*
+
+---
+
+#### Comparison of Block 1 and Block 129:
+
+Looking at their 12-bit block addresses:
+
+| Block | Binary (12 bits) | **Tag (5 bits)** | **Index (7 bits)** |
+| :--- | :--- | :--- | :--- |
+| **Block 1** | `00000 0000001` | **`00000`** | `0000001` (Line 1) |
+| **Block 129** | `00001 0000001` | **`00001`** | `0000001` (Line 1) |
+
+* Both have identical **Index bits** (`0000001`), which is why they collide in cache line 1.
+* The cache uses the stored **Tag bits** to determine which of the two is currently present.","They cannot coexist in this one-way line: block 1 also maps to line 1. The tag distinguishes the different memory blocks that share index 1; with 4096 memory blocks, the block address has 12 bits, split into 5 tag bits and 7 index bits.",,,,,,
+gemini-3.8-flash,scenario_11,3,"Now access blocks 1, 129, 1, 129. What happens at that line each time, assuming the cache starts empty?",,"Assuming the cache starts empty (valid bit is 0 for all lines), here is what happens step-by-step for the access sequence **1, 129, 1, 129**:
+
+---
+
+### Step-by-Step Execution:
+
+#### 1. Access Block 1
+* **Target Line:** Line 1 ($1 \pmod{128} = 1$)
+* **Check:** Line 1 is currently empty (invalid).
+* **Result:** **MISS** (Compulsory / Cold Miss)
+* **Action:** Block 1 is fetched from main memory and loaded into **Line 1**. The tag is set to `00000`, and the valid bit is set to 1.
+* **Line 1 now holds:** **Block 1**
+
+---
+
+#### 2. Access Block 129
+* **Target Line:** Line 1 ($129 \pmod{128} = 1$)
+* **Check:** Line 1 is valid, but the stored tag (`00000`) does not match Block 129's tag (`00001`).
+* **Result:** **MISS** (Conflict Miss)
+* **Action:** **Block 1 is evicted (overwritten).** Block 129 is fetched from main memory and placed into **Line 1**. The tag is updated to `00001`.
+* **Line 1 now holds:** **Block 129**
+
+---
+
+#### 3. Access Block 1
+* **Target Line:** Line 1 ($1 \pmod{128} = 1$)
+* **Check:** Line 1 is valid, but it currently holds Block 129 (tag `00001`), which does not match Block 1's tag (`00000`).
+* **Result:** **MISS** (Conflict Miss)
+* **Action:** **Block 129 is evicted.** Block 1 is fetched again from main memory and placed back into **Line 1**. The tag is updated back to `00000`.
+* **Line 1 now holds:** **Block 1**
+
+---
+
+#### 4. Access Block 129
+* **Target Line:** Line 1 ($129 \pmod{128} = 1$)
+* **Check:** Line 1 is valid, but the tag is `00000` (Block 1), not `00001`.
+* **Result:** **MISS** (Conflict Miss)
+* **Action:** **Block 1 is evicted once again.** Block 129 is fetched from main memory and placed into **Line 1**. The tag is updated to `00001`.
+* **Line 1 now holds:** **Block 129**
+
+---
+
+### Summary Table
+
+| Access # | Block Requested | Hit / Miss? | Miss Type | Action on Line 1 | Line 1 Resident Block |
+| :---: | :---: | :---: | :---: | :--- | :---: |
+| **1** | Block 1 | **MISS** | Compulsory | Loads Block 1 | Block 1 |
+| **2** | Block 129 | **MISS** | Conflict | Evicts Block 1, loads Block 129 | Block 129 |
+| **3** | Block 1 | **MISS** | Conflict | Evicts Block 129, loads Block 1 | Block 1 |
+| **4** | Block 129 | **MISS** | Conflict | Evicts Block 1, loads Block 129 | Block 129 |
+
+### Conclusion
+Every single access results in a **miss (0% hit rate)**. This phenomenon is known as **cache thrashing** (or ping-ponging), which is a major weakness of direct-mapped caches when multiple frequently used memory blocks map to the same line.","Starting empty, each of the four accesses misses: load 1, replace with 129, replace with 1, replace with 129. Each replaces the line-1 contents, assuming no other cache mechanism or interference changes the trace.",,,,,,
+gemini-3.8-flash,scenario_11,4,"Would choosing a different word *within* block 129 send it to another line, or only change the word offset?",,"It would **only change the word offset**. It will **not** send it to another line.
+
+### Why?
+
+1. **Blocks are the unit of transfer:**  
+   The cache does not store individual words in separate lines; it fetches and stores **the entire 16-word block** together into a single cache line.
+
+2. **The Address Structure:**  
+   As derived earlier, a 16-bit word address is split into:
+   ```
+   [ Tag: 5 bits ] [ Index: 7 bits ] [ Offset: 4 bits ]
+   ```
+   * **Index bits (7 bits):** Determine **which cache line** to look in.
+   * **Offset bits (4 bits):** Determine **which word** within that 16-word line to read or write.
+
+Every single word inside **Block 129** has the exact same 12-bit block address (`00001 0000001`):
+* The **Index** stays `0000001` (Line 1).
+* The **Tag** stays `00001`.
+* Only the **Offset** changes (from `0000` for word 0 up to `1111` for word 15).
+
+---
+
+### The Practical Benefit (Spatial Locality)
+Because all 16 words reside in that same cache line, if you load word 0 of Block 129 into the cache, accessing word 1, word 2, or any other word in Block 129 immediately afterward will result in a **cache HIT**, avoiding main memory entirely.","Changing the word within block 129 changes only its 4-bit word offset among 16 words. Its memory-block ID, line index 1 and tag remain the same.",,,,,,
+gemini-3.8-flash,scenario_11,5,"If this cache had twice as many lines but the same block size, would 1 and 129 still collide? Which field changes width?",,"### 1. Would Block 1 and Block 129 still collide?
+
+**No, they would no longer collide.**
+
+With twice as many lines ($128 \times 2 = 256\text{ lines}$), the mapping formula becomes:
+$$\text{Cache Line} = (\text{Block Number}) \pmod{256}$$
+
+* **Block 1:** $1 \pmod{256} = \mathbf{\text{Line } 1}$
+* **Block 129:** $129 \pmod{256} = \mathbf{\text{Line } 129}$
+
+Because they now map to completely different lines, **both blocks can stay in the cache at the same time**, eliminating the thrashing problem.
+
+---
+
+### 2. Which fields change width?
+
+Both the **Index** and the **Tag** fields change width (the Word Offset stays the same):
+
+* **Index field increases by 1 bit** (from **7 bits to 8 bits**):  
+  To address 256 cache lines instead of 128 ($2^8 = 256$).
+* **Tag field decreases by 1 bit** (from **5 bits to 4 bits**):  
+  Because the total address length hasn't changed (16 bits), the extra bit needed for the Index is taken from the Tag.
+* **Offset field remains unchanged** (**4 bits**):  
+  The block size is still 16 words ($2^4 = 16$).
+
+---
+
+### Comparison of the Address Breakdown:
+
+#### Old Cache (128 Lines):
+```
+[ Tag: 5 bits ] [ Index: 7 bits ] [ Offset: 4 bits ]
+```
+* **Block 1:**   `Tag: 00000` | `Index: 0000001` (Line 1)
+* **Block 129:** `Tag: 00001` | `Index: 0000001` (Line 1) $\rightarrow$ *Collision!*
+
+#### New Cache (256 Lines):
+```
+[ Tag: 4 bits ] [ Index: 8 bits ] [ Offset: 4 bits ]
+```
+* **Block 1:**   `Tag: 0000` | `Index: 0000 0001` (Line 1)
+* **Block 129:** `Tag: 0000` | `Index: 1000 0001` (Line 129) $\rightarrow$ *No collision!*
+
+*(Notice how the bit that used to differentiate them in the **Tag** became the highest bit of the new **Index**, naturally separating them into different cache lines).*","With 256 lines, block 1 maps to line 1 and 129 to line 129, so they do not collide. The index widens from 7 to 8 bits and the 12-bit block tag narrows from 5 to 4 bits, keeping the 16-word offset at 4 bits.",,,,,,
+gemini-3.8-flash,scenario_12,1,Where can block 128 go here? Show the set number and the two physical slots available inside that set.,data/images/cg3207_12_set_associative_mapping.png,"To find where main memory **Block 128 (B128)** can be placed in the cache:
+
+### 1. Set Mapping Formula
+In a set-associative cache, a memory block maps to a set using the modulo operation:
+$$\text{Set} = (\text{Block Number}) \pmod{\text{Number of Sets}}$$
+
+Given:
+* **Block Number** = $128$
+* **Number of Sets** = $64$
+
+$$\text{Set} = 128 \pmod{64} = \mathbf{0}$$
+
+---
+
+### 2. Physical Slots Available
+Since the cache is **2-way set-associative**, each set contains 2 physical slots (ways). 
+
+For **Set 0**, the two available physical slots shown in the diagram are:
+* **B0** (Way 0)
+* **B1** (Way 1)
+
+---
+
+### Summary:
+* **Set Number:** **Set 0**
+* **Available Physical Slots:** **B0** and **B1**","128 mod 64=0, so block 128 maps to set 0 and may occupy either of its two ways; it is not free to go to an arbitrary set.",,,,,,
+gemini-3.8-flash,scenario_12,2,"If block 64 is already in one way of that set, could block 128 occupy the other without evicting it?",,"**Yes, absolutely.**
+
+Here is why:
+
+1. **Both blocks map to Set 0:**
+   * $\text{Block 64} \pmod{64} = \mathbf{0}$
+   * $\text{Block 128} \pmod{64} = \mathbf{0}$
+
+2. **2-Way Associativity:**
+   Because each set has **2 physical ways (slots)**, Set 0 can hold up to two different memory blocks at the same time. 
+
+If Block 64 is in one way, Block 128 can simply be loaded into the second way. An eviction of Block 64 would only be necessary if a *third* block mapping to Set 0 (such as Block 0, Block 192, etc.) were brought in while both ways are already full.","Yes. Block 64 also maps to set 0, but with just that one way occupied, block 128 can fill the other way without eviction.",,,,,,
+gemini-3.8-flash,scenario_12,3,Why does the set field now need six bits instead of the seven line bits in the direct-mapped cache?,,"The set field needs **6 bits** instead of 7 because **it only needs to identify which *set* to look in, not the individual line/slot.**
+
+Here is the breakdown of why this happens:
+
+### 1. Fewer Sets than Lines
+* **Direct-Mapped Cache:** Every block has its own independent line. 
+  $$\text{Lines} = 128 \implies \log_2(128) = \mathbf{7\text{ bits}}$$
+* **2-Way Set-Associative Cache:** Lines are grouped into pairs (ways). 
+  $$\text{Sets} = \frac{\text{Total Lines}}{\text{Associativity}} = \frac{128}{2} = 64 \text{ sets}$$
+  $$\text{Set Index Bits} = \log_2(64) = \mathbf{6\text{ bits}}$$
+
+---
+
+### 2. Where did that extra bit go?
+That missing bit moved into the **Tag** field:
+
+| Configuration | Tag Bits | Index / Set Bits | Block Offset Bits |
+| :--- | :---: | :---: | :---: |
+| **Direct-Mapped** | **5 bits** | **7 bits** (Line) | 4 bits |
+| **2-Way Set-Associative**| **6 bits** | **6 bits** (Set) | 4 bits |
+
+*(Assuming a 16-bit address space: 12 bits for 4096 blocks + 4 bits for 16 words/block)*
+
+### Why does this make sense?
+* In a **direct-mapped** cache, the address tells the cache *exactly* which physical line to check using 7 bits.
+* In a **2-way associative** cache, the address uses 6 bits to find the *set* (which narrows it down to 2 lines). Then, the cache compares the **larger 6-bit tag** against both ways simultaneously using hardware comparators to see which one matches.","There are 64 sets, so set selection needs log2 64=6 bits. The earlier 128 direct-mapped lines needed 7 index bits; the extra physical choice here is a way within the selected set, not another set bit.",,,,,,
+gemini-3.8-flash,scenario_12,4,"Now request block 0 as well. Can 0, 64 and 128 all remain there? If not, can this drawing alone tell us the exact victim?",,"### 1. Can 0, 64, and 128 all remain there?
+
+**No, they cannot.**
+
+* All three blocks map to **Set 0**:
+  * $0 \pmod{64} = \mathbf{0}$
+  * $64 \pmod{64} = \mathbf{0}$
+  * $128 \pmod{64} = \mathbf{0}$
+* Because the cache is **2-way set-associative**, Set 0 only has **2 physical slots**.
+* Trying to fit three blocks into two slots causes a **conflict miss**, so one of the existing blocks (either Block 64 or Block 128) must be evicted to make room for Block 0.
+
+---
+
+### 2. Can this drawing alone tell us the exact victim?
+
+**No, it cannot.**
+
+The diagram only illustrates the **static physical structure** of the cache (capacity, sets, and ways). To determine the exact victim, we would need two pieces of information that are not in the drawing:
+
+1. **The Replacement Policy:** We need to know the algorithm the hardware uses to choose victims (e.g., **LRU** [Least Recently Used], **FIFO** [First-In, First-Out], or **Random**).
+2. **Access History:** We need to know the dynamic order/timestamps of when the blocks were referenced or loaded to apply that policy (e.g., which one was used least recently).","0, 64 and 128 all map to set 0, which holds only two blocks, so one must be absent or evicted when the third is installed. The exact victim is unknown without current contents and a replacement policy.",,,,,,
+gemini-3.8-flash,scenario_12,5,"Compare the 1,129,1,129 access pattern from the previous diagram. Does this two-way organisation still force them to evict one another?",,"**No, it no longer forces them to evict one another.**
+
+Here is the step-by-step breakdown of why:
+
+### 1. Check Set Mapping
+Using the mapping formula for 64 sets:
+* **Block 1:** $1 \pmod{64} = \mathbf{\text{Set } 1}$
+* **Block 129:** $129 \pmod{64} = 129 - (2 \times 64) = \mathbf{\text{Set } 1}$
+
+Both blocks still compete for the exact same set (**Set 1**).
+
+---
+
+### 2. How the 2-Way Cache Handles It
+Unlike the direct-mapped cache (which only had 1 slot per set), Set 1 now has **2 physical ways (slots)**:
+
+1. **Access 1 (Block 1):** Miss $\rightarrow$ Block 1 is loaded into **Way 0** of Set 1.
+2. **Access 2 (Block 129):** Miss $\rightarrow$ Block 129 is loaded into **Way 1** of Set 1. *(Block 1 remains intact!)*
+3. **Access 3 (Block 1):** **HIT!** (Found in Way 0).
+4. **Access 4 (Block 129):** **HIT!** (Found in Way 1).
+
+---
+
+### Conclusion
+In a direct-mapped cache, this pattern caused **100% miss-rate thrashing** because they kept overwriting the single slot. 
+
+With this **2-way set-associative** design, both blocks can reside in Set 1 at the same time, completely eliminating thrashing and turning every subsequent access into a **cache hit**.","Blocks 1 and 129 both map to set 1 but can coexist in its two ways. With only those two alternating and no interfering access, the first two accesses miss and subsequent ones hit, assuming the cache starts empty.",,,,,,
+gemini-3.8-flash,scenario_13,1,"If the CPU asks for logical page 2, offset 10, where does that land in the physical memory pictured?",data/images/cg2271_13_logical_address_translation.png,"Based on the provided diagram, here is how the address translates:
+
+1. **Find the Frame Number:**
+   * Look up **Page 2** in the page table: Entry 2 points to **Frame 1** (which is also where ""Page 2"" is stored in physical memory).
+
+2. **Keep the Offset:**
+   * The offset does not change during paging, so the offset remains **10**.
+
+3. **Calculate the Physical Address:**
+   * $\text{Physical Address} = (\text{Frame Number} \times \text{Frame Size}) + \text{Offset}$
+   * $\text{Physical Address} = (1 \times 256) + 10 = \mathbf{266}$
+
+### **Answer:**
+It lands in **Frame 1, at offset 10** (which corresponds to physical memory address **266**, or `0x010A` in hexadecimal).","Use logical page 2 to index the table; its entry is physical frame 1. At 256 bytes per frame, physical address is 1x256+10=266.",,,,,,
+gemini-3.8-flash,scenario_13,2,"I got 2x256+10. Which number in the diagram should replace that first 2, and why?",,"The first **2** should be replaced by **1**.
+
+Here is why:
+
+### 1. Which number to replace it with:
+In the formula for physical address:
+$$\text{Physical Address} = (\mathbf{\text{Frame Number}} \times \text{Frame Size}) + \text{Offset}$$
+
+* Your calculation used the **Page Number** (2) instead of the **Frame Number** (1).
+* The correct calculation is: **$1 \times 256 + 10 = 266$**
+
+---
+
+### 2. Where to find it in the diagram:
+Look at the **page table** in the center:
+* Go to row **2** (on the left side of the page table, representing Page 2).
+* Look at the number inside that row: it is **1**. 
+
+This tells the system: *""Page 2 is stored in **Frame 1**.""* 
+
+You can also confirm this on the right side under **physical memory**: **Page 2** is sitting in **frame 1**.
+
+*(Note: Your calculation of $2 \times 256 + 10 = 522$ is actually the **logical address** generated by the CPU before the hardware translates it into physical memory!)*","The first number is the *frame* number from page 2's table entry, namely 1; the logical page number 2 chooses the entry but is not itself the physical frame.",,,,,,
+gemini-3.8-flash,scenario_13,3,"If I choose offset 200 on the same logical page, does the physical frame change, or just the place within it?",,"**The physical frame does NOT change — just the place within it.**
+
+Here is why:
+
+1. **The frame depends only on the page:** 
+   Because you are still on **Page 2**, the page table will still point to **Frame 1**. 
+
+2. **The offset only measures distance inside that frame:**
+   The offset is simply the distance (in bytes) from the very beginning of the frame. 
+   * Since the frame size is **256 bytes**, any offset from `0` to `255` stays inside that exact same frame.
+
+### The new calculation:
+* $\text{Physical Address} = (\mathbf{1} \times 256) + \mathbf{200} = \mathbf{456}$
+
+So, you are still inside **Frame 1**, just further down (at byte 200 instead of byte 10).","Frame 1 remains selected. Offset 200 selects another byte within that frame, at 1x256+200=456.",,,,,,
+gemini-3.8-flash,scenario_13,4,"Now the page-2 entry is changed from frame 1 to frame 4. Which part of the physical address changes, and what does it become for offset 10?",data/images/cg2271_13_logical_address_translation_revised.png,"### 1. Which part of the physical address changes?
+
+Only the **frame number** (the base address of the frame) changes. 
+* The **offset (10)** remains completely untouched. 
+
+In binary/hardware terms, the higher-order bits (representing the frame) change from `001` (1) to `100` (4), while the lower-order bits (representing the offset `10`) stay the same.
+
+---
+
+### 2. What does the physical address become?
+
+Using the formula:
+$$\text{Physical Address} = (\mathbf{\text{Frame Number}} \times \text{Frame Size}) + \text{Offset}$$
+
+* **Frame Number:** $4$ (from entry 2 in the page table)
+* **Frame Size:** $256$ bytes
+* **Offset:** $10$
+
+$$\text{Physical Address} = (4 \times 256) + 10 = 1024 + 10 = \mathbf{1034}$$
+
+It lands in **Frame 4, offset 10**, which is byte address **1034** (or `0x040A` in hexadecimal).",Changing the entry to frame 4 changes only the frame-number part; offset 10 stays 10. The new physical address is 4x256+10=1034 if the modified page is present.,,,,,,
+gemini-3.8-flash,scenario_13,5,"If the entry were marked not present instead, could we still take the same arrow straight to a frame?",,"**No, you cannot.** 
+
+If the entry is marked **not present** (or invalid), the hardware immediately stops and does not translate the address to a frame.
+
+Here is what happens instead:
+
+1. **A Page Fault Occurs:**
+   The hardware (MMU) sees the ""not present"" bit and triggers an exception called a **page fault**, transferring control to the Operating System (OS).
+
+2. **Why can't it point to a frame?**
+   Because the data isn't currently in physical RAM at all—it usually lives on the hard drive or SSD (in the swap space or page file).
+
+3. **What the OS does next:**
+   * Finds an empty frame in physical memory (or kicks out an old one to make room).
+   * Reads the missing page from disk and copies it into that frame.
+   * Updates the page table: it writes the new frame number and changes the bit to **present**.
+   * Tells the CPU to retry the instruction.
+
+Only **after** all those steps can the CPU finally follow that arrow straight to the frame in physical memory.",No. A not-present entry provides no current resident frame to combine with the offset; address translation triggers handling such as a page fault before an access can use a physical frame.,,,,,,
+gemini-3.8-flash,scenario_14,1,A appears in two consecutive 2-TU slots. Does the picture tell us why B and C did not run between them?,data/images/cg2271_14_round_robin_timeline.png,"**No, the picture does not explicitly state the reason** (there are no arrival times or queue states shown). 
+
+However, **it can be deduced from the rules of Round Robin scheduling** indicated in the top-left corner:
+
+* **The algorithm is Round Robin with a 2-TU quantum:** In Round Robin, a process yields the CPU after its quantum expires and is placed at the back of the ready queue if other processes are waiting.
+* **Why A ran twice consecutively:** Process A could only run for a second consecutive quantum if **neither B nor C had arrived in the ready queue yet** when A’s first quantum ended (at 2 TUs). Therefore, B and C must have arrived later (between 2 and 4 TUs, or at 4 TUs), leaving A as the only ready process to run.","No. The timeline shows A's consecutive CPU intervals, but it does not show who had arrived or the ready-queue contents between them. The reason cannot be read uniquely from the blocks.",,,,,,
+gemini-3.8-flash,scenario_14,2,"One possible explanation is that B and C were not ready yet. Can we establish that from this timeline, or is it just a possible ready-queue history?",,"No, **we cannot definitively establish that B and C were not ready yet**; it is only the most common and likely ready-queue scenario among a few possibilities.
+
+Here is why:
+
+---
+
+### What is definitively established
+Under the definition of Round Robin (RR):
+* At time $t = 2$, process A’s quantum expired, and the scheduler was invoked.
+","That is a possible explanation, not an established fact. B and C might not yet be ready, but the picture omits their arrival/ready times and queue transitions.",,,,,,
+gemini-3.8-flash,scenario_14,3,A's final slot is only 1 TU. How could that happen with a 2-TU quantum?,,"In Round Robin scheduling, the quantum (2 TUs) represents the **maximum** amount of continuous CPU time a process is allowed to use per turn, not a mandatory minimum. 
+
+If a process runs for less than the full quantum (here, 1 TU instead of 2), it means the process **voluntarily gave up the CPU early**. There are two standard reasons for this:
+
+---
+
+### 1. The process finished (terminated) — *Most likely scenario*
+* A only had **1 TU of work remaining** to complete its execution (giving it a total CPU burst of $2 + 2 + 1 = 5\text{ TUs}$).
+* Once completed, it terminated and exited the ready queue immediately rather than idling on the CPU for the remaining 1 TU.
+* **Evidence from the diagram:** Notice that process **A never runs again** after this 1-TU slot. Similarly, process **C** runs for only 1 TU right after and never reappears, strongly indicating both processes finished their total work and terminated.
+
+---
+
+### 2. The process blocked for I/O or an event
+* After running for 1 TU, process A may have made a system call that caused it to block (e.g., waiting for disk I/O, network data, user input, or a lock/semaphore).
+* When a process blocks, it leaves the CPU immediately and moves to the *Waiting/Blocked* state, relinquishing the unused portion of its quantum to the next process in the ready queue.","A can complete its remaining work after 1 TU and leave before using a full 2-TU quantum. A quantum is a maximum continuous slice, not a requirement to use all of it.",,,,,,
+gemini-3.8-flash,scenario_14,4,"If B had already been waiting before A's second slot, would the shown order still look like ordinary round robin? What assumption would we need to check?",,"### 1. Would it still look like ordinary Round Robin?
+
+**No.** Under ordinary (standard) Round Robin:
+* Processes in the ready queue are served in strict **FIFO (First-In, First-Out)** order.
+* When process A’s quantum expires at $t = 2$, A is preempted and moved to the **back (tail)** of the ready queue.
+* If B was already waiting in the ready queue, B would be at the **front (head)** of the queue and **must run next**.
+
+If B was already waiting and A ran again anyway, this would directly violate standard Round Robin scheduling.
+
+---
+
+### 2. What assumptions would we need to check?
+
+To explain why this timeline occurred if B was already present in the system, you would need to check several critical assumptions:
+
+#### A. Is B in the *Ready* queue or the *Blocked/Waiting* queue?
+* **""Waiting"" has two meanings in OS terminology:** 
+  * Waiting to run (in the **Ready** state).
+  * Waiting for an event/resource/I/O (in the **Blocked/Waiting** state).
+* If B had arrived in the system before $t = 2$ but was blocked (e.g., waiting on disk I/O, a timer, or a lock), it was **not eligible to run**. A would naturally continue running because it was the only process in the Ready queue.
+
+#### B. The tie-breaking rule at quantum boundaries ($t = 2$)
+* If B arrived **exactly at $t = 2$** (the exact moment A’s quantum ended), schedulers must resolve a collision:
+  * *Policy 1 (Standard):* New arrivals are queued first $\rightarrow$ Queue becomes `[B, A]`, so **B runs**.
+  * *Policy 2 (Re-queue first):* Preempted process is re-inserted before admitting new arrivals $\rightarrow$ Queue becomes `[A, B]`, so **A runs again**.
+* You would need to check which tie-breaking implementation the scheduler uses.
+
+#### C. Equal priority assumption (Pure RR vs. Priority RR)
+* Ordinary Round Robin assumes **all processes have equal priority**.
+* If the system implements **Priority Scheduling with Round Robin** (or a Multilevel Feedback Queue), and process A has a higher priority than process B, A will always be selected over B as long as A has work to do, regardless of how long B has been waiting.","If B was ready and ahead of A when A's first quantum expired, ordinary RR would normally give B the next turn; consecutive A would need another explanation. Arrival order and the ready-queue state at that boundary are the crucial missing facts.",,,,,,
+gemini-3.8-flash,scenario_14,5,What extra labels or another diagram would let us reconstruct the queue and waiting times exactly?,,"To reconstruct the ready queue and calculate waiting times **exactly**, you are missing information about **arrivals**, **idle/blocked states**, and **precise time boundaries**. 
+
+Here are the specific labels or alternative diagrams that would make the execution fully unambiguous:
+
+---
+
+### 1. Essential Labels to Add to the Existing Timeline
+
+If you want to keep the single execution bar, you need three sets of annotations:
+
+* **Explicit Time Markers on the Axis:**  
+  Replace the vague arrow with a numbered timeline scale ($t = 0, 1, 2, 3, \dots, 14$). Currently, we infer contiguous execution, but without timestamps, we cannot rule out idle CPU periods between blocks.
+* **Arrival Markers ($\downarrow$):**  
+  Mark the exact moment each process entered the ready queue (e.g., `↓ B arrives at t = 3`).
+* **Exit / State-Change Reasons:**  
+  Explicitly label why a block ends, especially when it’s under the quantum limit:
+  * At $t = 9$ (end of A: 1 TU): Label as **""A Terminates""** or **""A Blocks for I/O""**.
+  * At $t = 12$ (end of C: 1 TU): Label as **""C Terminates""**.
+
+---
+
+### 2. The Best Alternative: A Multi-Track State Diagram (Per-Process Gantt Chart)
+
+The most complete and standard way to represent this in OS textbooks is a **per-process state timeline** where each process gets its own horizontal track, color-coded by state:
+
+```text
+Time:    0   1   2   3   4   5   6   7   8   9   10  11  12  13  14
+         |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+Proc A: [  RUN  ][  RUN  ]                  [RUN] (Terminated)
+Proc B:         [ READY  ][  RUN  ]         [READY  ][  RUN  ][  RUN  ]
+Proc C:             [RDY ][ READY ][  RUN  ]        [RDY][RUN](Terminated)
+```
+
+**Why this helps:**
+* **Waiting time is immediately measurable:** You just count the width of the **`READY`** blocks for each process:
+  * $\text{Waiting Time} = \sum \text{duration of Ready intervals}$.
+* It visually separates **""waiting to run""** (Ready) from **""not yet arrived""** or **""blocked on I/O""**.
+
+---
+
+### 3. A Ready-Queue Trace Table
+
+Another standard tool is a snapshot table listing the contents of the queue at every scheduling event (every arrival or quantum expiration):
+
+| Time ($t$) | Event | CPU Running | Ready Queue (Head $\to$ Tail) |
+| :--- | :--- | :--- | :--- |
+| **0** | A arrives | A | $[ \; ]$ |
+| **2** | A quantum expires (no one else ready) | A | $[ \; ]$ |
+| **3** | B arrives, C arrives | A | $[B, C]$ |
+| **4** | A quantum expires $\to$ requeued | B | $[C, A]$ |
+| **6** | B quantum expires $\to$ requeued | C | $[A, B]$ |
+| ... | ... | ... | ... |
+
+---
+
+### 4.","Provide each process's arrival/ready time, CPU burst or remaining time, initial queue order, and queue changes at quantum expiry/completion (plus switching assumptions if waiting times must be exact). Then the execution and waiting times can be reconstructed.",,,,,,
+gemini-3.8-flash,scenario_15,1,S starts at 1. Follow P1's wait(S) in the picture: who holds the permit after that point?,data/images/cg2271_15_semaphore_visualization.png,"After $P_1$ executes `wait(S)`, the semaphore value decreases from 1 to 0 and **$P_1$** is allowed to proceed. Therefore, **$P_1$** holds the permit.","After P1's wait(S) consumes the single available permit, P1 proceeds and S has no free permit (0 in the pictured convention). The visual doesn't show a separate owner field; 'P1 holds it' describes the effect of successful acquisition.",,,,,,
+gemini-3.8-flash,scenario_15,2,"When P2 then reaches wait(S), where does it wait, and does this drawing imply it keeps running on the CPU while waiting?",,"Based on the diagram and standard operating systems concepts:
+
+1. **Where it waits:** 
+   $P_2$ waits in the **waiting queue (or list of blocked processes)** associated with semaphore $S$. In the drawing, this is visually represented by the dark red bar inside the semaphore box where $P_2$ is placed.
+
+2. **Does it keep running on the CPU?**
+   **No.** The drawing explicitly notes that $P_2$ is **""suspended""** and later **""wakes up.""** 
+   * This indicates a **blocking (sleep/wakeup) semaphore**, not a spinlock (busy waiting). 
+   * When $P_2$ executes `wait(S)` and the value is 0, the operating system transitions $P_2$ into a blocked/waiting state and yields the CPU to other processes. It consumes no CPU cycles while waiting.",P2 cannot acquire when the permit is unavailable; the picture places P2 in the waiting-process list and labels it suspended. In this blocking example it does not repeatedly occupy the CPU to poll S.,,,,,,
+gemini-3.8-flash,scenario_15,3,"In the last panel P3 calls signal(S). Does that mean P2 has completed its critical section already, or only that it may resume?",,"It means **only that $P_2$ may resume (and is now entering its critical section)**; it has **not** completed it yet. 
+
+Here is why:
+* In the previous step, $P_2$ was blocked (suspended) *before* it could enter the critical section because no permit was available.
+* When $P_3$ calls `signal(S)`, it releases a permit, allowing $P_2$ to be unblocked. 
+* As the text states, **""$P_2$ wakes up, decreases S and proceeds""**—this means $P_2$ completes its `wait(S)` call, acquires the permit, and is now permitted to **enter and execute** its critical section. 
+* $P_2$ will only have completed its critical section later, when it finishes its work and eventually calls `signal(S)` itself.","P3's signal(S) wakes or enables P2 to proceed; it does not mean P2 has already run its critical section, much less completed it. The slide does not explain why P3 is the process signaling.",,,,,,
+gemini-3.8-flash,scenario_15,4,Suppose nobody signals after P2 is suspended. Where does the depicted sequence get stuck?,,"The sequence gets stuck at the **third panel (""After $P_2$ wait(S), $P_2$ suspended"")**:
+
+* **$P_2$ remains blocked indefinitely:** Without a `signal(S)` to wake it up, $P_2$ stays permanently suspended in the semaphore's waiting queue (the red bar).
+* **The transition to the fourth panel never occurs:** Since $P_2$ cannot acquire a permit, it can never enter or execute its critical section.
+
+In operating systems terminology, this results in **indefinite blocking (or deadlock)** for process $P_2$.",P2 remains suspended in the waiting list without a signal or another defined way to make a permit available. The diagram cannot show P2's later progress from the given events.,,,,,,
+gemini-3.8-flash,scenario_15,5,"If S had started at 2, which part of this two-process sequence would change, and would it still enforce one-at-a-time entry?",,"If $S$ had started at **2**:
+
+### 1. What would change in the sequence:
+* **Panel 1 (Initialization):** $S$ starts at **2** instead of 1.
+* **Panel 2 (After $P_1$ `wait(S)`):** $S$ decrements from 2 to **1** (instead of 0). $P_1$ proceeds.
+* **Panel 3 (After $P_2$ `wait(S)`):** 
+  * Because $S = 1$, a permit is still available.
+  * $S$ decrements from 1 to **0**, and **$P_2$ proceeds immediately without being suspended**. 
+  * The waiting queue (the red bar) remains completely empty, and $P_2$ never enters a blocked state.
+* **Panel 4 ($P_3$ `signal(S)`):** A signal from $P_3$ is no longer required to wake $P_2$ up, since $P_2$ never blocked.
+
+---
+
+### 2. Would it still enforce one-at-a-time entry?
+**No.** It would **fail to enforce mutual exclusion (one-at-a-time entry)**. 
+
+* With an initial value of 2, the semaphore allows **up to 2 processes** to enter simultaneously. 
+* Both $P_1$ and $P_2$ could be executing inside the critical section at the exact same time. 
+* To guarantee mutual exclusion (strict one-at-a-time entry), the semaphore must be initialized to **1** (acting as a binary semaphore / mutex).","With initial count 2, P1's wait would leave one permit, so P2's subsequent wait could proceed instead of joining the waiting list. Two concurrent entrants would not enforce a one-at-a-time critical section.",,,,,,
+gemini-3.8-flash,scenario_16,1,"In the top blue output trace, what makes the pin go low and then high again? I'm trying to match it to the triangle above.",data/images/cg2271_16_choosing_pwm_polarity.png,"Based on the timing diagram (which depicts **Center-Aligned PWM**, typical of microcontrollers like NXP/Freescale Kinetis FTM/TPM), the pin transitions are triggered by compare matches between the counter and the channel value register (**CnV**):
+
+---
+
+### **1. What makes it go LOW (Clear):**
+* **Event:** The","For the top high-true trace (ELS=0b10), it clears to low at the CnV match while the counter counts up and sets back to high at the down-count match. Match the two transitions to the rising and falling slopes.",,,,,,
+gemini-3.8-flash,scenario_16,2,"Do the high-true and low-true outputs have different counter periods in this drawing, or do they mostly invert one another?",,"**No, they do not have different periods—they have the exact same period, and they are exact logical inverses (complements) of each other.**
+
+Here is the breakdown:
+
+---
+
+### 1. Same Counter Period ($T$)
+* **Shared counter:** Both outputs are driven by the **same underlying up/down counter** (the blue triangle wave at the top). 
+* A single period $T$ equals one full cycle of the triangle (counting all the way up and all the way back down). 
+* As shown by the double-sided arrows labeled **$T\text{ (Period)}$** on both output traces, the period length is identical for both configurations.
+
+---
+
+### 2. They Invert One Another
+They represent **opposite output polarities** (typically","They share the same up/down counter period and CnV crossings. The low-true (0b01) trace performs opposite set/clear actions and is complementary in the depicted steady pattern, not a new timer frequency.",,,,,,
+gemini-3.8-flash,scenario_16,3,"If CnV moves toward the top of the triangle but the period stays fixed, how do the two crossing times move and what happens to high-true duty cycle?",,"When the channel value register (**$CnV$**) increases toward the top of the triangle (the counter modulo/peak), here is how the crossing times move and how the duty cycles respond:
+
+---
+
+### 1. How the Two Crossing Times Move
+As the green horizontal $CnV$ line shifts upward toward the peak (yellow dot):
+
+* **The First Crossing (Up-","Moving CnV upward delays its up-count crossing and advances its down-count crossing. The low interval between those crossings shrinks, so the top high-true output is high for more of each unchanged period.",,,,,,
+gemini-3.8-flash,scenario_16,4,What if CnV is near the bottom instead? Use the two sloped counter segments to check the direction of the change.,," crossings (Counter $\ge CnV$).
+                                                        - Top trace (`0b10`): LOW between the crossings (Counter $\ge CnV$), and HIGH outside (Counter $\le CnV$).
+
+4.  **Trace the sloped counter segments clearly**:
+    *   **Segment 1: Up-counter (positive slope, rising / $\nearrow$)**
+        ","Moving CnV toward the bottom makes the up-count match earlier and the down-count match later, widening the low interval and shortening the high-true pulse. The complementary low-true high interval widens.",,,,,,
+gemini-3.8-flash,scenario_16,5,"Can we calculate an exact percentage of high time from this slide, or do we need numerical CnV and period values?",,"**No, you cannot calculate an exact percentage from this slide alone.** You need the numerical register values—specifically **$CnV$** and the counter’s maximum value (commonly called **$MOD$** or modulo).
+
+Here is why, along with how you can estimate it and the exact formula you would use once you have the numbers:
+
+---
+
+### 1. Why you",No exact percentage is warranted from a schematic without numeric compare value and counter limit/period. With those settings and the defined edge behaviour one can calculate duty cycle; the drawn proportions are illustrative.,,,,,,
+gemini-3.8-flash,scenario_17,1,"Which transition tells the receiver that a frame may have started, and where does it check the start bit?",data/images/cg2271_17_uart_receiver_basics.png,"Based on the diagram and UART protocol:
+
+1. **The transition that indicates a frame may have started:** 
+   * The **falling edge (High-to-Low transition)** from the high **Idle** state to the low **Start** bit.
+
+2. **Where it checks the start bit:**
+   * It checks (samples) the start bit at the **middle of the bit period** (at approximately **$\frac{1}{2} T_{\text{bit}}$** or 0.5 bit-times after the falling edge, as indicated by the first blue sample arrow). 
+   * *Purpose:* This verifies that the line is still low to confirm it is a valid start bit and not just a brief noise spike or glitch.","The idle-high line falls to the start-bit low level, signaling a possible frame. The receiver checks near the middle of that start-bit interval to confirm it before scheduling data samples.",,,,,,
+gemini-3.8-flash,scenario_17,2,Why are the payload sample points near the middle of each bit rather than right at a transition?,,"Sampling near the middle of each bit—rather than near the edges/transitions—is critical for reliable communication in UART for several key reasons:
+
+---
+
+### 1. The Signal is at an Indeterminate State During Transitions
+* Real-world electrical signals cannot change voltage instantaneously; they have non-zero **rise and fall times**. 
+* Right at a transition (represented by the crossing $\mathbf{X}$ shapes in the diagram), the voltage is in an intermediate, undefined logic region between high and low. 
+* Sampling here could cause the receiver to read a random, incorrect bit value or enter a metastable state.
+
+---
+
+### 2. Settling Time for Ringing and Noise
+* Physical transmission lines (cables, PCB traces) have parasitic capacitance, inductance, and impedance mismatches.
+* Immediately following a transition, the line often experiences **ringing**, overshoot, or signal reflections. 
+* By waiting until the middle of the bit period, the signal has had enough time to **settle** at a stable, steady-state high or low voltage level.
+
+---
+
+### 3. Maximum Tolerance for Clock Drift (Baud Rate Mismatch)
+* UART is **asynchronous**—there is no shared clock line between transmitter and receiver. Both devices rely on their own internal oscillators, which are never perfectly identical (usually differing by $1\%$ to $3\%$).
+* Because the clocks drift relative to each other, the receiver’s calculated sample points gradually shift earlier or later over the course of the frame (from bit D0 to the Stop bit).
+* Placing the target sample point at the **exact center ($\mathbf{50\%}$)** provides the **maximum possible timing margin ($\pm 50\%$ of a bit width)** before clock drift causes the receiver to accidentally sample the previous or next bit.
+
+---
+
+### 4. Maximum Noise Margin (The ""Eye Diagram"" Center)
+* In signal integrity terms, the center of the bit corresponds to the widest vertical and horizontal opening of the **""eye diagram.""** 
+* This is where the signal is farthest from both:
+  * **Timing jitter** (horizontal noise on transition edges).
+  * **Voltage noise** (vertical noise that could push a high signal below the logic threshold).",Transitions are where line voltage and timing uncertainty are greatest. Sampling near each bit's center gives margin against edges and small clock mismatch.,,,,,,
+gemini-3.8-flash,scenario_17,3,"If I count the start bit as payload bit 0, how would that shift the rest of the byte compared with the labels in this frame?",,"If you treated the **Start bit** as the first payload bit (Bit 0), every bit in the 8-bit byte would be **shifted by one position**:
+
+---
+
+### 1. Mapping Comparison
+
+| Diagram Label (Standard) | Your Shifted Label | Value Received |
+| :--- | :--- | :--- |
+| **Start** | **Bit 0** | **Always `0`** (since the start bit is always low) |
+| **D0** | **Bit 1** | Original bit 0 |
+| **D1** | **Bit 2** | Original bit 1 |
+| **D2** | **Bit 3** | Original bit 2 |
+| **D3** | **Bit 4** | Original bit 3 |
+| **D4** | **Bit 5** | Original bit 4 |
+| **D5** | **Bit 6** | Original bit 5 |
+| **D6** | **Bit 7** (MSB) | Original bit 6 |
+| **D7** | *Pushed out* | Treated as the **Parity bit** |
+| **Parity** | *Pushed out* | Treated as the **Stop bit** |
+
+---
+
+### 2. What Happens to the Data
+
+Because UART transmits the **least-significant bit (LSB) first**:
+
+1. **The byte is left-shifted by 1 bit (`data << 1`):**
+   * Inserting a `0` at Bit 0 and pushing all other bits up to the next power of 2 ($2^1, 2^2, \dots$) effectively doubles the original value ($\times 2$).
+2. **Bit 0 is always `0`:**
+   * Since the Start bit is defined by the protocol as logic low (`0`), the received byte would always appear to be an **even number**.
+3. **The original most-significant bit (D7) is lost:**
+   * D7 gets shifted out of the 8-bit payload window entirely and would mistakenly be read as the parity bit.","The start bit is a framing interval, not data bit 0. Counting it as payload would misalign every later payload sample and reconstruct the wrong bit sequence/byte.",,,,,,
+gemini-3.8-flash,scenario_17,4,"The drawing includes parity. Is that always part of UART, or does the frame format depend on the configuration?",,"**No, parity is not always part of UART.** It is completely **optional** (as indicated by the small label *""optional""* above the Parity bit in the drawing).
+
+The UART frame structure is highly configurable, and both the transmitter and receiver must be set to the exact same settings in advance to understand each other.
+
+---
+
+### The Common Shorthand Notation
+UART configurations are universally expressed in a three-character notation: **`<Data Bits>-<Parity>-<Stop Bits>`**.
+
+* **`8-N-1` (The most common configuration in modern systems):**
+  * **8** data bits
+  * **N**o parity (the parity bit is completely omitted)
+  * **1** stop bit
+  * *Total frame size:* $1 \text{ (start)} + 8 \text{ (data)} + 0 \text{ (parity)} + 1 \text{ (stop)} = \mathbf{10\text{ bits}}$.
+
+* **`8-E-1` (The frame shown in the diagram):**
+  * **8** data bits
+  * **E**ven parity (includes the parity bit)
+  * **1** stop bit
+  * *Total frame size:* $1 + 8 + 1 + 1 = \mathbf{11\text{ bits}}$.
+
+---
+
+### Configurable Parameters in UART
+
+1. **Parity Bit Options:**
+   * **None (`N`):** No parity bit is transmitted at all.
+   * **Even (`E`):** Parity bit is set so the total number of `1`s is even.
+   * **Odd (`O`):** Parity bit is set so the total number of `1`s is odd.
+   * **Mark / Space (`M` / `S`):** Fixed permanently at `1` (Mark) or `0` (Space); sometimes used for multi-drop addressing.
+
+2. **Data Bit Length:**
+   * Typically **8 bits**, but standard UART hardware can be configured for **5, 6, 7, 8, or 9 bits** (e.g., legacy systems or ASCII text often used 7 bits: `7-E-1`).
+
+3. **Stop Bits:**
+   * Typically **1 bit**, but can be configured for **1.5** or **2 stop bits** to give slower receivers extra time to process the byte.
+
+---
+
+### Why Parity is Usually Disabled Today
+Single-bit parity only detects an **odd number of bit errors** and cannot correct them. In modern embedded and computer systems, parity is often omitted (`8-N-1`) to reduce transmission overhead by ~9%, relying instead on higher-level protocols (like packet CRC, checksums, or TLS) for robust error detection.","Parity is optional and depends on the agreed UART framing configuration; transmitter and receiver must agree whether it exists, as well as data bits and stop bits.",,,,,,
+gemini-3.8-flash,scenario_17,5,"If the receiver's bit clock is a little faster than the transmitter's, where would its later sample points drift relative to the bit centers?",,"If the receiver’s bit clock is **faster** than the transmitter’s, its sample points will drift **earlier in time** (to the **left** of the bit centers on the diagram).
+
+---
+
+### Why this happens:
+
+1. **Shorter Bit Period ($T_{\text{rx}} < T_{\text{tx}}$):**
+   * A ""faster"" clock means the receiver measures time too quickly.
+   * As a result, the receiver's internal estimate of a bit duration ($T_{\text{rx}}$) is **shorter** than the actual bit duration being sent by the transmitter ($T_{\text{tx}}$).
+
+2. **Cumulative Timing Error:**
+   * Both sides synchronize at the initial falling edge of the Start bit ($t = 0$).
+   * For each subsequent bit, the receiver waits for its own version of a bit period before sampling again.
+   * Because each receiver bit period is slightly too short, the receiver takes each sample **too early**. This error accumulates bit by bit across the frame:
+     $$\Delta t_{\text{drift}} = N \times (T_{\text{tx}} - T_{\text{rx}})$$
+     *(where $N$ is the number of bits elapsed).*
+
+---
+
+### Visual Effect across the Frame:
+
+* **Start & D0:** The sample point is very close to the center (the drift hasn't had time to build up).
+* **Middle bits (D3–D4):** The sample point is noticeably to the **left** of the center.
+* **Later bits (D7, Parity, Stop):** The sample point drifts dangerously close to the **leading (left) edge** of the bit.
+
+### The Failure Mode:
+If the clock mismatch is too large (typically greater than ~3–5% across a 10- or 11-bit frame), by the time the receiver tries to sample the **Stop bit**, its sample point may drift all the way into the **preceding bit** (the Parity bit or D7). 
+
+If that preceding bit happens to be a low (`0`), the receiver reads a `0` instead of the expected high (`1`) for the Stop bit, resulting in a **Framing Error**.","A faster receiver uses shorter local bit periods, so its successive sample points drift earlier relative to the transmitter's bit centers; enough drift can sample an edge or neighboring bit and cause data/framing errors.",,,,,,
+gemini-3.8-flash,scenario_18,1,"The arrow from Logic to Storage goes one way. According to this legend, what relationship does that claim?",data/images/cs2113_18_architecture_diagram.png,"According to the legend, the solid arrow (`->`) represents an **Association**. 
+
+Therefore, it claims an **Association** relationship from Logic to Storage.","The legend calls the solid Logic->Storage arrow an association: Logic has a directed relationship with Storage. The arrow direction identifies the drawn dependence/connection, not a specific call instance.",,,,,,
+gemini-3.8-flash,scenario_18,2,"Does it mean every command must call Storage, or only that Logic can depend on it? What can we safely infer from this drawing?",,"Based on standard software architecture conventions (and specifically this UML-style component diagram, commonly used in SE education like CS2103):
+
+### 1. Does every command call Storage, or does it only mean Logic *can* depend on it?
+**It only means that `Logic` can depend on and interact with `Storage`.** 
+
+It does **not** mean every command must call `Storage`. 
+* This is a **structural (static) architecture diagram**, not a behavioral (dynamic) diagram like a Sequence Diagram. 
+* It defines *allowed dependencies* and *references*, not the runtime execution path of every single operation. For example, a command like `help` or `list` may only query `Model` or return a message without touching `Storage` at all.
+
+---
+
+### 2. What can we safely infer from this drawing?
+
+Here is what you can safely conclude from that arrow and the diagram:
+
+1. **Unidirectional Knowledge / Dependency:**
+   * `Logic` knows about `Storage` and can call its APIs/interfaces.
+   * `Storage` does **not** know about `Logic` (there is no arrow pointing back). Changes to `Logic` will not force changes to `Storage`.
+
+2. **Persistent Reference (Association vs. Transient Dependency):**
+   * The legend distinguishes between a solid line (**Association**) and a dashed line (**Transient Dependency**).
+   * Because it is a solid arrow, it typically implies a **structural/field-level reference** (e.g., `LogicManager` holds an instance variable of `Storage`), rather than just a temporary, one-off use (like passing it as a method parameter).
+
+3. **Coordination Responsibility:**
+   * `Logic` acts as a coordinator: it has associations to `UI`, `Model`, and `Storage`, meaning `Logic` is responsible for orchestrating changes across the system (e.g., executing a command, updating `Model`, and asking `Storage` to persist the changes).
+
+### What you *cannot* infer:
+* Which specific commands trigger calls to `Storage`.
+* The exact methods being called or the data being passed.
+* The timing or frequency of these calls (you would need a **Sequence Diagram** to see that).",It does not prove every command calls Storage. It shows the architectural relationship is allowed/present; individual command behaviour requires a runtime trace or code.,,,,,,
+gemini-3.8-flash,scenario_18,3,Storage also has a dashed arrow toward File. Does the legend say that line is a different kind of relationship?,,"**Yes**, the legend explicitly defines that dashed arrow as a different kind of relationship:
+
+* **Solid arrow (`->`)**: **Association** (a persistent, structural reference, such as holding an instance variable).
+* **Dashed arrow (`-->`)**: **Transient Dependency** (a temporary or indirect usage).
+
+### What this means in context:
+* Rather than maintaining a permanent, long-lived object reference to a specific `File` in memory, **`Storage` interacts with `File` only when needed** (e.g., temporarily opening, reading/writing data to disk, and closing it).
+* It highlights that `File` is an external dependency used transiently during I/O operations, rather than an internal component held continuously by `Storage`.","Yes. The dashed Storage->File arrow is a *transient dependency* according to this drawing's legend, unlike the solid association. The dash does not mean 'unimportant'.",,,,,,
+gemini-3.8-flash,scenario_18,4,"If I draw a new direct arrow from UI to File, what claim have I added that the original picture does not make?",data/images/cs2113_18_architecture_diagram_revised.png,"By adding a solid arrow from **UI** to **File**, you have made the following new claims that the original architecture strictly avoided:
+
+### 1. Direct Dependency on the File System
+* **The Claim:** `UI` directly accesses, reads, writes, or manages the `File`.
+* **Contrast with Original:** Originally, only `Storage` was allowed to interact with the file system. All other components had to go through `Logic` and `Storage` to persist or retrieve saved data.
+
+### 2. A Persistent ""Association"" (Solid Line)
+* **The Claim:** According to the legend, a solid line (`->`) denotes an **Association** (a structural/held reference). This claims that `UI` maintains a direct, long-lived reference to a `File` object.
+* **Contrast with Original:** Notice that even `Storage` only has a dashed arrow (`-->`, a *Transient Dependency*) to `File`. Drawing a solid line claims that `UI` has a *stronger, more permanent coupling* to the file system than `Storage` does.
+
+### 3. Bypassing Architectural Layers (Coupling / Separation of Concerns)
+* **The Claim:** The presentation layer (`UI`) is now tightly coupled to I/O and storage concerns. 
+* **Architectural Impact:** This violates standard layered architecture (like MVC/Clean Architecture), where UI should only care about presentation and user input, delegating all I/O and business logic to `Logic`/`Storage`.","A direct UI->File arrow would assert a new direct UI-to-File relationship, bypassing the absence of such an edge in the original. It would not, by itself, prove every UI action accesses a file.",,,,,,
+gemini-3.8-flash,scenario_18,5,"Could this architecture diagram tell me the exact order of calls for an add command, or would a sequence diagram answer that better?",,"**No, this architecture diagram cannot tell you the exact order of calls.** A **sequence diagram** would answer that much better.
+
+Here is why:
+
+### Why this architecture diagram cannot tell you the order:
+1. **It is a Static (Structural) View:** 
+   * It only shows *what parts exist* and *who is allowed to talk to whom*. 
+   * It has no concept of **time**, execution flow, or sequencing.
+2. **It is Operation-Agnostic:** 
+   * It represents the entire application at a high level. It does not differentiate between an `add` command, a `delete` command, or an `exit` command.
+3. **Arrows mean references, not chronological steps:** 
+   * The arrows simply mean ""Component A knows about Component B."" They do not represent ""Step 1, Step 2, Step 3.""
+
+---
+
+### Why a Sequence Diagram answers this better:
+* **Time flows top-to-bottom:** It explicitly models the chronological timeline of execution.
+* **Scenario-specific:** You can draw a sequence diagram specifically for the scenario: *""Executing the `add` command.""*
+* **Detailed interactions:** It clearly shows:
+  1. `User` inputs the text into `UI`.
+  2. `UI` calls `Logic.execute(""add ..."")`.
+  3. `Logic` creates/updates an object in `Model`.
+  4. `Logic` calls `Storage.save(...)`.
+  5. `Storage` writes to `File`.
+  6. Return messages flow back up to update the `UI`.",No exact order of method calls follows from this static component view. The add sequence diagram can show the ordered message exchange for that use case.,,,,,,
+gemini-3.8-flash,scenario_19,1,"When LogJob issues execute(...), who receives it, and which object starts interpreting the command?",data/images/cs2113_19_add_sequence_diagram.png,"Based on the sequence diagram:
+
+1. **Who receives `execute(...)`:** 
+   * **`:LogicManager`** receives the `execute(...)` call from `LogJob`.
+
+2. **Which object starts interpreting the command:** 
+   * **`:ApplicationParser`** starts interpreting (parsing) the command when `:LogicManager` calls `parseCommand(args)` on it.",LogJob sends execute(...) to LogicManager. LogicManager calls ApplicationParser.parseCommand(args) to begin interpreting the command words.,,,,,,
+gemini-3.8-flash,scenario_19,2,"An AddCommandParser and an AddCommand appear partway down. Which arrows create them, and which object creates which?",,"Based on the diagram:
+
+* **Creation of `:AddCommandParser`:**
+  * **Created by:** **`:ApplicationParser`**
+  * **Arrow:** The horizontal arrow originating from the activation bar of `:ApplicationParser` pointing directly to the **`:AddCommandParser`** box (representing a constructor call/creation).
+
+* **Creation of `a:AddCommand`:**
+  * **Created by:** **`:AddCommandParser`**
+  * **Arrow:** The horizontal arrow originating from the activation bar of `:AddCommandParser` pointing directly to the **`a:AddCommand`** box.","ApplicationParser creates the AddCommandParser; the arrow from that parser creates a:AddCommand. They appear after the earlier messages, as the creation arrows show, rather than being assumed present from the top.",,,,,,
+gemini-3.8-flash,scenario_19,3,"Follow the actual call that adds an application. Is it made by the parser, the command, or the UI?",,"The actual call that adds an application (`add(application)`) is made by the **command** (**`a:AddCommand`**). 
+
+In the diagram, `:LogicManager` invokes `execute()` on `a:AddCommand`, and from `a:AddCommand`'s activation bar, the `add(application)` call is sent to `:ApplicationManager`.","After parsing returns the command, LogicManager calls execute() on a:AddCommand. That command calls add(application) on ApplicationManager in Model; the parser and UI are not the callers of the actual add.",,,,,,
+gemini-3.8-flash,scenario_19,4,"Trace the path back from that call to printMessage(addSuccess). Does the UI update the Model, or just display the returned result?",,"Based on the diagram, here is the trace of the path:
+
+1. **`:ApplicationManager`** finishes adding the application and returns control (dashed arrow) back to **`a:AddCommand`**.
+2. **`a:AddCommand`** terminates (indicated by the red cross) and returns **`commandResult`** back to **`:LogicManager`**.
+3. **`:LogicManager`** then calls **`printMessage(addSuccess)`** on **`:UI`**.
+
+**Conclusion:** 
+The UI **just displays the returned result**. It does not interact with or update the Model at all—the Model was already updated earlier by `a:AddCommand`.","The Model call returns to AddCommand, then a commandResult returns to LogicManager, which calls printMessage(addSuccess) on UI. The shown UI role is display of the success message, not a UI->Model update.",,,,,,
+gemini-3.8-flash,scenario_19,5,"If ApplicationManager.add(...) were removed from the sequence, would the other arrows alone show that an application was saved? Why?",,"**No.** 
+
+**Why:**
+* **No interaction with the Model:** The **`:ApplicationManager`** (inside the Model component) is the only entity responsible for storing and managing application data. The `add(application)` arrow is the **only call in the entire diagram that touches the Model**.
+* **Messages only reflect logic and UI flow:** Without that call, the remaining arrows—such as `commandResult` and `printMessage(addSuccess)`—only show parsing, internal execution within the Logic component, and displaying a message to the UI. Showing a ""success"" message does not demonstrate that data was actually stored or persisted if no message was ever sent to update the Model.","No. Other arrows show parsing, command execution and display, but without the ApplicationManager.add(application) message this particular drawing would no longer depict the Model addition. It also does not independently prove persistence to a file.",,,,,,
+gemini-3.8-flash,scenario_20,1,What is the hollow triangle between StorageManager and Storage telling me?,data/images/cs2113_20_storage_class_diagram.png,"In UML diagrams, the **dashed line with a hollow (unfilled) triangle** pointing toward an interface represents **Realization** (or **Implementation**).
+
+Specifically, it tells you that:
+
+* **`StorageManager` implements the `Storage` interface.**
+* `Storage` defines a contract (a set of methods/operations), and `StorageManager` is the concrete class providing the actual implementation of those methods.
+
+### In code, this translates to:
+* **Java / C#:** 
+  ```java
+  public class StorageManager implements Storage { ... }
+  ```
+* **TypeScript:** 
+  ```typescript
+  class StorageManager implements Storage { ... }
+  ```
+
+*(Note: If the line were solid instead of dashed, it would mean inheritance/generalization (`extends`), but because it is dashed and points to an `«interface»`, it indicates interface implementation).*","StorageManager realizes/implements the Storage interface; the dashed realization line's hollow triangle points toward the interface being implemented, not from interface to implementing class.",,,,,,
+gemini-3.8-flash,scenario_20,2,"If another part of the app is written against the Storage interface, which details of StorageManager could it avoid depending on?",,"By coding against the **`Storage` interface** rather than the concrete **`StorageManager`** class, the calling code is decoupled from the internal implementation details. 
+
+Based on the diagram, the calling part of the app avoids depending on:
+
+1. **The concrete class itself (`StorageManager`)**:
+   * The caller doesn't need to know the name of the class, how it is instantiated, or any private/internal state and helper methods it possesses. This makes it trivial to swap in a mock or stub (e.g., `InMemoryStorage`) for automated unit testing.
+
+2. **The serialization mechanism (`ApplicationSerializer`)**:
+   * The caller does not need to know *how* data is serialized or what format is used (e.g., JSON, XML, binary, SQLite). If the team decides to switch from JSON to a relational database, the caller's code doesn't change at all.
+
+3. **Hashing and data integrity details (`HashUtil`)**:
+   * The caller is completely unaware that hashing is taking place (whether for data integrity checks, caching keys, or security) and doesn't depend on the specific algorithms used (e.g., SHA-256 vs. MD5).
+
+4. **Internal coordination between components**:
+   * The caller only cares about *what* happens (e.g., `save()` or `load()`), not the step-by-step workflow of how `StorageManager` coordinates with `HashUtil` and `ApplicationSerializer` to complete the request.",The caller can depend on the operations promised by Storage rather than the concrete StorageManager type or its HashUtil/serializer implementation details. The interface diagram alone does not list all exact methods.,,,,,,
+gemini-3.8-flash,scenario_20,3,The arrow labelled <<hashes>> points at HashUtil. Does that show a dependency or ownership? What about the arrows toward Model?,,"### 1. Arrow toward `HashUtil` (`«hashes»`): **Dependency, not Ownership**
+
+It represents a **dependency** (specifically, a *usage* dependency).
+
+* **Why it's a dependency:** In UML, a **dashed line with an open arrowhead (`- - ->`)** signifies a dependency. It means that `StorageManager` relies on `HashUtil` to function (likely calling static helper methods like `HashUtil.hash(data)`), but it does not ""own"" or manage its lifecycle.
+* **What ownership would look like:** Ownership is represented by **composition** (a solid line with a filled black diamond: `◆───`) or **aggregation** (an unfilled diamond: `◇───`). If `StorageManager` owned `HashUtil`, you would see one of those diamond symbols.
+
+---
+
+### 2. Arrows pointing toward `Model`: **Also Dependencies**
+
+The arrows originating from `StorageManager` and `ApplicationSerializer` down toward `Model` are also **dependencies**.
+
+* **What they mean:** Both `StorageManager` and `ApplicationSerializer` depend on classes or types inside the `Model` package/component. For example:
+  * `ApplicationSerializer` needs to know the structure of `Model` objects in order to convert them to/from JSON or text.
+  * `StorageManager` likely takes `Model` objects as parameters (e.g., `save(Model model)`).
+* **Key architectural detail:** Because the arrows are one-way (pointing strictly downward to `Model`), the relationship is **unidirectional**. `StorageManager` and `ApplicationSerializer` know about `Model`, but `Model` knows nothing about `Storage`, keeping the domain/business logic cleanly decoupled from persistence.","The <<hashes>> arrow from StorageManager to HashUtil and <<serializes>> arrow to ApplicationSerializer indicate use/dependency, not ownership. Both StorageManager and ApplicationSerializer also have directed dependencies toward Model in the picture.",,,,,,
+gemini-3.8-flash,scenario_20,4,"If I added a new class implementing Storage, where would its realization arrow point? Would that alone require changing the existing HashUtil dependency?",,"### 1. Where would the realization arrow point?
+
+The realization arrow would point directly to the **`Storage` interface** (the box labeled `«interface» Storage`), exactly like the arrow from `StorageManager` currently does.
+
+* **Visually:** It would be a dashed line starting at your new class and ending with a **hollow triangle pointing at `Storage`**.
+
+---
+
+### 2. Would that alone require changing the existing `HashUtil` dependency?
+
+**No, not at all.** 
+
+Here is why:
+
+* **Independence of Implementations:** The existing dependency is between `StorageManager` and `HashUtil`. Adding a new, separate class (for example, `InMemoryStorage` or `CloudStorageManager`) does not modify `StorageManager` or how it works.
+* **Freedom of Implementation:** The new class is free to fulfill the `Storage` contract however it wants:
+  * It could choose to also depend on `HashUtil` (drawing a separate dependency arrow to it).
+  * It could use a completely different utility (e.g., a network client or database driver).
+  * It might not need hashing at all.
+* **Open/Closed Principle:** This is a core benefit of using interfaces—the system is *open for extension* (you can add new storage implementations) without being *modified* (existing classes like `StorageManager` and its dependency on `HashUtil` remain untouched).",A new implementation's realization arrow would point to Storage. That fact alone creates no required HashUtil dependency; whether the new class uses hashing is a separate design decision.,,,,,,
+gemini-3.8-flash,scenario_20,5,"Can this picture establish whether hashing happens before serialization during a save, or is that order outside what a class diagram shows?",,"**No, this diagram cannot establish the order of operations.** That information is outside what a class diagram is designed to show.
+
+Here is why:
+
+* **Static vs. Dynamic:** This is a **structural (static) diagram**. It only shows *what exists* and *who knows about whom* (dependencies and contracts). It does not depict runtime behavior, execution flow, or the dimension of time.
+* **Layout does not imply order:** The fact that `HashUtil` is drawn on the left and `ApplicationSerializer` is on the right is purely for visual neatness and layout convenience. It implies nothing about which one is invoked first.
+
+---
+
+### What diagram would show this order?
+
+To show the temporal order (whether hashing happens before or after serialization), you would use a **dynamic behavioral diagram**, most commonly a **UML Sequence Diagram**:
+
+* In a Sequence Diagram, time runs from **top to bottom**. 
+* You would clearly see the calls ordered chronologically:
+  1. `StorageManager` calls `ApplicationSerializer.serialize(...)`
+  2. `StorageManager` then calls `HashUtil.hash(...)` (or vice versa).","No. A class/dependency diagram says what classes relate to or use, not the order of runtime calls. A sequence diagram, code, or another behavioural specification would be needed to say whether hashing precedes serialization.",,,,,,

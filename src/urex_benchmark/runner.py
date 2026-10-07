@@ -223,6 +223,13 @@ def main() -> None:
         help="Max generation tokens per turn (default: 2048)",
     )
     parser.add_argument(
+        "--thinking-level",
+        type=str,
+        default=None,
+        choices=["minimal", "low", "medium", "high"],
+        help="Reasoning thinking level for models supporting thinkingConfig (e.g. Gemini 3.x)",
+    )
+    parser.add_argument(
         "--include-drafts",
         action="store_true",
         help="Attempt running scenarios marked as 'draft'",
@@ -269,6 +276,8 @@ def main() -> None:
             "temperature": args.temperature,
             "max_tokens": args.max_tokens,
         }
+        if args.thinking_level:
+            gemini_settings["thinking_level"] = args.thinking_level
         provider = GeminiProvider(model_identifier=model_id, **gemini_settings)
     else:
         raise ValueError(f"Unknown provider: {args.provider}")
