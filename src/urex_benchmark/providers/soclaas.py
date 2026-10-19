@@ -102,8 +102,8 @@ class SoCLaaSProvider(BaseProvider):
         ).rstrip("/")
 
         self.temperature = float(settings.get("temperature", 0.2))
-        self.max_tokens = int(settings.get("max_tokens", 2048))
-        self.timeout = float(settings.get("timeout", 60.0))
+        self.max_tokens = int(settings["max_tokens"]) if settings.get("max_tokens") is not None else None
+        self.timeout = float(settings.get("timeout", 120.0))
         self.system_prompt = settings.get("system_prompt")
         self.active_conversations: Dict[str, Dict[str, Any]] = {}
 
@@ -175,12 +175,13 @@ class SoCLaaSProvider(BaseProvider):
 
         messages = self._build_openai_messages(student_message, image_path, history)
 
-        payload = {
+        payload: Dict[str, Any] = {
             "model": self.model_identifier,
             "messages": messages,
             "temperature": self.temperature,
-            "max_tokens": self.max_tokens,
         }
+        if self.max_tokens is not None:
+            payload["max_tokens"] = self.max_tokens
 
         req_data = json.dumps(payload).encode("utf-8")
         api_endpoint = f"{self.base_url}/chat/completions"
@@ -196,71 +197,88 @@ class SoCLaaSProvider(BaseProvider):
             method="POST",
         )
 
-        t0 = time.perf_counter()
-        try:
-            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-                resp_bytes = resp.read()
-                latency_ms = (time.perf_counter() - t0) * 1000.0
+        max_retries = int(self.settings.get("max_retries", 3))
+        backoff_delay = 2.0
 
-            result = json.loads(resp_bytes.decode("utf-8"))
-
-            choices = result.get("choices", [])
-            if not choices:
-                raise RuntimeError(f"SoCLaaS returned empty choices in response: {result}")
-
-            reply_content = choices[0].get("message", {}).get("content", "")
-            usage = result.get("usage", {})
-
-            token_usage = {
-                "prompt_tokens": usage.get("prompt_tokens", 0),
-                "completion_tokens": usage.get("completion_tokens", 0),
-                "total_tokens": usage.get("total_tokens", 0),
-            }
-
-            if conversation_id in self.active_conversations:
-                self.active_conversations[conversation_id]["turns"].append(turn_id)
-
-            return ProviderResponse(
-                content=reply_content,
-                token_usage=token_usage,
-                latency_ms=round(latency_ms, 2),
-                model_identifier=self.model_identifier,
-                raw_metadata={
-                    "model": result.get("model", self.model_identifier),
-                    "finish_reason": choices[0].get("finish_reason"),
-                },
-            )
-
-        except urllib.error.HTTPError as http_err:
-            latency_ms = (time.perf_counter() - t0) * 1000.0
-            error_body = ""
+        for attempt in range(max_retries + 1):
+            t0 = time.perf_counter()
             try:
-                error_body = http_err.read().decode("utf-8")
-                parsed_err = json.loads(error_body)
-                error_body = parsed_err.get("error", {}).get("message", error_body)
-            except Exception:
-                pass
+                with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                    resp_bytes = resp.read()
+                    latency_ms = (time.perf_counter() - t0) * 1000.0
 
-            if http_err.code == 400 and ("image" in error_body.lower() or "vision" in error_body.lower()):
+                result = json.loads(resp_bytes.decode("utf-8"))
+
+                choices = result.get("choices", [])
+                if not choices:
+                    raise RuntimeError(f"SoCLaaS returned empty choices in response: {result}")
+
+                reply_content = choices[0].get("message", {}).get("content", "")
+
+                usage = result.get("usage", {})
+                token_usage = {
+                    "prompt_tokens": usage.get("prompt_tokens", 0),
+                    "completion_tokens": usage.get("completion_tokens", 0),
+                    "total_tokens": usage.get("total_tokens", 0),
+                }
+
+                if conversation_id in self.active_conversations:
+                    self.active_conversations[conversation_id]["turns"].append(turn_id)
+
+                return ProviderResponse(
+                    content=reply_content,
+                    token_usage=token_usage,
+                    latency_ms=round(latency_ms, 2),
+                    model_identifier=self.model_identifier,
+                    raw_metadata={
+                        "model": result.get("model", self.model_identifier),
+                        "finish_reason": choices[0].get("finish_reason"),
+                    },
+                )
+
+            except urllib.error.HTTPError as http_err:
+                error_body = ""
+                try:
+                    error_body = http_err.read().decode("utf-8")
+                    parsed_err = json.loads(error_body)
+                    error_body = parsed_err.get("error", {}).get("message", error_body)
+                except Exception:
+                    pass
+
+                # Retry on rate limits (429) or transient cluster issues
+                if http_err.code in (429, 500, 502, 503, 504) and attempt < max_retries:
+                    time.sleep(backoff_delay)
+                    backoff_delay *= 2
+                    continue
+
+                if http_err.code == 400 and ("image" in error_body.lower() or "vision" in error_body.lower()):
+                    raise RuntimeError(
+                        f"SoCLaaS HTTP 400 Bad Request: Model '{self.model_identifier}' rejected image input. "
+                        f"Ensure you are targeting a multimodal/VLM model on SoCLaaS. Server details: {error_body}"
+                    ) from http_err
+
+                if http_err.code == 401:
+                    raise PermissionError(
+                        f"SoCLaaS HTTP 401 Unauthorized: Invalid or expired SOCLAAS_API_KEY. Server details: {error_body}"
+                    ) from http_err
+
                 raise RuntimeError(
-                    f"SoCLaaS HTTP 400 Bad Request: Model '{self.model_identifier}' rejected image input. "
-                    f"Ensure you are targeting a multimodal/VLM model on SoCLaaS. Server details: {error_body}"
+                    f"SoCLaaS API HTTP Error {http_err.code} ({http_err.reason}): {error_body}"
                 ) from http_err
 
-            if http_err.code == 401:
-                raise PermissionError(
-                    f"SoCLaaS HTTP 401 Unauthorized: Invalid or expired SOCLAAS_API_KEY. Server details: {error_body}"
-                ) from http_err
+            except (TimeoutError, urllib.error.URLError) as net_err:
+                is_timeout = isinstance(net_err, TimeoutError) or "timed out" in str(net_err).lower()
+                if is_timeout and attempt < max_retries:
+                    time.sleep(backoff_delay)
+                    backoff_delay *= 2
+                    continue
 
-            raise RuntimeError(
-                f"SoCLaaS API HTTP Error {http_err.code}: {http_err.reason}. Server details: {error_body}"
-            ) from http_err
-
-        except urllib.error.URLError as url_err:
-            raise ConnectionError(
-                f"Failed to connect to SoCLaaS at {self.base_url} ({url_err.reason}). "
-                "If accessing from outside NUS campus, please ensure NUS VPN is active."
-            ) from url_err
+                if isinstance(net_err, urllib.error.URLError):
+                    raise ConnectionError(
+                        f"Failed to connect to SoCLaaS at {self.base_url} ({net_err.reason}). "
+                        "If accessing from outside NUS campus, please ensure NUS VPN is active."
+                    ) from net_err
+                raise
 
     def close_conversation(self, conversation_id: str) -> None:
         """Cleans up session tracking for completed or terminated conversations."""

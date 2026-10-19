@@ -11,9 +11,11 @@ import time
 from typing import Any, Dict, List, Optional
 
 from urex_benchmark.models import ModelMessage, Scenario, ScenarioRunResult, TurnResult
+from urex_benchmark.providers.anthropic import AnthropicProvider
 from urex_benchmark.providers.base import BaseProvider
 from urex_benchmark.providers.gemini import GeminiProvider
 from urex_benchmark.providers.mock import MockProvider
+from urex_benchmark.providers.openai import OpenAIProvider
 from urex_benchmark.providers.soclaas import SoCLaaSProvider
 
 
@@ -194,15 +196,15 @@ def main() -> None:
     parser.add_argument(
         "--provider",
         type=str,
-        choices=["mock", "soclaas", "gemini"],
+        choices=["mock", "soclaas", "gemini", "anthropic", "openai"],
         default="mock",
-        help="Model provider to execute ('mock', 'soclaas', or 'gemini')",
+        help="Model provider to execute ('mock', 'soclaas', 'gemini', 'anthropic', or 'openai')",
     )
     parser.add_argument(
         "--model-id",
         type=str,
         default=None,
-        help="Model identifier (defaults: mock-vlm-v1 for mock, default for soclaas, gemini-flash-latest for gemini)",
+        help="Model identifier (defaults: mock-vlm-v1 for mock, default for soclaas, gemini-flash-latest for gemini, claude-haiku-5-5 for anthropic, gpt-6.1-sol for openai)",
     )
     parser.add_argument(
         "--api-base",
@@ -219,15 +221,14 @@ def main() -> None:
     parser.add_argument(
         "--max-tokens",
         type=int,
-        default=2048,
-        help="Max generation tokens per turn (default: 2048)",
+        default=None,
+        help="Max generation tokens per turn (optional, defaults to model native limit)",
     )
     parser.add_argument(
         "--thinking-level",
         type=str,
         default=None,
-        choices=["minimal", "low", "medium", "high"],
-        help="Reasoning thinking level for models supporting thinkingConfig (e.g. Gemini 3.x)",
+        help="Reasoning thinking level / effort (e.g., 'minimal', 'low', 'medium', 'high', 'xhigh', 'max')",
     )
     parser.add_argument(
         "--include-drafts",
@@ -279,6 +280,24 @@ def main() -> None:
         if args.thinking_level:
             gemini_settings["thinking_level"] = args.thinking_level
         provider = GeminiProvider(model_identifier=model_id, **gemini_settings)
+    elif args.provider == "anthropic":
+        model_id = args.model_id or "claude-haiku-5-5"
+        anthropic_settings: Dict[str, Any] = {
+            "temperature": args.temperature,
+            "max_tokens": args.max_tokens,
+        }
+        if args.thinking_level:
+            anthropic_settings["thinking_level"] = args.thinking_level
+        provider = AnthropicProvider(model_identifier=model_id, **anthropic_settings)
+    elif args.provider == "openai":
+        model_id = args.model_id or "gpt-6.1-sol"
+        openai_settings: Dict[str, Any] = {
+            "temperature": args.temperature,
+            "max_tokens": args.max_tokens,
+        }
+        if args.thinking_level:
+            openai_settings["reasoning_effort"] = args.thinking_level
+        provider = OpenAIProvider(model_identifier=model_id, **openai_settings)
     else:
         raise ValueError(f"Unknown provider: {args.provider}")
 

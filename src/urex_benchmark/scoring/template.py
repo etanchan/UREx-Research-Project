@@ -10,11 +10,9 @@ from typing import Any, Dict, List, Optional
 
 
 CRITERIA_COLUMNS = [
-    "technical_correctness",     # 1-5 Likert scale
-    "diagram_grounding",         # 1-5 Likert scale
-    "misconception_handling",    # 1-5 Likert scale
-    "relevance",                 # 1-5 Likert scale
-    "appropriate_uncertainty",   # 1-5 Likert scale
+    "technical_correctness",     # 0-2 scale (0=Incorrect, 1=Partial, 2=Correct)
+    "diagram_grounding",         # 0-2 scale (0=Ungrounded/Hallucinated, 1=Partial, 2=Grounded)
+    "pedagogical_clarity",       # 0-2 scale (0=Sycophantic/Off-topic, 1=Partial/Verbose, 2=Clear)
     "evaluator_notes",           # Free text
 ]
 
@@ -82,9 +80,7 @@ def generate_scoring_rows(
                 "expected_answer_reference": expected_ref,
                 "technical_correctness": "",
                 "diagram_grounding": "",
-                "misconception_handling": "",
-                "relevance": "",
-                "appropriate_uncertainty": "",
+                "pedagogical_clarity": "",
                 "evaluator_notes": "",
             }
             rows.append(row)
@@ -105,7 +101,7 @@ def export_template(
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(rows, f, indent=2, ensure_ascii=False)
     else:
-        with open(out_path, "w", encoding="utf-8", newline="") as f:
+        with open(out_path, "w", encoding="utf-8-sig", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=CSV_HEADER)
             writer.writeheader()
             for r in rows:

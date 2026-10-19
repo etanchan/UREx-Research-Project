@@ -53,7 +53,7 @@ class GeminiProvider(BaseProvider):
             or os.environ.get("GOOGLE_API_KEY")
         )
         self.temperature = float(settings.get("temperature", 0.2))
-        self.max_tokens = int(settings.get("max_tokens", 2048))
+        self.max_tokens = int(settings["max_tokens"]) if settings.get("max_tokens") is not None else None
         self.timeout = float(settings.get("timeout", 120.0))
         self.thinking_level = settings.get("thinking_level")
         self.system_prompt = settings.get("system_prompt")
@@ -124,8 +124,10 @@ class GeminiProvider(BaseProvider):
 
         gen_config: Dict[str, Any] = {
             "temperature": self.temperature,
-            "maxOutputTokens": self.max_tokens,
         }
+        if self.max_tokens is not None:
+            gen_config["maxOutputTokens"] = self.max_tokens
+
         if self.thinking_level:
             gen_config["thinkingConfig"] = {
                 "thinkingLevel": self.thinking_level

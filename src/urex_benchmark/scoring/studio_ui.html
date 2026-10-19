@@ -1,0 +1,2169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UREx Evaluation Studio</title>
+  <style>
+    :root {
+      --bg-app: #0f172a;
+      --bg-panel: #1e293b;
+      --bg-card: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-muted: #f1f5f9;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --text-main: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-soft: #eff6ff;
+      --emerald: #059669;
+      --emerald-soft: #ecfdf5;
+      --emerald-border: #a7f3d0;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --amber-border: #fde68a;
+      --rose: #e11d48;
+      --rose-soft: #fff1f2;
+      --rose-border: #fecdd3;
+      --purple: #7c3aed;
+      --purple-soft: #f5f3ff;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: var(--bg-subtle);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Header Bar */
+    header.topbar {
+      background: var(--bg-app);
+      color: #f8fafc;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid #334155;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 5px 9px;
+      border-radius: 7px;
+      letter-spacing: 0.4px;
+    }
+
+    .brand-title {
+      font-weight: 650;
+      font-size: 15px;
+      letter-spacing: -0.2px;
+    }
+
+    .sync-status {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sync-status.saving {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fcd34d;
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .excel-picker-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1e293b;
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      flex-wrap: wrap;
+    }
+
+    .excel-picker-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .excel-select {
+      background: #0f172a;
+      color: #fff;
+      border: 1px solid #3b82f6;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 340px;
+    }
+
+    .sheet-chip {
+      background: #0f172a;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .sheet-chip:hover {
+      border-color: #64748b;
+      color: #fff;
+    }
+
+    .sheet-chip.active {
+      background: #2563eb;
+      border-color: #3b82f6;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .sheet-chip .count {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 99px;
+      background: rgba(15, 23, 42, 0.35);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 6px 11px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover { background: #334155; }
+
+    .btn.active-toggle {
+      background: #7c3aed;
+      border-color: #8b5cf6;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: #3b82f6;
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-ai {
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      border-color: #8b5cf6;
+      color: #fff;
+    }
+
+    .btn-ai:hover { filter: brightness(1.1); }
+    .btn-ai:disabled { opacity: 0.6; cursor: wait; }
+
+    /* Main Layout */
+    .studio-body {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* Sidebar Scenario List */
+    aside.sidebar {
+      background: #fff;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .sidebar-header {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-subtle);
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .filter-row:last-child { margin-bottom: 0; }
+
+    .filter-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .filter-pill.active {
+      background: var(--text-main);
+      color: #fff;
+      border-color: var(--text-main);
+    }
+
+    .scenario-list {
+      overflow-y: auto;
+      flex: 1;
+      padding: 8px;
+    }
+
+    .scenario-item {
+      padding: 10px 11px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      margin-bottom: 4px;
+      transition: all 0.12s ease;
+    }
+
+    .scenario-item:hover {
+      background: var(--bg-subtle);
+      border-color: var(--border);
+    }
+
+    .scenario-item.active {
+      background: var(--accent-soft);
+      border-color: #93c5fd;
+    }
+
+    .sc-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .sc-id {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .course-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: var(--bg-muted);
+      color: var(--text-secondary);
+    }
+
+    .course-CG3207 { background: #dbeafe; color: #1e40af; }
+    .course-CG2271 { background: #fef3c7; color: #92400e; }
+    .course-CS2113 { background: #f3e8ff; color: #6b21a8; }
+
+    .sc-title {
+      font-size: 13px;
+      font-weight: 550;
+      color: var(--text-main);
+      line-height: 1.3;
+      margin-bottom: 7px;
+    }
+
+    .turn-dots {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .turn-dot {
+      height: 6px;
+      flex: 1;
+      border-radius: 99px;
+      background: #e2e8f0;
+    }
+
+    .turn-dot.done { background: var(--emerald); }
+    .turn-dot.partial { background: var(--amber); }
+
+    /* Main Content Pane */
+    main.workspace {
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      min-height: 0;
+      padding: 14px 18px 32px;
+      gap: 14px;
+    }
+
+    /* Turn Bar */
+    .turn-nav-bar {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .turn-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .turn-tab {
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.12s ease;
+    }
+
+    .turn-tab:hover {
+      border-color: var(--border-strong);
+      color: var(--text-main);
+    }
+
+    .turn-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+    }
+
+    .turn-tab .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #cbd5e1;
+    }
+
+    .turn-tab.graded .dot { background: #10b981; }
+    .turn-tab.active.graded .dot { background: #a7f3d0; }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-light {
+      background: #fff;
+      color: var(--text-main);
+      border: 1px solid var(--border-strong);
+      padding: 6px 11px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 550;
+      cursor: pointer;
+    }
+
+    .btn-light:hover { background: var(--bg-muted); }
+
+    /* Context Reference Grid (Diagram + Question/Expected Answer) */
+    .context-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 44%) 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 1100px) {
+      .context-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 9px 14px;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 650;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .diagram-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      flex: 1;
+      min-height: 220px;
+      position: relative;
+    }
+
+    .diagram-body img {
+      max-width: 100%;
+      max-height: 310px;
+      object-fit: contain;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: zoom-in;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .diagram-caption {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .img-switch-pills {
+      display: flex;
+      gap: 4px;
+    }
+
+    .img-pill {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 5px;
+      border: 1px solid var(--border-strong);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .img-pill.active {
+      background: var(--purple);
+      color: #fff;
+      border-color: var(--purple);
+    }
+
+    .qa-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .student-box {
+      background: var(--accent-soft);
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid var(--accent);
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+    }
+
+    .box-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .student-box .box-label { color: #1e40af; }
+
+    .student-box .box-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #0f172a;
+      font-weight: 500;
+    }
+
+    .expected-box {
+      background: var(--emerald-soft);
+      border: 1px solid var(--emerald-border);
+      border-left: 4px solid var(--emerald);
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      flex: 1;
+    }
+
+    .expected-box .box-label { color: #065f46; }
+
+    .expected-box .box-text {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #064e3b;
+    }
+
+    details.history-drawer {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-subtle);
+      padding: 7px 11px;
+      font-size: 12.5px;
+    }
+
+    details.history-drawer summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-secondary);
+      user-select: none;
+    }
+
+    .history-list {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .history-turn-item {
+      padding: 6px 9px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-size: 12px;
+    }
+
+    /* Model Evaluation Cards Grid */
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 14px;
+      align-items: start;
+    }
+
+    .model-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .model-card.fully-graded { border-color: #86efac; }
+
+    .model-card-header {
+      padding: 11px 14px;
+      background: #0f172a;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .model-name {
+      font-weight: 650;
+      font-size: 13.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .model-file-sub {
+      font-size: 11px;
+      color: #93c5fd;
+      font-weight: 500;
+      background: rgba(59, 130, 246, 0.18);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .score-total-badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 99px;
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .score-total-badge.complete {
+      background: #059669;
+      color: #fff;
+    }
+
+    /* Rubric Scoring Controls Box */
+    .rubric-box {
+      padding: 12px 14px;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .rubric-quick-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .rubric-quick-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.4px;
+    }
+
+    .quick-btns { display: flex; gap: 5px; }
+
+    .btn-quick {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 5px;
+      border: 1px solid var(--border-strong);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .btn-quick.all-2:hover {
+      background: var(--emerald-soft);
+      color: var(--emerald);
+      border-color: var(--emerald);
+    }
+
+    .rubric-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .crit-info { display: flex; flex-direction: column; }
+
+    .crit-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .crit-hint {
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+
+    .score-pills { display: flex; gap: 4px; }
+
+    .score-btn {
+      border: 1px solid var(--border-strong);
+      background: #fff;
+      color: var(--text-secondary);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: all 0.1s ease;
+      min-width: 72px;
+      text-align: center;
+    }
+
+    .score-btn:hover { background: var(--bg-muted); }
+
+    .score-btn.active-0 {
+      background: var(--rose);
+      border-color: var(--rose);
+      color: #fff;
+    }
+
+    .score-btn.active-1 {
+      background: var(--amber);
+      border-color: var(--amber);
+      color: #fff;
+    }
+
+    .score-btn.active-2 {
+      background: var(--emerald);
+      border-color: var(--emerald);
+      color: #fff;
+    }
+
+    .notes-wrap {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .notes-input {
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 12.5px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 44px;
+      background: #fff;
+    }
+
+    .notes-input:focus {
+      outline: 2px solid #93c5fd;
+      border-color: var(--accent);
+    }
+
+    /* Rendered Model Response */
+    .response-toolbar {
+      padding: 6px 14px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .response-body {
+      padding: 16px 18px;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #1e293b;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .response-body h1,
+    .response-body h2,
+    .response-body h3,
+    .response-body h4 {
+      margin-top: 14px;
+      margin-bottom: 6px;
+      color: #0f172a;
+      line-height: 1.3;
+    }
+
+    .response-body h1 { font-size: 17px; }
+    .response-body h2 { font-size: 16px; }
+    .response-body h3 { font-size: 15px; }
+
+    .response-body p { margin: 0 0 10px; }
+
+    .response-body ul,
+    .response-body ol {
+      margin: 0 0 10px;
+      padding-left: 22px;
+    }
+
+    .response-body li { margin-bottom: 4px; }
+
+    .response-body code {
+      background: #f1f5f9;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12.5px;
+      color: #0f172a;
+    }
+
+    .response-body pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 0 0 12px;
+    }
+
+    .response-body pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .response-body table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 10px 0 14px;
+      font-size: 13px;
+    }
+
+    .response-body th,
+    .response-body td {
+      border: 1px solid var(--border-strong);
+      padding: 6px 10px;
+      text-align: left;
+    }
+
+    .response-body th {
+      background: var(--bg-muted);
+      font-weight: 650;
+    }
+
+    .math-chip {
+      font-family: "Cambria Math", "STIX Two Math", Georgia, serif;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 0 4px;
+      border-radius: 4px;
+      color: #0f172a;
+    }
+
+    .raw-pre {
+      white-space: pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12.5px;
+      background: var(--bg-subtle);
+      padding: 12px;
+      border-radius: 6px;
+    }
+
+    /* Dialogs (Modals) with Modern Light-Dismiss */
+    dialog {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 0;
+      max-width: 92vw;
+      max-height: 90vh;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
+      background: #fff;
+      color: var(--text-main);
+    }
+
+    dialog::backdrop {
+      background-color: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(3px);
+    }
+
+    .dialog-inner {
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .dialog-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .dialog-top h2 { margin: 0; font-size: 17px; }
+
+    #imageZoomDialog img {
+      max-width: 88vw;
+      max-height: 80vh;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .summary-table th,
+    .summary-table td {
+      border: 1px solid var(--border);
+      padding: 8px 11px;
+      text-align: left;
+    }
+
+    .summary-table th {
+      background: var(--bg-subtle);
+      font-weight: 650;
+    }
+
+    .kbd-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-muted);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge">UREx</span>
+      <span class="brand-title">Evaluation Studio</span>
+      <span id="syncBadge" class="sync-status">✓ Synced with scores/*.csv</span>
+    </div>
+
+    <!-- Step 1: Choose which Excel (.csv) file to evaluate -->
+    <div class="excel-picker-box">
+      <label for="primarySheetSelect" class="excel-picker-label">
+        📂 Choose Excel Sheet (.csv):
+      </label>
+      <select id="primarySheetSelect" class="excel-select"></select>
+      <button type="button" class="btn" id="compareModeBtn" title="Compare multiple Excel sheets side-by-side">
+        ⚖️ Compare Multiple: Off
+      </button>
+    </div>
+
+    <div class="topbar-actions">
+      <button type="button" class="btn" id="blindModeBtn" style="display:none;" title="Hide model names and shuffle card order per scenario">
+        🕵️ Blind Mode: Off
+      </button>
+      <button type="button" class="btn btn-ai" id="openAiJudgeBtn" title="Auto-grade using an AI Judge directly into the active CSV file">
+        ✨ AI Auto-Judge
+      </button>
+      <button type="button" class="btn btn-primary" id="openSummaryBtn">
+        📊 Live Summary
+      </button>
+    </div>
+  </header>
+
+  <!-- Optional Multi-Sheet Compare Bar -->
+  <div id="compareBar" style="display:none;background:#1e293b;padding:8px 18px;border-bottom:1px solid #334155;align-items:center;gap:8px;flex-wrap:wrap;">
+    <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:#cbd5e1;">Select CSV sheets to compare side-by-side:</span>
+    <div id="sheetSelector" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+  </div>
+
+  <!-- Studio Body -->
+  <div class="studio-body">
+    <!-- Left Sidebar: Scenarios -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="filter-row" id="courseFilters">
+          <button type="button" class="filter-pill active" data-course="ALL">All Courses</button>
+          <button type="button" class="filter-pill" data-course="CG3207">CG3207</button>
+          <button type="button" class="filter-pill" data-course="CG2271">CG2271</button>
+          <button type="button" class="filter-pill" data-course="CS2113">CS2113</button>
+        </div>
+        <div class="filter-row" id="statusFilters">
+          <button type="button" class="filter-pill active" data-status="ALL">All</button>
+          <button type="button" class="filter-pill" data-status="UNGRADED">Needs Grading</button>
+          <button type="button" class="filter-pill" data-status="DONE">Completed</button>
+        </div>
+      </div>
+      <div class="scenario-list" id="scenarioList"></div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+      <!-- Turn Bar -->
+      <div class="turn-nav-bar">
+        <div class="turn-tabs" id="turnTabs"></div>
+        <div class="nav-controls">
+          <span class="kbd-hint" title="Use Alt+Left / Alt+Right arrows to step through turns">⌨️ Alt+← / Alt+→</span>
+          <button type="button" class="btn-light" id="prevTurnBtn">← Prev</button>
+          <button type="button" class="btn-light" id="nextTurnBtn">Next →</button>
+          <button type="button" class="btn-light" id="nextUngradedBtn" style="border-color:#93c5fd;background:#eff6ff;color:#1d4ed8;">
+            ⏭ Next Ungraded
+          </button>
+        </div>
+      </div>
+
+      <!-- Pinned Context: Diagram + Question/Expected Answer -->
+      <div class="context-grid">
+        <!-- Diagram Panel -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span id="diagramHeaderTitle">Active Diagram</span>
+            <div class="img-switch-pills" id="diagramSwitchPills"></div>
+          </div>
+          <div class="diagram-body">
+            <img id="activeDiagramImg" src="" alt="Scenario Diagram" title="Click to zoom full resolution">
+            <div class="diagram-caption">
+              <span id="diagramPathLabel"></span>
+              <span>(Click image to zoom)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question + Ground Truth Expected Answer Panel -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <span id="scenarioHeaderLabel">Scenario Context</span>
+            <span id="sourceRefLabel" style="font-weight:400;text-transform:none;font-size:11px;"></span>
+          </div>
+          <div class="qa-body">
+            <details class="history-drawer" id="historyDrawer">
+              <summary id="historySummaryLabel">Prior Conversation Context (Turns 1 to k-1)</summary>
+              <div class="history-list" id="historyList"></div>
+            </details>
+
+            <div class="student-box">
+              <div class="box-label">
+                <span id="studentTurnTitle">Student Question (Turn 1)</span>
+              </div>
+              <div class="box-text" id="studentQuestionText"></div>
+            </div>
+
+            <div class="expected-box">
+              <div class="box-label">
+                <span>✓ Ground-Truth Expected Answer Reference</span>
+              </div>
+              <div class="box-text" id="expectedAnswerText"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Model Evaluation Cards -->
+      <div class="models-grid" id="modelsGrid"></div>
+    </main>
+  </div>
+
+  <!-- Image Zoom Modal Dialog -->
+  <dialog id="imageZoomDialog" closedby="any" aria-labelledby="zoomDialogTitle">
+    <div class="dialog-inner">
+      <div class="dialog-top">
+        <h2 id="zoomDialogTitle">Diagram Full Resolution</h2>
+        <form method="dialog"><button type="submit" class="btn-light">Close (Esc)</button></form>
+      </div>
+      <img id="zoomDialogImg" src="" alt="Full resolution diagram">
+    </div>
+  </dialog>
+
+  <!-- Live Summary Modal Dialog -->
+  <dialog id="summaryDialog" closedby="any" aria-labelledby="summaryDialogTitle" style="width:920px;">
+    <div class="dialog-inner">
+      <div class="dialog-top">
+        <h2 id="summaryDialogTitle">📊 Live Benchmark Score Summary (from scores/*.csv)</h2>
+        <form method="dialog"><button type="submit" class="btn-light">Close (Esc)</button></form>
+      </div>
+      <div id="summaryDialogContent"></div>
+    </div>
+  </dialog>
+
+  <!-- AI Auto-Judge Modal Dialog -->
+  <dialog id="aiJudgeDialog" closedby="any" aria-labelledby="aiJudgeDialogTitle" style="width:520px;">
+    <div class="dialog-inner">
+      <div class="dialog-top">
+        <h2 id="aiJudgeDialogTitle">✨ AI Auto-Judge (Direct to CSV)</h2>
+        <form method="dialog"><button type="submit" class="btn-light">Close</button></form>
+      </div>
+      <p style="margin:0;font-size:13px;color:var(--text-secondary);line-height:1.5;">
+        The AI Judge reads the active diagram, student prompt, and your private <code>expected_answer_reference</code>, then writes 0–2 scores and <code>evaluator_notes</code> directly into your selected <code>scores/*.csv</code> file(s).
+      </p>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+        <label style="display:flex;flex-direction:column;gap:4px;font-weight:600;">
+          Scope to Grade:
+          <select id="judgeScopeSelect" class="btn-light" style="padding:8px;">
+            <option value="turn">Current Turn Only (Fastest — ~3s)</option>
+            <option value="scenario">Current Scenario (All 5 Turns)</option>
+            <option value="all">Entire Selected CSV Sheet(s) (All Scenarios)</option>
+          </select>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:4px;font-weight:600;">
+          Judge Provider:
+          <select id="judgeProviderSelect" class="btn-light" style="padding:8px;">
+            <option value="gemini">Google Gemini (GEMINI_API_KEY)</option>
+            <option value="openai">OpenAI (OPENAI_API_KEY)</option>
+            <option value="anthropic">Anthropic (ANTHROPIC_API_KEY)</option>
+            <option value="soclaas">NUS SoCLaaS (SOCLAAS_API_KEY)</option>
+            <option value="mock">Mock Judge (Instant offline test)</option>
+          </select>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:4px;font-weight:600;">
+          Judge Model ID:
+          <input type="text" id="judgeModelInput" value="gemini-2.5-flash" class="notes-input" style="min-height:34px;">
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="judgeOverwriteCheck">
+          Overwrite rows that already have scores filled in
+        </label>
+      </div>
+      <div id="judgeStatusMsg" style="font-size:12.5px;color:var(--accent);font-weight:500;display:none;"></div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;">
+        <button type="button" class="btn btn-ai" id="runAiJudgeConfirmBtn">✨ Run AI Judge & Save to CSV</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    /*__EMBEDDED_INITIAL_STATE__*/
+
+    // Mandatory fallback for browsers without <dialog closedby> support (e.g., Safari)
+    document.querySelectorAll('dialog').forEach((dialog) => {
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        dialog.addEventListener('click', (event) => {
+          if (event.target !== dialog) return;
+          const rect = dialog.getBoundingClientRect();
+          const isDialogContent = (
+            rect.top <= event.clientY &&
+            event.clientY <= rect.top + rect.height &&
+            rect.left <= event.clientX &&
+            event.clientX <= rect.left + rect.width
+          );
+          if (isDialogContent) return;
+          dialog.close();
+        });
+      }
+    });
+
+    // Application State
+    let appState = {
+      sheets: [],
+      scenarios: {},
+      summary: {},
+      primarySheet: null,
+      compareMode: false,
+      selectedSheets: new Set(),
+      currentScenarioId: null,
+      currentTurnId: 1,
+      courseFilter: "ALL",
+      statusFilter: "ALL",
+      blindMode: false,
+      rawModeCards: new Set(),
+      manualDiagramOverride: null,
+    };
+
+    const RUBRIC_DEFS = [
+      {
+        key: "technical_correctness",
+        label: "Technical Correctness",
+        hint: "0: Wrong concept · 1: Partial/minor slip · 2: Fully accurate",
+      },
+      {
+        key: "diagram_grounding",
+        label: "Diagram Grounding",
+        hint: "0: Hallucinates/ignores · 1: Minor assumption · 2: Explicitly grounded",
+      },
+      {
+        key: "pedagogical_clarity",
+        label: "Pedagogical Clarity",
+        hint: "0: Sycophantic/off-topic · 1: Verbose/weak · 2: Clear & corrects misconceptions",
+      },
+    ];
+
+    function setSyncStatus(text, isSaving = false) {
+      const badge = document.getElementById("syncBadge");
+      badge.textContent = text;
+      badge.classList.toggle("saving", isSaving);
+    }
+
+    // Fast, zero-dependency local Markdown + Table + LaTeX renderer
+    function formatInlineMarkdown(line) {
+      let s = line
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      // Inline code
+      s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+      // Inline math $...$
+      s = s.replace(/\$([^$\n]+)\$/g, (_, m) => {
+        const cleanMath = m
+          .replace(/\\oplus/g, "⊕")
+          .replace(/\\cdot/g, "·")
+          .replace(/\\times/g, "×")
+          .replace(/\\rightarrow|\\to/g, "→")
+          .replace(/\\leftarrow/g, "←")
+          .replace(/\\le|\\leq/g, "≤")
+          .replace(/\\ge|\\geq/g, "≥")
+          .replace(/\\ne|\\neq/g, "≠")
+          .replace(/\\text\{([^}]+)\}/g, "$1")
+          .replace(/\\mathrm\{([^}]+)\}/g, "$1")
+          .replace(/_\{([^}]+)\}/g, "<sub>$1</sub>")
+          .replace(/_([a-zA-Z0-9])/g, "<sub>$1</sub>")
+          .replace(/\^\{([^}]+)\}/g, "<sup>$1</sup>")
+          .replace(/\^([a-zA-Z0-9])/g, "<sup>$1</sup>");
+        return `<span class="math-chip">${cleanMath}</span>`;
+      });
+      // Bold & Italic
+      s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      s = s.replace(/\*(.+?)\*/g, "<em>$1</em>");
+      return s;
+    }
+
+    function renderFormattedText(rawText) {
+      if (!rawText) return "<em>(Empty response)</em>";
+      const lines = rawText.replace(/\r\n/g, "\n").split("\n");
+      let out = [];
+      let inCode = false;
+      let codeBuf = [];
+      let inList = null; // "ul" or "ol"
+      let inTable = false;
+      let tableRows = [];
+
+      function flushList() {
+        if (inList) {
+          out.push(`</${inList}>`);
+          inList = null;
+        }
+      }
+
+      function flushTable() {
+        if (!inTable) return;
+        inTable = false;
+        if (tableRows.length === 0) return;
+        let html = "<table>";
+        tableRows.forEach((r, idx) => {
+          const cells = r.split("|").slice(1, -1).map((c) => c.trim());
+          if (idx === 1 && cells.every((c) => /^[-:\s]+$/.test(c))) {
+            return; // separator row
+          }
+          const tag = idx === 0 ? "th" : "td";
+          html += "<tr>" + cells.map((c) => `<${tag}>${formatInlineMarkdown(c)}</${tag}>`).join("") + "</tr>";
+        });
+        html += "</table>";
+        out.push(html);
+        tableRows = [];
+      }
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        if (trimmed.startsWith("```")) {
+          flushList();
+          flushTable();
+          if (!inCode) {
+            inCode = true;
+            codeBuf = [];
+          } else {
+            inCode = false;
+            const escaped = codeBuf.join("\n").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            out.push(`<pre><code>${escaped}</code></pre>`);
+          }
+          continue;
+        }
+
+        if (inCode) {
+          codeBuf.push(line);
+          continue;
+        }
+
+        // Table detection
+        if (trimmed.startsWith("|") && trimmed.endsWith("|") && trimmed.length > 2) {
+          flushList();
+          inTable = true;
+          tableRows.push(trimmed);
+          continue;
+        } else {
+          flushTable();
+        }
+
+        if (!trimmed) {
+          flushList();
+          continue;
+        }
+
+        // Headings
+        const hMatch = trimmed.match(/^(#{1,4})\s+(.*)$/);
+        if (hMatch) {
+          flushList();
+          const level = hMatch[1].length;
+          out.push(`<h${level}>${formatInlineMarkdown(hMatch[2])}</h${level}>`);
+          continue;
+        }
+
+        // Unordered list
+        const ulMatch = trimmed.match(/^[-*+]\s+(.*)$/);
+        if (ulMatch) {
+          if (inList !== "ul") {
+            flushList();
+            inList = "ul";
+            out.push("<ul>");
+          }
+          out.push(`<li>${formatInlineMarkdown(ulMatch[1])}</li>`);
+          continue;
+        }
+
+        // Ordered list
+        const olMatch = trimmed.match(/^\d+\.\s+(.*)$/);
+        if (olMatch) {
+          if (inList !== "ol") {
+            flushList();
+            inList = "ol";
+            out.push("<ol>");
+          }
+          out.push(`<li>${formatInlineMarkdown(olMatch[1])}</li>`);
+          continue;
+        }
+
+        flushList();
+        out.push(`<p>${formatInlineMarkdown(trimmed)}</p>`);
+      }
+
+      flushList();
+      flushTable();
+      return out.join("\n");
+    }
+
+    function isRowGraded(row) {
+      if (!row) return false;
+      return (
+        String(row.technical_correctness ?? "").trim() !== "" &&
+        String(row.diagram_grounding ?? "").trim() !== "" &&
+        String(row.pedagogical_clarity ?? "").trim() !== ""
+      );
+    }
+
+    function getScenarioIdsList() {
+      const idSet = new Set();
+      appState.sheets.forEach((s) => {
+        if (appState.selectedSheets.has(s.filename)) {
+          s.rows.forEach((r) => idSet.add(r.scenario_id));
+        }
+      });
+      if (idSet.size === 0) {
+        Object.keys(appState.scenarios).forEach((k) => idSet.add(k));
+      }
+      return Array.from(idSet).sort();
+    }
+
+    function getTurnStatusAcrossSelectedSheets(scenarioId, turnId) {
+      const activeSheets = appState.sheets.filter((s) => appState.selectedSheets.has(s.filename));
+      if (activeSheets.length === 0) return "none";
+      let gradedCount = 0;
+      let totalPossible = 0;
+      for (const s of activeSheets) {
+        const row = s.rows.find((r) => r.scenario_id === scenarioId && Number(r.turn_id) === Number(turnId));
+        if (row) {
+          totalPossible++;
+          if (isRowGraded(row)) gradedCount++;
+        }
+      }
+      if (totalPossible === 0 || gradedCount === 0) return "none";
+      if (gradedCount === totalPossible) return "done";
+      return "partial";
+    }
+
+    function applyStatePayload(data) {
+      appState.sheets = data.sheets || [];
+      appState.scenarios = data.scenarios || {};
+      appState.summary = data.summary || {};
+
+      if (!appState.primarySheet && appState.sheets.length > 0) {
+        const fullSheets = appState.sheets.filter((s) => s.total_rows >= 20);
+        const defaultSheet = fullSheets.length > 0 ? fullSheets[0] : appState.sheets[0];
+        appState.primarySheet = defaultSheet.filename;
+        appState.selectedSheets = new Set([defaultSheet.filename]);
+        setSyncStatus(`✓ Active Excel: scores/${defaultSheet.filename}`, false);
+      }
+
+      const allScIds = getScenarioIdsList();
+      if (!appState.currentScenarioId || !allScIds.includes(appState.currentScenarioId)) {
+        appState.currentScenarioId = allScIds[0] || "scenario_01";
+      }
+
+      renderAll();
+    }
+
+    async function fetchStudioState() {
+      const res = await fetch("/api/state");
+      const data = await res.json();
+      applyStatePayload(data);
+    }
+
+    function renderSheetSelector() {
+      const selectEl = document.getElementById("primarySheetSelect");
+      selectEl.innerHTML = "";
+      appState.sheets.forEach((sheet) => {
+        const opt = document.createElement("option");
+        opt.value = sheet.filename;
+        opt.textContent = `${sheet.filename}  —  (${sheet.filled_rows}/${sheet.total_rows} turns graded)`;
+        if (sheet.filename === appState.primarySheet) {
+          opt.selected = true;
+        }
+        selectEl.appendChild(opt);
+      });
+
+      const compareBar = document.getElementById("compareBar");
+      const blindBtn = document.getElementById("blindModeBtn");
+      compareBar.style.display = appState.compareMode ? "flex" : "none";
+      blindBtn.style.display = appState.compareMode ? "inline-flex" : "none";
+
+      const container = document.getElementById("sheetSelector");
+      container.innerHTML = "";
+      appState.sheets.forEach((sheet) => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        const isActive = appState.selectedSheets.has(sheet.filename);
+        chip.className = `sheet-chip ${isActive ? "active" : ""}`;
+        const shortName = sheet.filename.replace("_scoring.csv", "").replace(".csv", "");
+        chip.innerHTML = `
+          <span>${shortName}</span>
+          <span class="count">${sheet.filled_rows}/${sheet.total_rows}</span>
+        `;
+        chip.title = `${sheet.filename} (${sheet.model_id}) — Click to toggle visibility`;
+        chip.addEventListener("click", () => {
+          if (appState.selectedSheets.has(sheet.filename)) {
+            if (appState.selectedSheets.size > 1) {
+              appState.selectedSheets.delete(sheet.filename);
+            }
+          } else {
+            appState.selectedSheets.add(sheet.filename);
+          }
+          renderAll();
+        });
+        container.appendChild(chip);
+      });
+    }
+
+    function renderSidebar() {
+      const listEl = document.getElementById("scenarioList");
+      listEl.innerHTML = "";
+      const scIds = getScenarioIdsList();
+
+      scIds.forEach((scId) => {
+        const meta = appState.scenarios[scId] || {};
+        const course = meta.course || "OTHER";
+        const title = meta.title || scId;
+
+        if (appState.courseFilter !== "ALL" && course !== appState.courseFilter) {
+          return;
+        }
+
+        const turnStatuses = [1, 2, 3, 4, 5].map((t) => getTurnStatusAcrossSelectedSheets(scId, t));
+        const allDone = turnStatuses.every((st) => st === "done");
+
+        if (appState.statusFilter === "UNGRADED" && allDone) return;
+        if (appState.statusFilter === "DONE" && !allDone) return;
+
+        const item = document.createElement("div");
+        item.className = `scenario-item ${scId === appState.currentScenarioId ? "active" : ""}`;
+        item.innerHTML = `
+          <div class="sc-top">
+            <span class="sc-id">${scId}</span>
+            <span class="course-tag course-${course}">${course}</span>
+          </div>
+          <div class="sc-title">${title}</div>
+          <div class="turn-dots">
+            ${turnStatuses.map((st, idx) => `<div class="turn-dot ${st}" title="Turn ${idx + 1}: ${st}"></div>`).join("")}
+          </div>
+        `;
+        item.addEventListener("click", () => {
+          appState.currentScenarioId = scId;
+          appState.manualDiagramOverride = null;
+          renderAll();
+        });
+        listEl.appendChild(item);
+      });
+    }
+
+    function renderTurnBar() {
+      const tabsEl = document.getElementById("turnTabs");
+      tabsEl.innerHTML = "";
+      const scId = appState.currentScenarioId;
+      const meta = appState.scenarios[scId] || {};
+      const turnsMeta = meta.turns || [];
+
+      for (let t = 1; t <= 5; t++) {
+        const tMeta = turnsMeta.find((x) => Number(x.turn_id) === t) || {};
+        const hasRevisedImg = Boolean(tMeta.revised_image_path);
+        const st = getTurnStatusAcrossSelectedSheets(scId, t);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `turn-tab ${t === appState.currentTurnId ? "active" : ""} ${st === "done" ? "graded" : ""}`;
+        btn.innerHTML = `
+          <span class="dot"></span>
+          <span>Turn ${t}${hasRevisedImg ? " 🔄" : ""}</span>
+        `;
+        btn.addEventListener("click", () => {
+          appState.currentTurnId = t;
+          appState.manualDiagramOverride = null;
+          renderAll();
+        });
+        tabsEl.appendChild(btn);
+      }
+    }
+
+    function renderContextPanel() {
+      const scId = appState.currentScenarioId;
+      const tId = appState.currentTurnId;
+      const meta = appState.scenarios[scId] || {};
+      const turnsMeta = meta.turns || [];
+
+      let sampleRow = null;
+      for (const s of appState.sheets) {
+        const found = s.rows.find((r) => r.scenario_id === scId && Number(r.turn_id) === Number(tId));
+        if (found) {
+          sampleRow = found;
+          break;
+        }
+      }
+
+      const initialImg = meta.initial_image_path || (
+        appState.sheets[0]?.rows.find((r) => r.scenario_id === scId && Number(r.turn_id) === 1)?.attached_image_path
+      ) || "";
+
+      let revisedImg = "";
+      let revisedTurnNum = 4;
+      for (const tm of turnsMeta) {
+        if (tm.revised_image_path) {
+          revisedImg = tm.revised_image_path;
+          revisedTurnNum = Number(tm.turn_id);
+        }
+      }
+
+      const defaultActiveImg = (revisedImg && tId >= revisedTurnNum) ? revisedImg : initialImg;
+      const shownImg = appState.manualDiagramOverride || defaultActiveImg;
+
+      const pillsEl = document.getElementById("diagramSwitchPills");
+      pillsEl.innerHTML = "";
+      if (revisedImg) {
+        const initBtn = document.createElement("button");
+        initBtn.type = "button";
+        initBtn.className = `img-pill ${shownImg === initialImg ? "active" : ""}`;
+        initBtn.textContent = "Initial (Turn 1)";
+        initBtn.onclick = () => {
+          appState.manualDiagramOverride = initialImg;
+          renderContextPanel();
+        };
+
+        const revBtn = document.createElement("button");
+        revBtn.type = "button";
+        revBtn.className = `img-pill ${shownImg === revisedImg ? "active" : ""}`;
+        revBtn.textContent = `Revised (Turn ${revisedTurnNum})`;
+        revBtn.onclick = () => {
+          appState.manualDiagramOverride = revisedImg;
+          renderContextPanel();
+        };
+
+        pillsEl.appendChild(initBtn);
+        pillsEl.appendChild(revBtn);
+      }
+
+      const imgEl = document.getElementById("activeDiagramImg");
+      const pathLabel = document.getElementById("diagramPathLabel");
+      if (shownImg) {
+        imgEl.src = "/" + shownImg.replace(/^\/+/, "");
+        imgEl.style.display = "block";
+        pathLabel.textContent = shownImg;
+      } else {
+        imgEl.style.display = "none";
+        pathLabel.textContent = "No diagram path found";
+      }
+
+      document.getElementById("scenarioHeaderLabel").textContent =
+        `${scId} · ${meta.course || ""} · ${meta.title || ""}`;
+      document.getElementById("sourceRefLabel").textContent =
+        meta.source_reference ? meta.source_reference.split(".")[0] : "";
+
+      const tMeta = turnsMeta.find((x) => Number(x.turn_id) === Number(tId)) || {};
+      const studentQ = sampleRow?.student_message || tMeta.student_message || "";
+      const expectedA = sampleRow?.expected_answer_reference || "";
+
+      document.getElementById("studentTurnTitle").textContent =
+        `Student Question — Turn ${tId} of 5`;
+      document.getElementById("studentQuestionText").textContent = studentQ;
+      document.getElementById("expectedAnswerText").textContent =
+        expectedA || "(No expected answer reference loaded)";
+
+      const historyDrawer = document.getElementById("historyDrawer");
+      const historyList = document.getElementById("historyList");
+      const historySummary = document.getElementById("historySummaryLabel");
+      historyList.innerHTML = "";
+      if (tId <= 1) {
+        historyDrawer.style.display = "none";
+      } else {
+        historyDrawer.style.display = "block";
+        historySummary.textContent = `Prior Questions in this Conversation (Turns 1 to ${tId - 1})`;
+        for (let pt = 1; pt < tId; pt++) {
+          const pRow = appState.sheets[0]?.rows.find(
+            (r) => r.scenario_id === scId && Number(r.turn_id) === pt
+          );
+          const pMeta = turnsMeta.find((x) => Number(x.turn_id) === pt) || {};
+          const qText = pRow?.student_message || pMeta.student_message || "";
+          const refText = pRow?.expected_answer_reference || "";
+          const div = document.createElement("div");
+          div.className = "history-turn-item";
+          div.innerHTML = `
+            <div style="font-weight:700;color:var(--accent);margin-bottom:2px;">Turn ${pt} Student:</div>
+            <div style="margin-bottom:4px;">${qText}</div>
+            <div style="color:var(--emerald);font-size:11.5px;"><strong>Expected:</strong> ${refText}</div>
+          `;
+          historyList.appendChild(div);
+        }
+      }
+    }
+
+    function getOrderedActiveSheets(scId) {
+      const active = appState.sheets.filter((s) => appState.selectedSheets.has(s.filename));
+      if (!appState.blindMode) return active;
+      const copy = [...active];
+      let seed = 0;
+      for (let i = 0; i < scId.length; i++) {
+        seed = (seed * 31 + scId.charCodeAt(i)) % 1000003;
+      }
+      copy.sort((a, b) => {
+        const ha = ((seed + a.filename.length * 97) * 2654435761) >>> 0;
+        const hb = ((seed + b.filename.length * 97) * 2654435761) >>> 0;
+        return ha - hb;
+      });
+      return copy;
+    }
+
+    async function saveScoreToServer(sheet, row) {
+      setSyncStatus("Saving to CSV...", true);
+      try {
+        const res = await fetch("/api/save_score", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            filename: sheet.filename,
+            scenario_id: row.scenario_id,
+            turn_id: Number(row.turn_id),
+            technical_correctness: row.technical_correctness ?? "",
+            diagram_grounding: row.diagram_grounding ?? "",
+            pedagogical_clarity: row.pedagogical_clarity ?? "",
+            evaluator_notes: row.evaluator_notes ?? "",
+          }),
+        });
+        const data = await res.json();
+        if (data.status === "ok") {
+          sheet.filled_rows = sheet.rows.filter(isRowGraded).length;
+          setSyncStatus(`✓ Saved to scores/${sheet.filename}`, false);
+          renderSheetSelector();
+          renderSidebar();
+          renderTurnBar();
+        } else {
+          setSyncStatus(`⚠ Save error: ${data.error}`, true);
+        }
+      } catch (err) {
+        setSyncStatus(`⚠ Network error saving CSV`, true);
+      }
+    }
+
+    function renderModelCards() {
+      const grid = document.getElementById("modelsGrid");
+      grid.innerHTML = "";
+      const scId = appState.currentScenarioId;
+      const tId = appState.currentTurnId;
+      const orderedSheets = getOrderedActiveSheets(scId);
+
+      orderedSheets.forEach((sheet, idx) => {
+        const row = sheet.rows.find(
+          (r) => r.scenario_id === scId && Number(r.turn_id) === Number(tId)
+        );
+        if (!row) return;
+
+        const cardId = `${sheet.filename}__${scId}__${tId}`;
+        const isGraded = isRowGraded(row);
+        const totalScore = isGraded
+          ? Number(row.technical_correctness) + Number(row.diagram_grounding) + Number(row.pedagogical_clarity)
+          : null;
+
+        const displayTitle = appState.blindMode
+          ? `Blind Model ${String.fromCharCode(65 + idx)}`
+          : `Model: ${sheet.model_id}`;
+        const displaySub = appState.blindMode ? "(Identity hidden)" : `📂 scores/${sheet.filename}`;
+
+        const card = document.createElement("div");
+        card.className = `model-card ${isGraded ? "fully-graded" : ""}`;
+
+        // Header
+        const header = document.createElement("div");
+        header.className = "model-card-header";
+        header.innerHTML = `
+          <div class="model-name">
+            <span>${displayTitle}</span>
+            <span class="model-file-sub">${displaySub}</span>
+          </div>
+          <span class="score-total-badge ${isGraded ? "complete" : ""}">
+            ${isGraded ? `${totalScore} / 6 pts` : "Ungraded"}
+          </span>
+        `;
+        card.appendChild(header);
+
+        // Rubric Box
+        const rubricBox = document.createElement("div");
+        rubricBox.className = "rubric-box";
+
+        const quickBar = document.createElement("div");
+        quickBar.className = "rubric-quick-bar";
+        quickBar.innerHTML = `
+          <span class="rubric-quick-title">Rubric Scoring (Saves directly to CSV)</span>
+          <div class="quick-btns">
+            <button type="button" class="btn-quick all-2" title="Set all three criteria to 2 (Full Credit)">✓ All 2s (Full Credit)</button>
+            <button type="button" class="btn-quick clear-btn" title="Clear scores for this turn">Clear</button>
+          </div>
+        `;
+        quickBar.querySelector(".all-2").addEventListener("click", () => {
+          row.technical_correctness = "2";
+          row.diagram_grounding = "2";
+          row.pedagogical_clarity = "2";
+          saveScoreToServer(sheet, row);
+          renderModelCards();
+        });
+        quickBar.querySelector(".clear-btn").addEventListener("click", () => {
+          row.technical_correctness = "";
+          row.diagram_grounding = "";
+          row.pedagogical_clarity = "";
+          saveScoreToServer(sheet, row);
+          renderModelCards();
+        });
+        rubricBox.appendChild(quickBar);
+
+        RUBRIC_DEFS.forEach((crit) => {
+          const curVal = String(row[crit.key] ?? "").trim();
+          const rRow = document.createElement("div");
+          rRow.className = "rubric-row";
+          rRow.innerHTML = `
+            <div class="crit-info">
+              <span class="crit-name">${crit.label}</span>
+              <span class="crit-hint">${crit.hint}</span>
+            </div>
+            <div class="score-pills">
+              <button type="button" class="score-btn ${curVal === "0" ? "active-0" : ""}" data-val="0">0 · None</button>
+              <button type="button" class="score-btn ${curVal === "1" ? "active-1" : ""}" data-val="1">1 · Partial</button>
+              <button type="button" class="score-btn ${curVal === "2" ? "active-2" : ""}" data-val="2">2 · Full</button>
+            </div>
+          `;
+          rRow.querySelectorAll(".score-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const v = btn.getAttribute("data-val");
+              row[crit.key] = (String(row[crit.key] ?? "").trim() === v) ? "" : v;
+              saveScoreToServer(sheet, row);
+              renderModelCards();
+            });
+          });
+          rubricBox.appendChild(rRow);
+        });
+
+        // Evaluator Notes
+        const notesWrap = document.createElement("div");
+        notesWrap.className = "notes-wrap";
+        const notesInput = document.createElement("textarea");
+        notesInput.className = "notes-input";
+        notesInput.placeholder = "Evaluator notes / rationale (auto-saves directly into the CSV file)...";
+        notesInput.value = row.evaluator_notes || "";
+        let notesTimer = null;
+        notesInput.addEventListener("input", () => {
+          row.evaluator_notes = notesInput.value;
+          clearTimeout(notesTimer);
+          notesTimer = setTimeout(() => {
+            saveScoreToServer(sheet, row);
+          }, 450);
+        });
+        notesWrap.appendChild(notesInput);
+        rubricBox.appendChild(notesWrap);
+        card.appendChild(rubricBox);
+
+        // Response Toolbar
+        const wordCount = (row.model_response || "").trim().split(/\s+/).filter(Boolean).length;
+        const isRaw = appState.rawModeCards.has(cardId);
+        const toolbar = document.createElement("div");
+        toolbar.className = "response-toolbar";
+        toolbar.innerHTML = `
+          <span>Model Response · ${wordCount} words</span>
+          <button type="button" class="btn-quick raw-toggle">${isRaw ? "View Formatted Markdown" : "View Raw Text"}</button>
+        `;
+        toolbar.querySelector(".raw-toggle").addEventListener("click", () => {
+          if (appState.rawModeCards.has(cardId)) {
+            appState.rawModeCards.delete(cardId);
+          } else {
+            appState.rawModeCards.add(cardId);
+          }
+          renderModelCards();
+        });
+        card.appendChild(toolbar);
+
+        // Response Body
+        const body = document.createElement("div");
+        body.className = "response-body";
+        if (isRaw) {
+          const pre = document.createElement("div");
+          pre.className = "raw-pre";
+          pre.textContent = row.model_response || "";
+          body.appendChild(pre);
+        } else {
+          body.innerHTML = renderFormattedText(row.model_response || "");
+        }
+        card.appendChild(body);
+
+        grid.appendChild(card);
+      });
+    }
+
+    function renderAll() {
+      renderSheetSelector();
+      renderSidebar();
+      renderTurnBar();
+      renderContextPanel();
+      renderModelCards();
+    }
+
+    // Navigation helpers
+    function stepTurn(delta) {
+      const scIds = getScenarioIdsList();
+      let scIdx = scIds.indexOf(appState.currentScenarioId);
+      if (scIdx === -1) scIdx = 0;
+
+      let nextTurn = appState.currentTurnId + delta;
+      if (nextTurn > 5) {
+        if (scIdx + 1 < scIds.length) {
+          appState.currentScenarioId = scIds[scIdx + 1];
+          appState.currentTurnId = 1;
+        }
+      } else if (nextTurn < 1) {
+        if (scIdx - 1 >= 0) {
+          appState.currentScenarioId = scIds[scIdx - 1];
+          appState.currentTurnId = 5;
+        }
+      } else {
+        appState.currentTurnId = nextTurn;
+      }
+      appState.manualDiagramOverride = null;
+      renderAll();
+    }
+
+    function jumpToNextUngraded() {
+      const scIds = getScenarioIdsList();
+      for (const scId of scIds) {
+        for (let t = 1; t <= 5; t++) {
+          if (getTurnStatusAcrossSelectedSheets(scId, t) !== "done") {
+            appState.currentScenarioId = scId;
+            appState.currentTurnId = t;
+            appState.manualDiagramOverride = null;
+            renderAll();
+            return;
+          }
+        }
+      }
+      alert("🎉 All turns in the selected CSV sheet(s) have been graded!");
+    }
+
+    document.getElementById("prevTurnBtn").addEventListener("click", () => stepTurn(-1));
+    document.getElementById("nextTurnBtn").addEventListener("click", () => stepTurn(1));
+    document.getElementById("nextUngradedBtn").addEventListener("click", jumpToNextUngraded);
+
+    window.addEventListener("keydown", (e) => {
+      if (e.altKey && e.key === "ArrowRight") {
+        e.preventDefault();
+        stepTurn(1);
+      } else if (e.altKey && e.key === "ArrowLeft") {
+        e.preventDefault();
+        stepTurn(-1);
+      }
+    });
+
+    document.querySelectorAll("#courseFilters .filter-pill").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#courseFilters .filter-pill").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        appState.courseFilter = btn.getAttribute("data-course");
+        renderSidebar();
+      });
+    });
+
+    document.querySelectorAll("#statusFilters .filter-pill").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#statusFilters .filter-pill").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        appState.statusFilter = btn.getAttribute("data-status");
+        renderSidebar();
+      });
+    });
+
+    // Primary Excel Sheet Dropdown selector
+    document.getElementById("primarySheetSelect").addEventListener("change", (e) => {
+      const chosen = e.target.value;
+      appState.primarySheet = chosen;
+      if (!appState.compareMode) {
+        appState.selectedSheets = new Set([chosen]);
+      } else {
+        appState.selectedSheets.add(chosen);
+      }
+      const allScIds = getScenarioIdsList();
+      if (!allScIds.includes(appState.currentScenarioId)) {
+        appState.currentScenarioId = allScIds[0] || "scenario_01";
+        appState.currentTurnId = 1;
+      }
+      setSyncStatus(`✓ Active Excel: scores/${chosen}`, false);
+      renderAll();
+    });
+
+    // Side-by-Side Compare Mode toggle
+    document.getElementById("compareModeBtn").addEventListener("click", (e) => {
+      appState.compareMode = !appState.compareMode;
+      e.currentTarget.textContent = `⚖️ Compare Multiple: ${appState.compareMode ? "On" : "Off"}`;
+      e.currentTarget.classList.toggle("active-toggle", appState.compareMode);
+      if (!appState.compareMode) {
+        appState.blindMode = false;
+        document.getElementById("blindModeBtn").textContent = "🕵️ Blind Mode: Off";
+        document.getElementById("blindModeBtn").classList.remove("active-toggle");
+        appState.selectedSheets = new Set([appState.primarySheet]);
+      } else {
+        const fullSheets = appState.sheets.filter((s) => s.total_rows >= 20);
+        if (fullSheets.length > 1) {
+          fullSheets.forEach((s) => appState.selectedSheets.add(s.filename));
+        }
+      }
+      renderAll();
+    });
+
+    // Blind Mode toggle
+    document.getElementById("blindModeBtn").addEventListener("click", (e) => {
+      appState.blindMode = !appState.blindMode;
+      e.currentTarget.textContent = `🕵️ Blind Mode: ${appState.blindMode ? "On" : "Off"}`;
+      e.currentTarget.classList.toggle("active-toggle", appState.blindMode);
+      renderModelCards();
+    });
+
+    // Image Zoom Dialog
+    document.getElementById("activeDiagramImg").addEventListener("click", (e) => {
+      const dialog = document.getElementById("imageZoomDialog");
+      document.getElementById("zoomDialogImg").src = e.currentTarget.src;
+      document.getElementById("zoomDialogTitle").textContent =
+        `${appState.currentScenarioId} — ${document.getElementById("diagramPathLabel").textContent}`;
+      dialog.showModal();
+    });
+
+    // Live Summary Dialog
+    document.getElementById("openSummaryBtn").addEventListener("click", async () => {
+      await fetchStudioState();
+      const dialog = document.getElementById("summaryDialog");
+      const container = document.getElementById("summaryDialogContent");
+      const models = appState.summary?.models || {};
+      const modelKeys = Object.keys(models);
+
+      if (modelKeys.length === 0) {
+        container.innerHTML = "<p>No rated turns found yet.</p>";
+        dialog.showModal();
+        return;
+      }
+
+      let html = `
+        <h3 style="margin:4px 0 8px;font-size:14px;">1. Overall Leaderboard (Macro Scenario Average, 0–2 Scale)</h3>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Model / CSV Sheet</th>
+              <th>Macro Mean ± SD</th>
+              <th>Percentage</th>
+              <th>Turn 1</th>
+              <th>Turn 2</th>
+              <th>Turn 3</th>
+              <th>Turn 4</th>
+              <th>Turn 5</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      modelKeys.forEach((mKey) => {
+        const m = models[mKey];
+        const macro = m.macro_scenario_score || { mean: 0, std: 0 };
+        const pct = ((macro.mean / 2.0) * 100).toFixed(1);
+        const tCells = [1, 2, 3, 4, 5].map((t) => {
+          const td = m.by_turn_position?.[t]?.overall;
+          return td && td.count > 0 ? td.mean.toFixed(2) : "—";
+        });
+        html += `
+          <tr>
+            <td><strong>${mKey}</strong></td>
+            <td>${macro.mean.toFixed(2)} ± ${macro.std.toFixed(2)}</td>
+            <td><strong>${pct}%</strong></td>
+            ${tCells.map((c) => `<td>${c}</td>`).join("")}
+          </tr>
+        `;
+      });
+
+      html += `</tbody></table>`;
+
+      html += `<h3 style="margin:14px 0 8px;font-size:14px;">2. Criterion Breakdown Across Turn Positions</h3>`;
+      modelKeys.forEach((mKey) => {
+        const m = models[mKey];
+        const hasAny = [1, 2, 3, 4, 5].some((t) => (m.by_turn_position?.[t]?.overall?.count || 0) > 0);
+        if (!hasAny) return;
+        html += `
+          <div style="margin-bottom:12px;">
+            <div style="font-weight:650;font-size:13px;margin-bottom:4px;">${mKey}</div>
+            <table class="summary-table">
+              <thead>
+                <tr>
+                  <th>Turn</th>
+                  <th>Technical Correctness</th>
+                  <th>Diagram Grounding</th>
+                  <th>Pedagogical Clarity</th>
+                  <th>Turn Overall</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${[1, 2, 3, 4, 5].map((t) => {
+                  const td = m.by_turn_position?.[t] || {};
+                  const fmt = (k) => td[k]?.count > 0 ? `${td[k].mean.toFixed(2)} (n=${td[k].count / (k === "overall" ? 3 : 1)})` : "—";
+                  return `
+                    <tr>
+                      <td>Turn ${t}</td>
+                      <td>${fmt("technical_correctness")}</td>
+                      <td>${fmt("diagram_grounding")}</td>
+                      <td>${fmt("pedagogical_clarity")}</td>
+                      <td><strong>${td.overall?.count > 0 ? td.overall.mean.toFixed(2) : "—"}</strong></td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      dialog.showModal();
+    });
+
+    // AI Judge Dialog
+    const judgeProviderDefaults = {
+      gemini: "gemini-2.5-flash",
+      openai: "gpt-4o",
+      anthropic: "claude-3-5-sonnet-latest",
+      soclaas: "default",
+      mock: "mock-judge-v1",
+    };
+
+    document.getElementById("judgeProviderSelect").addEventListener("change", (e) => {
+      const p = e.target.value;
+      document.getElementById("judgeModelInput").value = judgeProviderDefaults[p] || "";
+    });
+
+    document.getElementById("openAiJudgeBtn").addEventListener("click", () => {
+      document.getElementById("judgeStatusMsg").style.display = "none";
+      document.getElementById("aiJudgeDialog").showModal();
+    });
+
+    document.getElementById("runAiJudgeConfirmBtn").addEventListener("click", async () => {
+      const btn = document.getElementById("runAiJudgeConfirmBtn");
+      const statusMsg = document.getElementById("judgeStatusMsg");
+      const scope = document.getElementById("judgeScopeSelect").value;
+      const provider = document.getElementById("judgeProviderSelect").value;
+      const modelId = document.getElementById("judgeModelInput").value.trim();
+      const overwrite = document.getElementById("judgeOverwriteCheck").checked;
+
+      const filenames = Array.from(appState.selectedSheets);
+      const payload = {
+        filenames,
+        provider,
+        model_id: modelId,
+        overwrite,
+        scenario_id: scope === "all" ? null : appState.currentScenarioId,
+        turn_id: scope === "turn" ? appState.currentTurnId : null,
+      };
+
+      btn.disabled = true;
+      statusMsg.style.display = "block";
+      statusMsg.textContent = `⏳ Grading with ${provider} (${modelId}) and writing directly to ${filenames.length} CSV file(s)...`;
+      setSyncStatus("AI Judge running...", true);
+
+      try {
+        const res = await fetch("/api/auto_judge", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (data.status === "ok") {
+          appState.sheets = data.state.sheets;
+          appState.summary = data.state.summary;
+          const totalGraded = (data.results || []).reduce((acc, r) => acc + (r.graded || 0), 0);
+          statusMsg.textContent = `✓ Graded ${totalGraded} turn row(s) and saved to scores/*.csv!`;
+          setSyncStatus(`✓ AI Judge saved ${totalGraded} rows to CSV`, false);
+          renderAll();
+        } else {
+          statusMsg.textContent = `⚠ Error: ${data.error || "Unknown error"}`;
+          setSyncStatus("⚠ AI Judge error", true);
+        }
+      } catch (err) {
+        statusMsg.textContent = `⚠ Request failed: ${err}`;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // Boot immediately from embedded initial state (if present) or fetch from API
+    if (window.__INITIAL_STATE__) {
+      applyStatePayload(window.__INITIAL_STATE__);
+    } else {
+      fetchStudioState();
+    }
+  </script>
+</body>
+</html>

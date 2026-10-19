@@ -14,9 +14,7 @@ from typing import Any, Dict, List, Optional
 CRITERIA = [
     "technical_correctness",
     "diagram_grounding",
-    "misconception_handling",
-    "relevance",
-    "appropriate_uncertainty",
+    "pedagogical_clarity",
 ]
 
 
@@ -41,7 +39,7 @@ def load_scoring_data(filepath: Path | str) -> List[Dict[str, Any]]:
             raw = json.load(f)
             rows = raw if isinstance(raw, list) else []
     else:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, "r", encoding="utf-8-sig") as f:
             reader = csv.DictReader(f)
             for r in reader:
                 rows.append(r)
@@ -58,7 +56,7 @@ def load_scoring_data(filepath: Path | str) -> List[Dict[str, Any]]:
             if val is not None and str(val).strip() != "":
                 try:
                     num_val = float(val)
-                    if 1.0 <= num_val <= 5.0:
+                    if 0.0 <= num_val <= 2.0:
                         row_dict[crit] = num_val
                     else:
                         row_dict[crit] = None
@@ -145,11 +143,12 @@ def print_summary_table(summary: Dict[str, Any]) -> None:
     for model_id, m_data in summary["models"].items():
         print(f"\nMODEL: {model_id} (Evaluated on {m_data['scenario_count']} scenario(s))")
         macro = m_data["macro_scenario_score"]
-        print(f"Macro Scenario Average Score: {macro['mean']} ± {macro['std']} (Scale: 1.0 - 5.0)")
-        print("\n--- 1. Breakdown by Turn Position (Turns 1 to 5) ---")
-        headers = ["Turn", "Correctness", "Grounding", "Misconception", "Relevance", "Uncertainty", "Turn Avg"]
-        print(f"{headers[0]:<6} | {headers[1]:<11} | {headers[2]:<10} | {headers[3]:<13} | {headers[4]:<10} | {headers[5]:<11} | {headers[6]:<9}")
-        print("-" * 82)
+        pct = round((macro["mean"] / 2.0) * 100, 1)
+        print(f"Macro Scenario Average Score: {macro['mean']} ± {macro['std']} / 2.00 ({pct}%)")
+        print("\n--- 1. Breakdown by Turn Position (Turns 1 to 5, Scale: 0.0 - 2.0) ---")
+        headers = ["Turn", "Correctness", "Grounding", "Pedagogy", "Turn Avg"]
+        print(f"{headers[0]:<6} | {headers[1]:<13} | {headers[2]:<13} | {headers[3]:<13} | {headers[4]:<10}")
+        print("-" * 68)
 
         for t in range(1, 6):
             t_data = m_data["by_turn_position"].get(t, {})
@@ -158,18 +157,18 @@ def print_summary_table(summary: Dict[str, Any]) -> None:
                 for c in CRITERIA
             ]
             overall = f"{t_data.get('overall', {}).get('mean', 0.0):.2f}" if t_data.get("overall", {}).get("count", 0) > 0 else "N/A"
-            print(f"Turn {t:<1} | {c_vals[0]:<11} | {c_vals[1]:<10} | {c_vals[2]:<13} | {c_vals[3]:<10} | {c_vals[4]:<11} | {overall:<9}")
+            print(f"Turn {t:<1} | {c_vals[0]:<13} | {c_vals[1]:<13} | {c_vals[2]:<13} | {overall:<10}")
 
         print("\n--- 2. Breakdown by Scenario ---")
-        sc_headers = ["Scenario ID", "Turns Rated", "Scenario Mean Score"]
-        print(f"{sc_headers[0]:<35} | {sc_headers[1]:<12} | {sc_headers[2]:<20}")
-        print("-" * 75)
+        sc_headers = ["Scenario ID", "Ratings Count", "Scenario Mean Score (0-2)"]
+        print(f"{sc_headers[0]:<35} | {sc_headers[1]:<13} | {sc_headers[2]:<25}")
+        print("-" * 78)
         for sc_id, sc_data in m_data["by_scenario"].items():
             cnt = sc_data.get("overall", {}).get("count", 0)
             avg = sc_data.get("overall", {}).get("mean", 0.0)
             sd = sc_data.get("overall", {}).get("std", 0.0)
             score_str = f"{avg:.2f} ± {sd:.2f}" if cnt > 0 else "No ratings"
-            print(f"{sc_id:<35} | {cnt:<12} | {score_str:<20}")
+            print(f"{sc_id:<35} | {cnt:<13} | {score_str:<25}")
 
     print("\n" + "=" * 80)
 

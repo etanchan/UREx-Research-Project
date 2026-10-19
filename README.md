@@ -196,12 +196,10 @@ PYTHONPATH=src python3 -m unittest discover -s tests -p "test_*.py" -v
 
 ## Human Scoring Rubric
 
-Human evaluators rate each turn on a 1–5 Likert scale across five dimensions:
-1. **Technical Correctness**: Factual and conceptual accuracy of engineering details.
-2. **Diagram Grounding**: Explicit and faithful attribution to visual elements in the diagram.
-3. **Misconception Handling**: Detection and pedagogical correction of student fallacies.
-4. **Relevance**: Direct focus on student query without extraneous verbosity.
-5. **Appropriate Uncertainty**: Correct calibration when diagram lacks specific parameters.
+Human evaluators rate each turn on a **0–2 scale** (`0` = No Credit, `1` = Partial Credit, `2` = Full Credit) across three core dimensions:
+1. **Technical Correctness (`technical_correctness`)**: Factual and conceptual accuracy of engineering details compared against the expected answer reference (`0` = incorrect core concept, `1` = partially correct / minor calculation or omission slip, `2` = fully accurate across all parts).
+2. **Diagram Grounding (`diagram_grounding`)**: Explicit and faithful attribution to visual elements in the diagram, adapting to revised Turn 4 diagrams and calibrating appropriately when specific parameters are omitted (`0` = ignores/contradicts diagram or hallucinates unseen values, `1` = mostly grounded with minor unstated assumptions, `2` = explicitly grounded and calibrated).
+3. **Pedagogical Clarity (`pedagogical_clarity`)**: Direct focus on the student's query and explicit correction of student misconceptions (`0` = agrees with false student premise or off-topic, `1` = overly verbose or weakly addresses confusion, `2` = directly answers and clearly corrects misconceptions).
 
 ---
 
